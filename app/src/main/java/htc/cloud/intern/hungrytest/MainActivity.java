@@ -25,7 +25,7 @@ public class MainActivity extends ActionBarActivity {
     private Toolbar mToolbar;
     private Context mContext;
     private DrawerLayout mDrawerLayout;
-    private FragmentManager mFragmentManager;
+    public static FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,9 @@ public class MainActivity extends ActionBarActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_nearby:
                         selectedFragment = MapViewFragment.newInstance(0);
+                        break;
+                    case R.id.drawer_match:
+                        selectedFragment = DailyMatchFragment.newInstance(menuItem.getTitle());
                         break;
                     default:
                         selectedFragment = PlaceholderFragment.newInstance(menuItem.getTitle());
@@ -120,4 +123,5 @@ public class MainActivity extends ActionBarActivity {
 //                break;
 //        }
     }
+
 }

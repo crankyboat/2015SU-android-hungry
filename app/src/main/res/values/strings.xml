@@ -7,5 +7,6 @@
     <string name="favourite">Favorite</string>
     <string name="settings">Settings</string>
     <string name="nearby">Nearby</string>
+    <string name="match">Daily Match</string>
 
 </resources>

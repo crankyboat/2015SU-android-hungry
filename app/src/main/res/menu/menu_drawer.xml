@@ -16,6 +16,11 @@
             android:title="@string/favourite"/>
 
         <item
+            android:id="@+id/drawer_match"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="@string/match"/>
+
+        <item
             android:id="@+id/drawer_settings"
             android:icon="@drawable/ic_stars_black_24dp"
             android:title="@string/settings"/>
