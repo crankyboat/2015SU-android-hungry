@@ -68,6 +68,10 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
         });
+
+        mFragmentManager.beginTransaction()
+                .replace(R.id.container, MapFragment.newInstance(0))
+                .commit();
     }
 
     @Override
