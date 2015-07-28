@@ -15,10 +15,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.SupportMapFragment;
-
 
 public class MainActivity extends ActionBarActivity {
 
@@ -54,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
                 Fragment selectedFragment;
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_nearby:
-                        selectedFragment = MapViewFragment.newInstance(0);
+                        selectedFragment = MapFragment.newInstance(0);
                         break;
                     case R.id.drawer_match:
                         selectedFragment = DailyMatchFragment.newInstance(menuItem.getTitle());
@@ -107,21 +103,9 @@ public class MainActivity extends ActionBarActivity {
             textView.setText(name);
         }
         else {
-            Toast.makeText(this, "No section_label found.", Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, "No section_label found.", Toast.LENGTH_LONG).show();
 
         }
-
-//        switch (number) {
-//            case 1:
-//                mTitle = getString(R.string.title_section1);
-//                break;
-//            case 2:
-//                mTitle = getString(R.string.title_section2);
-//                break;
-//            case 3:
-//                mTitle = getString(R.string.title_section3);
-//                break;
-//        }
     }
 
 }
