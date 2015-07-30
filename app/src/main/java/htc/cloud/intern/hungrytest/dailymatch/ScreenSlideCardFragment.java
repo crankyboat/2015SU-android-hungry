@@ -1,10 +1,12 @@
-package htc.cloud.intern.hungrytest;
+package htc.cloud.intern.hungrytest.dailymatch;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import htc.cloud.intern.hungrytest.R;
 
 /**
  * Created by intern on 7/27/15.

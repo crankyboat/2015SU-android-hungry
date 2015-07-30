@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest;
+package htc.cloud.intern.hungrytest.dailymatch;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

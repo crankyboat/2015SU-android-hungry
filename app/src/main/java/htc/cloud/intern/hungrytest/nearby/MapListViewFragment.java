@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest;
+package htc.cloud.intern.hungrytest.nearby;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -15,12 +15,11 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+
+import htc.cloud.intern.hungrytest.R;
 
 /**
  * Created by intern on 7/28/15.
@@ -70,14 +69,16 @@ public class MapListViewFragment extends ListFragment {
         PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
                 .getCurrentPlace(mGoogleApiClient, null);
 
+
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
                 ArrayList<ListData> list = new ArrayList<ListData>();
                 for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    Log.i("location-listview", String.format("PLACE '%s' has likelihood: %g",
+                    Log.i("location-listview", String.format("PLACE '%s' has likelihood %g and type %s",
                             placeLikelihood.getPlace().getName(),
-                            placeLikelihood.getLikelihood()));
+                            placeLikelihood.getLikelihood(),
+                            placeLikelihood.getPlace().getPlaceTypes().toString()));
 
                     String placeName = placeLikelihood.getPlace().getName().toString();
                     LatLng placeLatLng = placeLikelihood.getPlace().getLatLng();

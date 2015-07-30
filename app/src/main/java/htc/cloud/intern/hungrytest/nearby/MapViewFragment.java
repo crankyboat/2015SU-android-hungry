@@ -1,15 +1,12 @@
-package htc.cloud.intern.hungrytest;
+package htc.cloud.intern.hungrytest.nearby;
 
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -24,6 +21,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import htc.cloud.intern.hungrytest.R;
 
 /**
  * Created by intern on 7/28/15.
@@ -75,6 +74,13 @@ public class MapViewFragment extends Fragment {
         mMap = ((SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map)).getMap();
         return rootView;
     }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//
+//    }
+
 
     private void getLocalPlaces(GoogleApiClient mGoogleApiClient) {
 

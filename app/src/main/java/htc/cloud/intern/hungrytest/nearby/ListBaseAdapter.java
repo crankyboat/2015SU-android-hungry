@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest;
+package htc.cloud.intern.hungrytest.nearby;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import htc.cloud.intern.hungrytest.R;
 
 /**
  * Created by intern on 7/28/15.

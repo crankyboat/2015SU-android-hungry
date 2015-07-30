@@ -15,6 +15,10 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import htc.cloud.intern.hungrytest.dailymatch.DailyMatchFragment;
+import htc.cloud.intern.hungrytest.hungryapi.ApiFragment;
+import htc.cloud.intern.hungrytest.nearby.MapFragment;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -51,6 +55,9 @@ public class MainActivity extends ActionBarActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_nearby:
                         selectedFragment = MapFragment.newInstance(0);
+                        break;
+                    case R.id.drawer_favourite:
+                        selectedFragment = ApiFragment.newInstance("Google Api");
                         break;
                     case R.id.drawer_match:
                         selectedFragment = DailyMatchFragment.newInstance(menuItem.getTitle());

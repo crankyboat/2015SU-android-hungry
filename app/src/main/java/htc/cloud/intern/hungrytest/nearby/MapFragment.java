@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest;
+package htc.cloud.intern.hungrytest.nearby;
 
 /**
  * Created by intern on 7/24/15.
@@ -37,11 +37,12 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import htc.cloud.intern.hungrytest.R;
 
 
 public class MapFragment extends Fragment implements

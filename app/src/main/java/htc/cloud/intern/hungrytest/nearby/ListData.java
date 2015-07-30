@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest;
+package htc.cloud.intern.hungrytest.nearby;
 
 /**
  * Created by intern on 7/28/15.
