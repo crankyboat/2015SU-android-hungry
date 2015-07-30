@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -35,12 +34,7 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import htc.cloud.intern.hungrytest.R;
 
@@ -59,9 +53,7 @@ public class MapFragment extends Fragment implements
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
     protected LatLng mCurrentLocation;
-    protected Marker mCurrentMarker;
     private Activity mActivity;
-    protected GoogleMap mMap;
 
     protected MapViewFragment mMapViewFragment;
     protected MapListViewFragment mMapListViewFragment;
@@ -75,8 +67,7 @@ public class MapFragment extends Fragment implements
     }
 
     public MapFragment() {
-        isMapView = false;
-
+        isMapView = true;
     }
 
     @Override
@@ -84,7 +75,7 @@ public class MapFragment extends Fragment implements
                              Bundle savedInstanceState){
 
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        onSwitchViewClicked(null);
+        setUpViewFragments();
         return rootView;
     }
 
@@ -95,10 +86,6 @@ public class MapFragment extends Fragment implements
         mActivity = activity;
         setUpGoogleApiClient();
         setUpLocationRequest();
-
-//        setUpMapIfNeeded();
-//        setUpPlacePicker();
-//        getLocalPlaces();
 
         ActionBar actionBar = ((ActionBarActivity) activity).getSupportActionBar();
         View view = activity.getLayoutInflater().inflate(R.layout.fragment_map_mapview_toolbar, null);
@@ -138,32 +125,6 @@ public class MapFragment extends Fragment implements
         super.onDetach();
     }
 
-    public void onSwitchViewClicked(View view){
-
-        mSwitchviewButton.setImageResource(isMapView ? R.drawable.ic_map_black_24dp : R.drawable.ic_list_black_24dp);
-
-        Fragment switchFragment;
-        if (isMapView) {
-            switchFragment = (mMapListViewFragment == null)
-                    ? (ListFragment)MapListViewFragment.newInstance(0)
-                    : mMapListViewFragment;
-            mMapListViewFragment = (MapListViewFragment)switchFragment;
-        }
-        else {
-            switchFragment = (mMapViewFragment == null)
-                    ? MapViewFragment.newInstance(0)
-                    : mMapViewFragment;
-            mMapViewFragment = (MapViewFragment)switchFragment;
-
-        }
-        getFragmentManager().beginTransaction()
-                .replace(R.id.map_container, switchFragment)
-                .commit();
-
-        isMapView = !isMapView;
-
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -190,7 +151,7 @@ public class MapFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (!mGoogleApiClient.isConnected() && mCurrentMarker != null) {
+        if (!mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
     }
@@ -209,24 +170,63 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-
-        if (mMapViewFragment != null) {
-            mMapViewFragment.onLocationChanged(location, mGoogleApiClient);
-        }
-        if (mMapListViewFragment != null) {
-            mMapListViewFragment.onLocationChanged(location, mGoogleApiClient);
-        }
-
-    }
-
-    @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         int errorCode = connectionResult.getErrorCode();
         if (errorCode == ConnectionResult.SERVICE_MISSING) {
             Toast.makeText(getActivity(), "Google Play Service Missing.", Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                .getCurrentPlace(mGoogleApiClient, null);
+
+        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+                    if (mMapViewFragment != null) {
+                        mMapViewFragment.onLocationChanged(mCurrentLocation, likelyPlaces);
+                    }
+                    if (mMapListViewFragment != null) {
+                        mMapListViewFragment.onLocationChanged(likelyPlaces);
+                    }
+                }
+                likelyPlaces.release();
+            }
+        });
+
+
+
+
+
+    }
+    
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == PLACE_PICKER_REQUEST) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                Place place = PlacePicker.getPlace(data, mActivity);
+//                String toastMsg = String.format("Place: %s", place.getName());
+//                Toast.makeText(mActivity, toastMsg, Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
+//
+//    private void setUpPlacePicker() {
+//        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//        Context context = mActivity.getApplicationContext();
+//        try {
+//            startActivityForResult(builder.build(context), PLACE_PICKER_REQUEST);
+//        } catch (GooglePlayServicesRepairableException e) {
+//            e.printStackTrace();
+//        } catch (GooglePlayServicesNotAvailableException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     protected synchronized void setUpGoogleApiClient() {
 
@@ -241,60 +241,44 @@ public class MapFragment extends Fragment implements
     }
 
     protected void setUpLocationRequest() {
+
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000); //ms
+        mLocationRequest.setInterval(100000); //ms
         mLocationRequest.setFastestInterval(1000);  //ms
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
     }
 
-    private void setUpPlacePicker() {
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        Context context = mActivity.getApplicationContext();
-        try {
-            startActivityForResult(builder.build(context), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-        }
+    private void setUpViewFragments() {
+
+        mMapViewFragment = MapViewFragment.newInstance(0);
+        mMapListViewFragment = MapListViewFragment.newInstance(0);
+        getFragmentManager().beginTransaction()
+                .add(R.id.map_container, mMapViewFragment)
+                .add(R.id.map_container, mMapListViewFragment)
+                .hide(mMapListViewFragment)
+                .commit();
+
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, mActivity);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(mActivity, toastMsg, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+    public void onSwitchViewClicked(View view){
 
-    private void getLocalPlaces() {
+        mSwitchviewButton.setImageResource(isMapView ? R.drawable.ic_map_black_24dp : R.drawable.ic_list_black_24dp);
 
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(mGoogleApiClient, null);
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    Log.i(TAG, String.format("Place '%s' has likelihood: %g",
-                            placeLikelihood.getPlace().getName(),
-                            placeLikelihood.getLikelihood()));
+        Fragment switchFragment = (isMapView)
+                ? mMapListViewFragment
+                : mMapViewFragment;
+        Fragment switchoutFragment = (isMapView)
+                ? mMapViewFragment
+                : mMapListViewFragment;
 
-                    // Display each place on the map.
-                    String placeName = placeLikelihood.getPlace().getName().toString();
-                    LatLng placeLatLng = placeLikelihood.getPlace().getLatLng();
-                    mMap.addMarker(new MarkerOptions()
-                            .position(placeLatLng)
-                            .title(placeName)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 17));
+        getFragmentManager().beginTransaction()
+                .hide(switchoutFragment)
+                .show(switchFragment)
+                .commit();
 
-                }
-                likelyPlaces.release();
-            }
-        });
+        isMapView = !isMapView;
+//        Toast.makeText(mActivity, "switchFragment = "+switchFragment.toString(), Toast.LENGTH_LONG).show();
 
     }
 

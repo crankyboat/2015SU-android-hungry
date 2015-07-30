@@ -1,6 +1,5 @@
 package htc.cloud.intern.hungrytest.nearby;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -9,12 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -46,6 +41,7 @@ public class MapListViewFragment extends ListFragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_map_listview, container, false);
+
         mListView = (ListView) rootView.findViewById(android.R.id.list);
         mListView.setEmptyView(rootView.findViewById(android.R.id.empty));
         setListAdapter(new ListBaseAdapter(getActivity(), mList));
@@ -53,41 +49,19 @@ public class MapListViewFragment extends ListFragment {
         return rootView;
     }
 
-    public void onLocationChanged(Location location, GoogleApiClient mGoogleApiClient){
-        getLocalPlacesToList(mGoogleApiClient);
-    }
+    public void onLocationChanged(PlaceLikelihoodBuffer likelyPlaces){
 
-    public void updateList(ArrayList<ListData> list) {
-
-        mList = new ArrayList<ListData>(list);
+        mList = new ArrayList<ListData>();
+        for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+            Log.i("location-maplistview", String.format("Place '%s' has likelihood: %g",
+                    placeLikelihood.getPlace().getName(),
+                    placeLikelihood.getLikelihood()));
+            String placeName = placeLikelihood.getPlace().getName().toString();
+            LatLng placeLatLng = placeLikelihood.getPlace().getLatLng();
+            mList.add(new ListData(placeName, placeLatLng.toString(), R.drawable.ic_stars_black_24dp));
+        }
         setListAdapter(new ListBaseAdapter(getActivity(), mList));
 
-    }
-
-    public void getLocalPlacesToList(GoogleApiClient mGoogleApiClient) {
-
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(mGoogleApiClient, null);
-
-
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                ArrayList<ListData> list = new ArrayList<ListData>();
-                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                    Log.i("location-listview", String.format("PLACE '%s' has likelihood %g and type %s",
-                            placeLikelihood.getPlace().getName(),
-                            placeLikelihood.getLikelihood(),
-                            placeLikelihood.getPlace().getPlaceTypes().toString()));
-
-                    String placeName = placeLikelihood.getPlace().getName().toString();
-                    LatLng placeLatLng = placeLikelihood.getPlace().getLatLng();
-                    list.add(new ListData(placeName, placeLatLng.toString(), R.drawable.ic_stars_black_24dp));
-                }
-                likelyPlaces.release();
-                updateList(list);
-            }
-        });
     }
 
 }
