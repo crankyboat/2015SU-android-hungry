@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest.nearby;
+package htc.cloud.intern.hungrytest.nearbyapi;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
@@ -18,6 +17,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
+import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.R;
 
 /**
@@ -54,7 +56,7 @@ public class MapViewFragment extends Fragment {
     }
 
 
-    public void onLocationChanged(LatLng location, PlaceLikelihoodBuffer likelyPlaces){
+    public void onLocationChanged(LatLng location, ArrayList<PlaceState> likelyPlaces, double maxDistance){
 
         mCurrentLocation = location;
         if (mCurrentMarker == null) {
@@ -65,18 +67,18 @@ public class MapViewFragment extends Fragment {
         }
         mCurrentMarker.setTitle("My Location");
 
-        for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-            Log.i("location-mapview", String.format("Place '%s' has likelihood: %g",
-                    placeLikelihood.getPlace().getName(),
-                    placeLikelihood.getLikelihood()));
-            String placeName = placeLikelihood.getPlace().getName().toString();
-            LatLng placeLatLng = placeLikelihood.getPlace().getLatLng();
+        for (PlaceState place : likelyPlaces) {
+            Log.i("location-mapview", String.format("Place '%s'", place.getName()));
+            String placeName = place.getName().toString();
+            LatLng placeLatLng = place.getLatLng();
             mMap.addMarker(new MarkerOptions()
                     .position(placeLatLng)
                     .title(placeName)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         }
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, 17));
+
+        int zoom = ( maxDistance > 500 ) ? 15 : 17 ;
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, zoom));
     }
 
 //    @Override

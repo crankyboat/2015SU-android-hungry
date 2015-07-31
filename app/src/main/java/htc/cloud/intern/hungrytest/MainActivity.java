@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import htc.cloud.intern.hungrytest.dailymatch.DailyMatchFragment;
 import htc.cloud.intern.hungrytest.hungryapi.ApiFragment;
 import htc.cloud.intern.hungrytest.nearby.MapFragment;
@@ -22,10 +24,14 @@ import htc.cloud.intern.hungrytest.nearby.MapFragment;
 
 public class MainActivity extends ActionBarActivity {
 
+    public static FragmentManager mFragmentManager;
+    public UserState mUserState;
     private Toolbar mToolbar;
     private Context mContext;
     private DrawerLayout mDrawerLayout;
-    public static FragmentManager mFragmentManager;
+    private NavigationView mNavigationView;
+
+    private ArrayList<Fragment> mNavigationFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
+        mUserState = new UserState(this.getBaseContext());
         mFragmentManager = getSupportFragmentManager();
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -44,8 +51,12 @@ public class MainActivity extends ActionBarActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        NavigationView view = (NavigationView) findViewById(R.id.navigation_view);
-        view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+//        setUpNavigationMenuItems();
+//        setUpNavigationFragments();
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override public boolean onNavigationItemSelected(MenuItem menuItem) {
 
@@ -54,7 +65,10 @@ public class MainActivity extends ActionBarActivity {
                 Fragment selectedFragment;
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_nearby:
-                        selectedFragment = MapFragment.newInstance(0);
+                        selectedFragment = htc.cloud.intern.hungrytest.nearby.MapFragment.newInstance(0);
+                        break;
+                    case R.id.drawer_nearbyapi:
+                        selectedFragment = htc.cloud.intern.hungrytest.nearbyapi.MapFragment.newInstance(0);
                         break;
                     case R.id.drawer_favourite:
                         selectedFragment = ApiFragment.newInstance("Google Api");
@@ -80,6 +94,14 @@ public class MainActivity extends ActionBarActivity {
                 .replace(R.id.container, MapFragment.newInstance(0))
                 .commit();
     }
+
+//    private void setUpNavigationMenuItems() {
+//
+//        Menu navigationMenu = mNavigationView.getMenu();
+//
+//        // id, (checked), icon, title
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

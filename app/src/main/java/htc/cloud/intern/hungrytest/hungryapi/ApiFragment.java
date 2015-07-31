@@ -50,12 +50,18 @@ public class ApiFragment extends Fragment implements AsyncResponse {
         mSectionNameView = (TextView) rootView.findViewById(R.id.section_label);
         mSectionNameView.setText("Hello " + mSectionName + "!");
 
+        // Dummy user state
         UserState us = new UserState(getActivity().getBaseContext());
-        us.setUserLocation(new LatLng(0,0));
+        us.setUserLocation(new LatLng(0, 0));
+        us.setFeedback("business1", 1);
+        us.setFeedback("business2", 100);
 
         HungryAsyncTask mHungryAsyncTask = new HungryAsyncTask();
         mHungryAsyncTask.setResponseDelegate(this);
         mHungryAsyncTask.execute(us);
+
+        FeedbackAsyncTask mFeedbackAsyncTask = new FeedbackAsyncTask();
+        mFeedbackAsyncTask.execute(us);
 
         return rootView;
     }

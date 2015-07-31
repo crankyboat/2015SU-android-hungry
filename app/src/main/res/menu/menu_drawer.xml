@@ -11,6 +11,11 @@
             android:title="@string/nearby"/>
 
         <item
+            android:id="@+id/drawer_nearbyapi"
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="@string/nearby"/>
+
+        <item
             android:id="@+id/drawer_favourite"
             android:icon="@drawable/ic_stars_black_24dp"
             android:title="@string/favourite"/>

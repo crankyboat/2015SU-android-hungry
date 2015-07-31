@@ -27,7 +27,7 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
     public final static String serviceName = "get_recommendation";
     public final static String useridField = "user_id"; //124
     public final static String locationField = "location";  //121,23.3
-    public final static String jsonArrayName = "recommendations";
+    public final static String jsonArrayName = "businesses";
 
     private AsyncResponse responseDelegate;
     private URL url;

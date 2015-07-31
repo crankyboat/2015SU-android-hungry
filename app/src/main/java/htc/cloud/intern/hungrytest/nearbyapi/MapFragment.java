@@ -1,12 +1,10 @@
-package htc.cloud.intern.hungrytest.nearby;
+package htc.cloud.intern.hungrytest.nearbyapi;
 
 /**
  * Created by intern on 7/24/15.
  */
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,28 +19,35 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
-import htc.cloud.intern.hungrytest.R;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import htc.cloud.intern.hungrytest.MainActivity;
+import htc.cloud.intern.hungrytest.PlaceState;
+import htc.cloud.intern.hungrytest.R;
+import htc.cloud.intern.hungrytest.UserState;
+import htc.cloud.intern.hungrytest.hungryapi.AsyncResponse;
+import htc.cloud.intern.hungrytest.hungryapi.FeedbackAsyncTask;
+import htc.cloud.intern.hungrytest.hungryapi.HungryAsyncTask;
 
 public class MapFragment extends Fragment implements
     GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener,
-    LocationListener {
+    LocationListener, AsyncResponse {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ImageButton mSwitchviewButton;
@@ -86,6 +91,7 @@ public class MapFragment extends Fragment implements
         mActivity = activity;
         setUpGoogleApiClient();
         setUpLocationRequest();
+        setUpHungryApiAsyncTasks();
 
         ActionBar actionBar = ((ActionBarActivity) activity).getSupportActionBar();
         View view = activity.getLayoutInflater().inflate(R.layout.fragment_map_mapview_toolbar, null);
@@ -181,26 +187,66 @@ public class MapFragment extends Fragment implements
     public void onLocationChanged(Location location) {
 
         mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(mGoogleApiClient, null);
+//        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+//                .getCurrentPlace(mGoogleApiClient, null);
+//
+//        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+//            @Override
+//            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+//                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+//                    if (mMapViewFragment != null) {
+//                        mMapViewFragment.onLocationChanged(mCurrentLocation, likelyPlaces);
+//                    }
+//                    if (mMapListViewFragment != null) {
+//                        mMapListViewFragment.onLocationChanged(likelyPlaces);
+//                    }
+//                }
 
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                if (mMapViewFragment != null) {
-                    mMapViewFragment.onLocationChanged(mCurrentLocation, likelyPlaces);
-                }
-                if (mMapListViewFragment != null) {
-                    mMapListViewFragment.onLocationChanged(likelyPlaces);
-                }
-                likelyPlaces.release();
+
+
+//                likelyPlaces.release();
+//            }
+//        });
+
+        UserState us = ((MainActivity) mActivity).mUserState;
+        us.setUserLocation(mCurrentLocation);
+        setUpHungryApiAsyncTasks();
+
+    }
+
+    @Override
+    public void onPostExecute(JSONArray jsonArray) {
+        try {
+            Log.i("API-MapFragment", jsonArray.toString(4));
+
+            ArrayList<PlaceState> likelyPlaces = new ArrayList<PlaceState>();
+            JSONObject business;
+            LatLng latlng;
+            double maxDistance = 0.0;
+            for (int i=0; i<jsonArray.length(); i++) {
+                business = jsonArray.getJSONObject(i);
+
+                maxDistance = (business.getDouble("distance") > maxDistance)
+                        ? business.getDouble("distance")
+                        : maxDistance ;
+
+                latlng = new LatLng(business.getJSONObject("location").getJSONObject("coordinate").getDouble("latitude"),
+                        business.getJSONObject("location").getJSONObject("coordinate").getDouble("longitude"));
+
+                likelyPlaces.add(new PlaceState(business.getString("id"), latlng));
             }
-        });
+
+            if (mMapViewFragment != null) {
+                mMapViewFragment.onLocationChanged(mCurrentLocation, likelyPlaces, maxDistance);
+            }
+            if (mMapListViewFragment != null) {
+                mMapListViewFragment.onLocationChanged(likelyPlaces);
+            }
 
 
-
-
-
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 //    @Override
@@ -245,6 +291,21 @@ public class MapFragment extends Fragment implements
         mLocationRequest.setFastestInterval(1000);  //ms
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
+    }
+
+    private void setUpHungryApiAsyncTasks() {
+
+        // Dummy user state
+        UserState us = ((MainActivity)mActivity).mUserState;
+        us.setFeedback("business1", 1);
+        us.setFeedback("business2", 100);
+
+        HungryAsyncTask mHungryAsyncTask = new HungryAsyncTask();
+        mHungryAsyncTask.setResponseDelegate(this);
+        mHungryAsyncTask.execute(us);
+
+        FeedbackAsyncTask mFeedbackAsyncTask = new FeedbackAsyncTask();
+        mFeedbackAsyncTask.execute(us);
     }
 
     private void setUpViewFragments() {
