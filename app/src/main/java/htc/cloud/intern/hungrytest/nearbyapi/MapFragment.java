@@ -91,7 +91,7 @@ public class MapFragment extends Fragment implements
         mActivity = activity;
         setUpGoogleApiClient();
         setUpLocationRequest();
-        setUpHungryApiAsyncTasks();
+//        setUpHungryApiAsyncTasks();
 
         ActionBar actionBar = ((ActionBarActivity) activity).getSupportActionBar();
         View view = activity.getLayoutInflater().inflate(R.layout.fragment_map_mapview_toolbar, null);
@@ -187,26 +187,6 @@ public class MapFragment extends Fragment implements
     public void onLocationChanged(Location location) {
 
         mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-//                .getCurrentPlace(mGoogleApiClient, null);
-//
-//        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-//            @Override
-//            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-//                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-//                    if (mMapViewFragment != null) {
-//                        mMapViewFragment.onLocationChanged(mCurrentLocation, likelyPlaces);
-//                    }
-//                    if (mMapListViewFragment != null) {
-//                        mMapListViewFragment.onLocationChanged(likelyPlaces);
-//                    }
-//                }
-
-
-
-//                likelyPlaces.release();
-//            }
-//        });
 
         UserState us = ((MainActivity) mActivity).mUserState;
         us.setUserLocation(mCurrentLocation);
@@ -217,12 +197,16 @@ public class MapFragment extends Fragment implements
     @Override
     public void onPostExecute(JSONArray jsonArray) {
         try {
-            Log.i("API-MapFragment", jsonArray.toString(4));
+//            Log.i("API-MapFragment", jsonArray.toString(4));
 
             ArrayList<PlaceState> likelyPlaces = new ArrayList<PlaceState>();
+
+            double maxDistance = 0.0;
             JSONObject business;
             LatLng latlng;
-            double maxDistance = 0.0;
+            String imgSrc;
+            String phoneNum;
+
             for (int i=0; i<jsonArray.length(); i++) {
                 business = jsonArray.getJSONObject(i);
 
@@ -233,7 +217,11 @@ public class MapFragment extends Fragment implements
                 latlng = new LatLng(business.getJSONObject("location").getJSONObject("coordinate").getDouble("latitude"),
                         business.getJSONObject("location").getJSONObject("coordinate").getDouble("longitude"));
 
-                likelyPlaces.add(new PlaceState(business.getString("id"), latlng));
+                imgSrc = business.getString("image_url");
+
+                phoneNum = business.getString("display_phone");
+
+                likelyPlaces.add(new PlaceState(business.getString("id"), latlng, imgSrc, phoneNum));
             }
 
             if (mMapViewFragment != null) {

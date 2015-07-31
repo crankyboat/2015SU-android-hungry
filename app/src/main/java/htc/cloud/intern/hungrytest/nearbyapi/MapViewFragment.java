@@ -55,7 +55,6 @@ public class MapViewFragment extends Fragment {
 
     }
 
-
     public void onLocationChanged(LatLng location, ArrayList<PlaceState> likelyPlaces, double maxDistance){
 
         mCurrentLocation = location;

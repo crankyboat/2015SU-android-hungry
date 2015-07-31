@@ -1,5 +1,7 @@
 package htc.cloud.intern.hungrytest.nearbyapi;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -7,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
@@ -16,8 +19,6 @@ import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.R;
-import htc.cloud.intern.hungrytest.nearby.ListBaseAdapter;
-import htc.cloud.intern.hungrytest.nearby.ListData;
 
 /**
  * Created by intern on 7/28/15.
@@ -56,12 +57,28 @@ public class MapListViewFragment extends ListFragment {
 
         mList = new ArrayList<ListData>();
         for (PlaceState place : likelyPlaces) {
+
             Log.i("location-maplistview", String.format("Place '%s'", place.getName()));
             String placeName = place.getName().toString();
             LatLng placeLatLng = place.getLatLng();
-            mList.add(new ListData(placeName, placeLatLng.toString(), R.drawable.ic_stars_black_24dp));
+            String placeImgSrc = place.getImgSrc();
+            String placePhoneNum = place.getPhoneNum();
+
+            mList.add(new ListData(placeName, placePhoneNum, placeImgSrc));
+
         }
         setListAdapter(new ListBaseAdapter(getActivity(), mList));
+
+    }
+
+    @Override
+    public void onListItemClick (ListView listView, View view, int position, long id) {
+
+        Toast.makeText(getActivity(), "("+position+", "+id+")", Toast.LENGTH_SHORT).show();
+
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:"+((ListData)getListView().getItemAtPosition(position)).getDescription()));
+        startActivity(callIntent);
 
     }
 

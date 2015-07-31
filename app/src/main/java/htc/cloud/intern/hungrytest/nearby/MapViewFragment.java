@@ -66,9 +66,9 @@ public class MapViewFragment extends Fragment {
         mCurrentMarker.setTitle("My Location");
 
         for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-            Log.i("location-mapview", String.format("Place '%s' has likelihood: %g",
-                    placeLikelihood.getPlace().getName(),
-                    placeLikelihood.getLikelihood()));
+//            Log.i("location-mapview", String.format("Place '%s' has likelihood: %g",
+//                    placeLikelihood.getPlace().getName(),
+//                    placeLikelihood.getLikelihood()));
             String placeName = placeLikelihood.getPlace().getName().toString();
             LatLng placeLatLng = placeLikelihood.getPlace().getLatLng();
             mMap.addMarker(new MarkerOptions()

@@ -53,9 +53,9 @@ public class MapListViewFragment extends ListFragment {
 
         mList = new ArrayList<ListData>();
         for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-            Log.i("location-maplistview", String.format("Place '%s' has likelihood: %g",
-                    placeLikelihood.getPlace().getName(),
-                    placeLikelihood.getLikelihood()));
+//            Log.i("location-maplistview", String.format("Place '%s' has likelihood: %g",
+//                    placeLikelihood.getPlace().getName(),
+//                    placeLikelihood.getLikelihood()));
             String placeName = placeLikelihood.getPlace().getName().toString();
             LatLng placeLatLng = placeLikelihood.getPlace().getLatLng();
             mList.add(new ListData(placeName, placeLatLng.toString(), R.drawable.ic_stars_black_24dp));

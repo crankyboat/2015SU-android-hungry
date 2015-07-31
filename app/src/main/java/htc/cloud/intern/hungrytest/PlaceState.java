@@ -9,10 +9,15 @@ public class PlaceState {
 
     private String mName;
     private LatLng mLatLng;
+    private String mImgSrc;
+    private String mPhoneNum;
 
-    public PlaceState(String name, LatLng latlng) {
+    public PlaceState(String name, LatLng latlng, String imgSrc,
+                      String phoneNum) {
         mName = name;
         mLatLng = latlng;
+        mImgSrc = imgSrc;
+        mPhoneNum = phoneNum;
     }
 
     public String getName() {
@@ -23,4 +28,11 @@ public class PlaceState {
         return mLatLng;
     }
 
+    public String getImgSrc() {
+        return mImgSrc;
+    }
+
+    public String getPhoneNum() {
+        return mPhoneNum;
+    }
 }
