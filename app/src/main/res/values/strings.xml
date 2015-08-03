@@ -9,5 +9,6 @@
     <string name="nearby">Nearby</string>
     <string name="match">Daily Match</string>
     <string name="action_listview">List View</string>
+    <string name="nearby_api">Nearby API</string>
 
 </resources>

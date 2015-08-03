@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Api;
+
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.dailymatch.DailyMatchFragment;
@@ -31,7 +33,14 @@ public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
+    // TODO
     private ArrayList<Fragment> mNavigationFragments;
+    private htc.cloud.intern.hungrytest.nearby.MapFragment mNearbyFragment;
+    private htc.cloud.intern.hungrytest.nearbyapi.MapFragment mNearbyApiFragment;
+    private ApiFragment mFavoriteFragment;  // temp
+    private DailyMatchFragment mDailyMatchFragment;
+    private PlaceholderFragment mPlaceholderFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
 
 //        setUpNavigationMenuItems();
-//        setUpNavigationFragments();
+        setUpNavigationFragments();
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -65,23 +74,26 @@ public class MainActivity extends ActionBarActivity {
                 Fragment selectedFragment;
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_nearby:
-                        selectedFragment = htc.cloud.intern.hungrytest.nearby.MapFragment.newInstance(0);
+                        selectedFragment = mNearbyFragment;
                         break;
                     case R.id.drawer_nearbyapi:
-                        selectedFragment = htc.cloud.intern.hungrytest.nearbyapi.MapFragment.newInstance(0);
+                        selectedFragment = mNearbyApiFragment;
                         break;
                     case R.id.drawer_favourite:
-                        selectedFragment = ApiFragment.newInstance("Google Api");
+                        selectedFragment = mFavoriteFragment;
                         break;
                     case R.id.drawer_match:
-                        selectedFragment = DailyMatchFragment.newInstance(menuItem.getTitle());
+                        selectedFragment = mDailyMatchFragment;
                         break;
                     default:
-                        selectedFragment = PlaceholderFragment.newInstance(menuItem.getTitle());
+                        selectedFragment = mPlaceholderFragment;
                 }
                 mFragmentManager.beginTransaction()
                         .replace(R.id.container, selectedFragment)
                         .commit();
+//                mFragmentManager.beginTransaction()
+//                        .show(selectedFragment)
+//                        .commit();
 
                 menuItem.setChecked(true);
                 mDrawerLayout.closeDrawers();
@@ -93,6 +105,9 @@ public class MainActivity extends ActionBarActivity {
         mFragmentManager.beginTransaction()
                 .replace(R.id.container, MapFragment.newInstance(0))
                 .commit();
+//        mFragmentManager.beginTransaction()
+//                .show(mNearbyFragment)
+//                .commit();
     }
 
 //    private void setUpNavigationMenuItems() {
@@ -139,6 +154,31 @@ public class MainActivity extends ActionBarActivity {
 //            Toast.makeText(this, "No section_label found.", Toast.LENGTH_LONG).show();
 
         }
+    }
+
+    private void setUpNavigationFragments() {
+
+        // TODO
+
+        mNearbyFragment = htc.cloud.intern.hungrytest.nearby.MapFragment.newInstance(0);
+        mNearbyApiFragment = htc.cloud.intern.hungrytest.nearbyapi.MapFragment.newInstance(0);
+        mFavoriteFragment = ApiFragment.newInstance("Api");
+        mDailyMatchFragment = DailyMatchFragment.newInstance("Daily Match");
+        mPlaceholderFragment = PlaceholderFragment.newInstance("Placeholder");
+
+//        mFragmentManager.beginTransaction()
+//                .add(R.id.container, mNearbyFragment)
+//                .add(R.id.container, mNearbyApiFragment)
+//                .add(R.id.container, mFavoriteFragment)
+//                .add(R.id.container, mDailyMatchFragment)
+//                .add(R.id.container, mPlaceholderFragment)
+//                .hide(mNearbyFragment)
+//                .hide(mNearbyApiFragment)
+//                .hide(mFavoriteFragment)
+//                .hide(mDailyMatchFragment)
+//                .hide(mPlaceholderFragment)
+//                .commit();
+
     }
 
 }

@@ -135,6 +135,7 @@ public class MapFragment extends Fragment implements
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
+
     }
 
     @Override
@@ -142,7 +143,9 @@ public class MapFragment extends Fragment implements
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+
         super.onStop();
+
     }
 
     @Override
