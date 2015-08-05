@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.R;
@@ -32,6 +33,7 @@ public class MapViewFragment extends Fragment {
     private GoogleMap mMap;
     protected LatLng mCurrentLocation;
     protected Marker mCurrentMarker;
+    protected HashMap<Marker, PlaceState> mMarkerInfo = new HashMap<Marker, PlaceState>();
 
     public static MapViewFragment newInstance(int sectionNumber) {
         MapViewFragment fragment = new MapViewFragment();
@@ -51,6 +53,7 @@ public class MapViewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_map_mapview, container, false);
         mMap = ((SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map)).getMap();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TAIPEI_LAT_LNG, 10));
+
         return rootView;
 
     }
@@ -60,21 +63,26 @@ public class MapViewFragment extends Fragment {
         mCurrentLocation = location;
         if (mCurrentMarker == null) {
             mCurrentMarker = mMap.addMarker(new MarkerOptions().position(mCurrentLocation));
+            mMarkerInfo.put(mCurrentMarker, new PlaceState("", null, "", "", ""));
         }
         else {
             mCurrentMarker.setPosition(mCurrentLocation);
         }
-        mCurrentMarker.setTitle("My Location");
 
         for (PlaceState place : likelyPlaces) {
             Log.i("location-mapview", String.format("Place '%s'", place.getName()));
-            String placeName = place.getName().toString();
+            String placeName = place.getName().toString().replaceFirst("-(.*)", "");
+
             LatLng placeLatLng = place.getLatLng();
-            mMap.addMarker(new MarkerOptions()
+            Marker placeMarker = mMap.addMarker(new MarkerOptions()
                     .position(placeLatLng)
                     .title(placeName)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            mMarkerInfo.put(placeMarker, place);
         }
+        mMap.setInfoWindowAdapter(new PlaceInfoWindowAdapter(getActivity(), mMarkerInfo));
+        mMap.setOnInfoWindowClickListener(new PlaceOnInfoWindowListener(getActivity()));
+
 
         int zoom = ( maxDistance > 500 ) ? 15 : 17 ;
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, zoom));

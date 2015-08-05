@@ -61,7 +61,8 @@ public class ListBaseAdapter extends BaseAdapter {
         ListData currentListData = getItem(position);
 
         mViewHolder.tv_title.setText(currentListData.getTitle());
-        mViewHolder.tv_desc.setText(currentListData.getDescription());
+        mViewHolder.tv_desc.setText(currentListData.getCategory());
+        mViewHolder.tv_phone.setText(currentListData.getPhone());
 //        mViewHolder.iv_icon.setImageResource(currentListData.getImgResId());
 
         Ion.with(mViewHolder.iv_icon)
@@ -74,12 +75,13 @@ public class ListBaseAdapter extends BaseAdapter {
     }
 
     private class ListViewHolder {
-        TextView tv_title, tv_desc;
+        TextView tv_title, tv_desc, tv_phone;
         ImageView iv_icon;
 
         public ListViewHolder(View item) {
             tv_title = (TextView) item.findViewById(R.id.tv_title);
             tv_desc = (TextView) item.findViewById(R.id.tv_desc);
+            tv_phone= (TextView) item.findViewById(R.id.tv_phone);
             iv_icon = (ImageView) item.findViewById(R.id.iv_icon);
         }
     }

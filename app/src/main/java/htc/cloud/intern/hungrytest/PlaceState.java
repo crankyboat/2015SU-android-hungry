@@ -10,13 +10,15 @@ public class PlaceState {
     private String mName;
     private LatLng mLatLng;
     private String mImgSrc;
+    private String mCategory;
     private String mPhoneNum;
 
     public PlaceState(String name, LatLng latlng, String imgSrc,
-                      String phoneNum) {
+                      String category, String phoneNum) {
         mName = name;
         mLatLng = latlng;
         mImgSrc = imgSrc;
+        mCategory = category;
         mPhoneNum = phoneNum;
     }
 
@@ -30,6 +32,10 @@ public class PlaceState {
 
     public String getImgSrc() {
         return mImgSrc;
+    }
+
+    public String getCategory() {
+        return mCategory;
     }
 
     public String getPhoneNum() {

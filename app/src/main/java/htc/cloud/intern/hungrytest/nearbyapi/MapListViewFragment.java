@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.R;
+import htc.cloud.intern.hungrytest.business.BusinessActivity;
 
 /**
  * Created by intern on 7/28/15.
@@ -59,12 +60,13 @@ public class MapListViewFragment extends ListFragment {
         for (PlaceState place : likelyPlaces) {
 
             Log.i("location-maplistview", String.format("Place '%s'", place.getName()));
-            String placeName = place.getName().toString();
+            String placeName = place.getName().toString().replaceFirst("-", " ");
             LatLng placeLatLng = place.getLatLng();
             String placeImgSrc = place.getImgSrc();
             String placePhoneNum = place.getPhoneNum();
+            String placeCategory = place.getCategory();
 
-            mList.add(new ListData(placeName, placePhoneNum, placeImgSrc));
+            mList.add(new ListData(placeName, placePhoneNum, placeCategory, placeImgSrc));
 
         }
         setListAdapter(new ListBaseAdapter(getActivity(), mList));
@@ -74,11 +76,15 @@ public class MapListViewFragment extends ListFragment {
     @Override
     public void onListItemClick (ListView listView, View view, int position, long id) {
 
-        Toast.makeText(getActivity(), "("+position+", "+id+")", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "("+position+", "+id+")", Toast.LENGTH_SHORT).show();
 
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:"+((ListData)getListView().getItemAtPosition(position)).getDescription()));
-        startActivity(callIntent);
+        // Phone call
+//        Intent callIntent = new Intent(Intent.ACTION_CALL);
+//        callIntent.setData(Uri.parse("tel:"+((ListData)getListView().getItemAtPosition(position)).getPhone()));
+//        startActivity(callIntent);
+
+//        Intent businessIntent = new Intent(getActivity(), BusinessActivity.class);
+        startActivity(new Intent(getActivity(), BusinessActivity.class));
 
     }
 

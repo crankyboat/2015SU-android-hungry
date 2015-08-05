@@ -6,22 +6,24 @@ package htc.cloud.intern.hungrytest.nearbyapi;
 
 public class ListData {
 
-    String description;
     String title;
+    String phone;
+    String category;
     String imgUrl;
 
-    public ListData(String t, String d, String url) {
+    public ListData(String t, String p, String c, String url) {
         setTitle(t);
-        setDescription(d);
+        setPhone(p);
+        setCategory(c);
         setImgResUrl(url);
     }
 
-    public String getDescription() {
-        return description;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setDescription(String d) {
-        description = d;
+    public void setPhone(String p) {
+        phone = p;
     }
 
     public String getTitle() {
@@ -32,16 +34,24 @@ public class ListData {
         title = t;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String c) {
+        category = c;
+    }
+
     public String getImgResUrl() {
         return imgUrl;
     }
 
     public void setImgResUrl(String url) {
-        imgUrl = url;
+        imgUrl = url.replace("ms.jpg", "ls.jpg");
     }
 
     @Override
     public String toString(){
-        return String.format("(%s, %s)", title, description);
+        return String.format("(%s, %s)", title, phone);
     }
 }

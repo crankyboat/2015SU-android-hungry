@@ -11,4 +11,8 @@
     <string name="action_listview">List View</string>
     <string name="nearby_api">Nearby API</string>
 
+    <string name="title_activity_business">BusinessActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>

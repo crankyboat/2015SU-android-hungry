@@ -206,12 +206,16 @@ public class MapFragment extends Fragment implements
 
             double maxDistance = 0.0;
             JSONObject business;
+            String title;
             LatLng latlng;
             String imgSrc;
+            String category;
             String phoneNum;
 
             for (int i=0; i<jsonArray.length(); i++) {
                 business = jsonArray.getJSONObject(i);
+
+                title = business.getString("id");
 
                 maxDistance = (business.getDouble("distance") > maxDistance)
                         ? business.getDouble("distance")
@@ -224,7 +228,14 @@ public class MapFragment extends Fragment implements
 
                 phoneNum = business.getString("display_phone");
 
-                likelyPlaces.add(new PlaceState(business.getString("id"), latlng, imgSrc, phoneNum));
+                int maxCatCount = 4;
+                category = new String();
+                for (int j = 0; j < Math.min(business.getJSONArray("categories").getJSONArray(0).length(), maxCatCount); j++) {
+                    category += business.getJSONArray("categories").getJSONArray(0).get(j)+" ";
+                }
+                Log.i("MapFragment", "category: "+category);
+
+                likelyPlaces.add(new PlaceState(title, latlng, imgSrc, category, phoneNum));
             }
 
             if (mMapViewFragment != null) {
