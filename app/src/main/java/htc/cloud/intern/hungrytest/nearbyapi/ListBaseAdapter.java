@@ -14,6 +14,7 @@ import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 
+import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.R;
 
 /**
@@ -21,12 +22,12 @@ import htc.cloud.intern.hungrytest.R;
  */
 public class ListBaseAdapter extends BaseAdapter {
 
-    ArrayList<ListData> list = new ArrayList<ListData>();
+    ArrayList<PlaceState> list = new ArrayList<PlaceState>();
     LayoutInflater inflater;
     Context context;
 
-    public ListBaseAdapter(Context context, ArrayList<ListData> list) {
-        this.list = new ArrayList<ListData>(list);
+    public ListBaseAdapter(Context context, ArrayList<PlaceState> list) {
+        this.list = new ArrayList<PlaceState>(list);
         this.context = context;
         this.inflater = LayoutInflater.from(this.context);
     }
@@ -37,7 +38,7 @@ public class ListBaseAdapter extends BaseAdapter {
     }
 
     @Override
-    public ListData getItem(int position) {
+    public PlaceState getItem(int position) {
         return list.get(position);
     }
 
@@ -58,18 +59,18 @@ public class ListBaseAdapter extends BaseAdapter {
             mViewHolder = (ListViewHolder) convertView.getTag();
         }
 
-        ListData currentListData = getItem(position);
+        PlaceState currentPlaceState = getItem(position);
 
-        mViewHolder.tv_title.setText(currentListData.getTitle());
-        mViewHolder.tv_desc.setText(currentListData.getCategory());
-        mViewHolder.tv_phone.setText(currentListData.getPhone());
-//        mViewHolder.iv_icon.setImageResource(currentListData.getImgResId());
+        mViewHolder.tv_title.setText(currentPlaceState.getName());
+        mViewHolder.tv_desc.setText(currentPlaceState.getCategory());
+        mViewHolder.tv_phone.setText(currentPlaceState.getPhoneNum());
+//        mViewHolder.iv_icon.setImageResource(currentPlaceState.getImgSrc());
 
         Ion.with(mViewHolder.iv_icon)
                 .placeholder(R.drawable.ic_map_black_24dp)
-                .load(currentListData.getImgResUrl());
+                .load(currentPlaceState.getImgSrc());
 
-        Log.i("ListBaseAdapter", "imgURL: "+currentListData.getImgResUrl());
+        Log.i("ListBaseAdapter", "imgURL: "+currentPlaceState.getImgSrc());
 
         return convertView;
     }
