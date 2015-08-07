@@ -47,7 +47,7 @@ public class ListData {
     }
 
     public void setImgResUrl(String url) {
-        imgUrl = url.replace("ms.jpg", "ls.jpg");
+        imgUrl = url;
     }
 
     @Override

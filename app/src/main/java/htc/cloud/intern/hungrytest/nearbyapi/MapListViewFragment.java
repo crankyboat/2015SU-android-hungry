@@ -1,7 +1,6 @@
 package htc.cloud.intern.hungrytest.nearbyapi;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -9,10 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -60,7 +56,7 @@ public class MapListViewFragment extends ListFragment {
         for (PlaceState place : likelyPlaces) {
 
             Log.i("location-maplistview", String.format("Place '%s'", place.getName()));
-            String placeName = place.getName().toString().replaceFirst("-", " ");
+            String placeName = place.getName().toString();
             LatLng placeLatLng = place.getLatLng();
             String placeImgSrc = place.getImgSrc();
             String placePhoneNum = place.getPhoneNum();
@@ -77,14 +73,21 @@ public class MapListViewFragment extends ListFragment {
     public void onListItemClick (ListView listView, View view, int position, long id) {
 
 //        Toast.makeText(getActivity(), "("+position+", "+id+")", Toast.LENGTH_SHORT).show();
+//        startActivity(new Intent(getActivity(), BusinessActivity.class));
 
-        // Phone call
-//        Intent callIntent = new Intent(Intent.ACTION_CALL);
-//        callIntent.setData(Uri.parse("tel:"+((ListData)getListView().getItemAtPosition(position)).getPhone()));
-//        startActivity(callIntent);
+        ListData item = (ListData) getListView().getItemAtPosition(position);
+        Intent businessIntent = new Intent(getActivity(), BusinessActivity.class);
 
-//        Intent businessIntent = new Intent(getActivity(), BusinessActivity.class);
-        startActivity(new Intent(getActivity(), BusinessActivity.class));
+        businessIntent.putExtra(BusinessActivity.bName, item.getTitle());
+//        businessIntent.putExtra(BusinessActivity.bAddr, "");
+        businessIntent.putExtra(BusinessActivity.bCat, item.getCategory());
+        businessIntent.putExtra(BusinessActivity.bPhone, item.getPhone());
+        businessIntent.putExtra(BusinessActivity.bRating, (float)4.0);
+        businessIntent.putExtra(BusinessActivity.bDist, (float)2.5);
+//        businessIntent.putExtra(BusinessActivity.bSnippet, "");
+        businessIntent.putExtra(BusinessActivity.bImgSrc, item.getImgResUrl());
+
+        startActivity(businessIntent);
 
     }
 

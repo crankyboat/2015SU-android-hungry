@@ -71,7 +71,7 @@ public class MapViewFragment extends Fragment {
 
         for (PlaceState place : likelyPlaces) {
             Log.i("location-mapview", String.format("Place '%s'", place.getName()));
-            String placeName = place.getName().toString().replaceFirst("-(.*)", "");
+            String placeName = place.getName().toString();
 
             LatLng placeLatLng = place.getLatLng();
             Marker placeMarker = mMap.addMarker(new MarkerOptions()
@@ -81,7 +81,7 @@ public class MapViewFragment extends Fragment {
             mMarkerInfo.put(placeMarker, place);
         }
         mMap.setInfoWindowAdapter(new PlaceInfoWindowAdapter(getActivity(), mMarkerInfo));
-        mMap.setOnInfoWindowClickListener(new PlaceOnInfoWindowListener(getActivity()));
+        mMap.setOnInfoWindowClickListener(new PlaceOnInfoWindowListener(getActivity(), mMarkerInfo));
 
 
         int zoom = ( maxDistance > 500 ) ? 15 : 17 ;

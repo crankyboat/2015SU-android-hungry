@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/fullscreen_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/business_header"
+            android:layout_width="match_parent"
+            android:layout_height="172dp">
+
+            <ImageView
+                android:id="@+id/business_image"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="centerCrop"
+                android:tint="@color/material_deep_teal_200"
+                android:tintMode="multiply"
+                android:src="@drawable/drawer_background_" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+                <TextView
+                    android:id="@+id/business_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:padding="@dimen/spacing_large"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:text="Business Name"/>
+
+                <TextView
+                    android:id="@+id/business_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="@dimen/spacing_large"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:text="Address Line"/>
+
+
+            </RelativeLayout>
+        </FrameLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/business_header"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginRight="@dimen/spacing_small"
+            android:src="@drawable/ic_call_black_24dp"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            app:borderWidth="0dp"
+            app:rippleColor="@android:color/white"
+            app:backgroundTint="@color/material_deep_teal_200"/>
+
+        <TextView
+            android:id="@+id/business_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/business_header"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginLeft="@dimen/spacing_small"
+            android:layout_marginRight="@dimen/spacing_small"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:text="Category"/>
+
+        <TextView
+            android:id="@+id/business_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/business_category"
+            android:layout_margin="@dimen/spacing_small"
+            android:text="Phone Number"/>
+
+        <LinearLayout
+            android:id="@+id/business_rating_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/business_phone"
+            android:layout_margin="@dimen/spacing_small">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/spacing_small"
+                android:text="Rating"/>
+
+            <RatingBar
+                android:id="@+id/business_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/ratingBarStyleSmall"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:rating="2.0"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/business_dist_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/business_rating_group"
+            android:layout_margin="@dimen/spacing_small">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/spacing_small"
+                android:text="Distance"/>
+
+            <RatingBar
+                android:id="@+id/business_dist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/ratingBarStyleSmall"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:rating="2.0"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/business_snippet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/business_dist_group"
+            android:layout_margin="@dimen/spacing_small"
+            android:text="This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users.This is a snippet that introduces the business users."/>
+
+    </RelativeLayout>
+
+</ScrollView>

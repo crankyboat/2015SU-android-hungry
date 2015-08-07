@@ -215,7 +215,7 @@ public class MapFragment extends Fragment implements
             for (int i=0; i<jsonArray.length(); i++) {
                 business = jsonArray.getJSONObject(i);
 
-                title = business.getString("id");
+                title = business.getString("id").replaceFirst("-(.*)", "");
 
                 maxDistance = (business.getDouble("distance") > maxDistance)
                         ? business.getDouble("distance")
@@ -224,7 +224,7 @@ public class MapFragment extends Fragment implements
                 latlng = new LatLng(business.getJSONObject("location").getJSONObject("coordinate").getDouble("latitude"),
                         business.getJSONObject("location").getJSONObject("coordinate").getDouble("longitude"));
 
-                imgSrc = business.getString("image_url");
+                imgSrc = business.getString("image_url").replace("ms.jpg", "ls.jpg");
 
                 phoneNum = business.getString("display_phone");
 
