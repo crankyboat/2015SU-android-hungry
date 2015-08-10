@@ -327,8 +327,8 @@ public class MapFragment extends Fragment implements
         mHungryAsyncTask.setResponseDelegate(this);
         mHungryAsyncTask.execute(us);
 
-        FeedbackAsyncTask mFeedbackAsyncTask = new FeedbackAsyncTask();
-        mFeedbackAsyncTask.execute(us);
+//        FeedbackAsyncTask mFeedbackAsyncTask = new FeedbackAsyncTask();
+//        mFeedbackAsyncTask.execute(us);
     }
 
     private void setUpViewFragments() {

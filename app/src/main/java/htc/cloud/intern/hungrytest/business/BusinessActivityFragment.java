@@ -2,9 +2,13 @@ package htc.cloud.intern.hungrytest.business;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 import htc.cloud.intern.hungrytest.R;
 

@@ -1,5 +1,5 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/business_fragment"
     android:name="htc.cloud.intern.hungrytest.business.BusinessActivityFragment"
     tools:layout="@layout/fragment_business"
     android:layout_width="match_parent"

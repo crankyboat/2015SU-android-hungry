@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/business_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/transparent_padding"
+            android:layout_width="match_parent"
+            android:layout_height="330dp"
+            android:background="@android:color/white"
+            android:alpha="0.0"   />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_large"
+            android:background="@android:color/white"
+            android:elevation="@dimen/elevation_small">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/business_image"/>
+
+            <!--<include-->
+                <!--layout="@layout/content_business_topmost"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"    />-->
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+</ScrollView>

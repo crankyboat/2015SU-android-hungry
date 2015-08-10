@@ -22,7 +22,7 @@
                 android:scaleType="centerCrop"
                 android:tint="@color/material_deep_teal_200"
                 android:tintMode="multiply"
-                android:src="@drawable/drawer_background_" />
+                android:src="@drawable/business_image" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
