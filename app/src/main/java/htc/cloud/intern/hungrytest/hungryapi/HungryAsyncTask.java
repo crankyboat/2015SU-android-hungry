@@ -26,8 +26,11 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
     public final static String apiURL = "https://recornot.herokuapp.com/";
     public final static String serviceName = "get_recommendation";
     public final static String useridField = "user_id"; //124
-    public final static String locationField = "location";  //121,23.3
+    public final static String locationField = "coordinate";  //121,23.3
+    public final static String numField = "num_rec";
     public final static String jsonArrayName = "businesses";
+
+    public final static int numRec = 10;
 
     private AsyncResponse responseDelegate;
     private URL url;
@@ -50,7 +53,8 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
         try {
             url = new URL(apiURL+serviceName+
                     "?"+useridField+"="+userStates[0].mDeviceID+
-                    "&"+locationField+"="+userStates[0].mCurrentLocation);
+                    "&"+locationField+"="+userStates[0].mCurrentLocation+
+                    "&"+numField+"="+numRec);
 
             urlConnection = (HttpsURLConnection) url.openConnection();
             inputStream = urlConnection.getInputStream();

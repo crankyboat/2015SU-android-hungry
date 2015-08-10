@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="172dp"
     android:orientation="vertical"
-
     android:background="@drawable/drawer_background"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
     <!--android:paddingTop="@dimen/status_bar_height"-->
@@ -15,7 +14,7 @@
         android:layout_marginLeft="@dimen/spacing_large"
         android:layout_marginStart="@dimen/spacing_large"
         android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
     <TextView
         android:id="@+id/email"
@@ -26,6 +25,6 @@
         android:layout_marginStart="@dimen/spacing_large"
         android:layout_marginBottom="@dimen/spacing_large"
         android:text="\@htc.com"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
 </RelativeLayout>

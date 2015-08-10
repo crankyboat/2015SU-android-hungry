@@ -36,12 +36,12 @@ public class BusinessActivity extends ActionBarActivity {
         // Update all views
         Intent mIntent = getIntent();
         ((TextView) findViewById(R.id.business_name)).setText(getIntent().getStringExtra(bName));
-//        ((TextView) findViewById(R.id.business_address)).setText(getIntent().getStringExtra(bAddr));
+        ((TextView) findViewById(R.id.business_address)).setText(getIntent().getStringExtra(bAddr));
         ((TextView) findViewById(R.id.business_category)).setText(getIntent().getStringExtra(bCat));
         ((TextView) findViewById(R.id.business_phone)).setText(getIntent().getStringExtra(bPhone));
         ((RatingBar) findViewById(R.id.business_rating)).setRating(getIntent().getFloatExtra(bRating, 0));
         ((RatingBar) findViewById(R.id.business_dist)).setRating(getIntent().getFloatExtra(bDist, 0));
-//        ((TextView) findViewById(R.id.business_snippet)).setText(getIntent().getStringExtra(bSnippet));
+        ((TextView) findViewById(R.id.business_snippet)).setText(getIntent().getStringExtra(bSnippet));
 
         Ion.with((ImageView)findViewById(R.id.business_image))
                 .placeholder(R.drawable.ic_map_black_24dp)

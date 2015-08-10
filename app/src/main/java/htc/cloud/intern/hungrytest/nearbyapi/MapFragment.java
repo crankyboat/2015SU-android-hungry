@@ -206,16 +206,21 @@ public class MapFragment extends Fragment implements
 
             double maxDistance = 0.0;
             JSONObject business;
-            String title;
+            String id;
+            String name;
+            String address;
             LatLng latlng;
             String imgSrc;
             String category;
             String phoneNum;
+            String snippet;
 
             for (int i=0; i<jsonArray.length(); i++) {
                 business = jsonArray.getJSONObject(i);
 
-                title = business.getString("id").replaceFirst("-(.*)", "");
+                id = business.getString("business_id").replaceFirst("-(.*)", "");
+
+                name = business.getString("name");
 
                 maxDistance = (business.getDouble("distance") > maxDistance)
                         ? business.getDouble("distance")
@@ -224,9 +229,18 @@ public class MapFragment extends Fragment implements
                 latlng = new LatLng(business.getJSONObject("location").getJSONObject("coordinate").getDouble("latitude"),
                         business.getJSONObject("location").getJSONObject("coordinate").getDouble("longitude"));
 
-                imgSrc = business.getString("image_url").replace("ms.jpg", "ls.jpg");
 
-                phoneNum = business.getString("display_phone");
+                imgSrc = business.has("image_url")
+                        ? business.getString("image_url").replace("ms.jpg", "ls.jpg")
+                        : "https://lh5.googleusercontent.com/YzDC5IKxZcmNM5zP7a5s-cNEm1Uwt___OcAKKWMxnGkc-GHehkO_bixdXP-tuCE7WdpaUNhhCnd8UCg=w2340-h1164-rw";
+
+                phoneNum = business.has("display_phone")
+                        ? business.getString("display_phone")
+                        : "Phone Number N/A";
+
+                snippet = business.has("snippet_text")
+                        ? business.getString("snippet_text")
+                        : "";
 
                 int maxCatCount = 4;
                 category = new String();
@@ -235,7 +249,14 @@ public class MapFragment extends Fragment implements
                 }
                 Log.i("MapFragment", "category: "+category);
 
-                likelyPlaces.add(new PlaceState(title, latlng, imgSrc, category, phoneNum));
+                address = new String();
+                for (int j = 0; j < business.getJSONObject("location").getJSONArray("display_address").length(); j++) {
+                    address += business.getJSONObject("location").getJSONArray("display_address").get(j)+" ";
+                }
+                Log.i("MapFragment", "address: "+address);
+
+
+                likelyPlaces.add(new PlaceState(id, name, address, latlng, imgSrc, category, phoneNum, snippet));
             }
 
             if (mMapViewFragment != null) {

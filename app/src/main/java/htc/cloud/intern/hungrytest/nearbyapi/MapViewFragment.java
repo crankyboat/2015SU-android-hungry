@@ -63,7 +63,7 @@ public class MapViewFragment extends Fragment {
         mCurrentLocation = location;
         if (mCurrentMarker == null) {
             mCurrentMarker = mMap.addMarker(new MarkerOptions().position(mCurrentLocation));
-            mMarkerInfo.put(mCurrentMarker, new PlaceState("", null, "", "", ""));
+            mMarkerInfo.put(mCurrentMarker, null);
         }
         else {
             mCurrentMarker.setPosition(mCurrentLocation);

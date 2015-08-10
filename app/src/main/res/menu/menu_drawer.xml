@@ -2,23 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group
+        android:id="@+id/group1"
         android:checkableBehavior="single">
 
         <item
             android:id="@+id/drawer_nearby"
             android:checked="true"
-            android:icon="@drawable/ic_stars_black_24dp"
+            android:icon="@drawable/ic_explore_black_24dp"
             android:title="@string/nearby"/>
 
         <item
             android:id="@+id/drawer_nearbyapi"
-            android:icon="@drawable/ic_stars_black_24dp"
+            android:icon="@drawable/ic_explore_black_24dp"
             android:title="@string/nearby_api"/>
 
         <item
-            android:id="@+id/drawer_favourite"
-            android:icon="@drawable/ic_stars_black_24dp"
-            android:title="@string/favourite"/>
+            android:id="@+id/drawer_browse"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/browse"/>
 
         <item
             android:id="@+id/drawer_match"
@@ -26,8 +27,19 @@
             android:title="@string/match"/>
 
         <item
+            android:id="@+id/drawer_favourite"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="@string/favourite"/>
+
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+
+        <item
             android:id="@+id/drawer_settings"
-            android:icon="@drawable/ic_stars_black_24dp"
+            android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/settings"/>
 
     </group>

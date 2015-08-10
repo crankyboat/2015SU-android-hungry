@@ -57,12 +57,15 @@ public class MapListViewFragment extends ListFragment {
 
             Log.i("location-maplistview", String.format("Place '%s'", place.getName()));
             String placeName = place.getName().toString();
+            String placeAddr = place.getAddr();
             LatLng placeLatLng = place.getLatLng();
             String placeImgSrc = place.getImgSrc();
             String placePhoneNum = place.getPhoneNum();
             String placeCategory = place.getCategory();
+            String placeSnippet = place.getSnippet();
 
-            mList.add(new PlaceState(placeName, placeLatLng, placeImgSrc, placeCategory, placePhoneNum));
+            mList.add(new PlaceState(place.getId(), placeName, placeAddr, placeLatLng,
+                    placeImgSrc, placeCategory, placePhoneNum, placeSnippet));
 
         }
         setListAdapter(new ListBaseAdapter(getActivity(), mList));
@@ -79,12 +82,12 @@ public class MapListViewFragment extends ListFragment {
         Intent businessIntent = new Intent(getActivity(), BusinessActivity.class);
 
         businessIntent.putExtra(BusinessActivity.bName, item.getName());
-//        businessIntent.putExtra(BusinessActivity.bAddr, "");
+        businessIntent.putExtra(BusinessActivity.bAddr, item.getAddr());
         businessIntent.putExtra(BusinessActivity.bCat, item.getCategory());
         businessIntent.putExtra(BusinessActivity.bPhone, item.getPhoneNum());
         businessIntent.putExtra(BusinessActivity.bRating, (float)4.0);
         businessIntent.putExtra(BusinessActivity.bDist, (float)2.5);
-//        businessIntent.putExtra(BusinessActivity.bSnippet, "");
+        businessIntent.putExtra(BusinessActivity.bSnippet, item.getSnippet());
         businessIntent.putExtra(BusinessActivity.bImgSrc, item.getImgSrc());
 
         startActivity(businessIntent);

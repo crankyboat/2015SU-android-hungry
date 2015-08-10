@@ -7,20 +7,34 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class PlaceState {
 
+    private String mId;
     private String mName;
+    private String mAddr;
     private LatLng mLatLng;
     private String mImgSrc;
     private String mCategory;
     private String mPhoneNum;
+    private String mSnippet;
 
-    public PlaceState(String name, LatLng latlng, String imgSrc,
-                      String category, String phoneNum) {
+    public PlaceState(String id, String name, String address, LatLng latlng, String imgSrc,
+                      String category, String phoneNum, String snippet) {
+        setId(id);
         setName(name);
+        setAddr(address);
         setLatLng(latlng);
         setImgSrc(imgSrc);
         setCategory(category);
         setPhoneNum(phoneNum);
+        setSnippet(snippet);
 
+    }
+
+    public void setId(String id) {
+        mId = id;
+    }
+
+    public String getId() {
+        return mId;
     }
 
     public void setName(String name) {
@@ -29,6 +43,14 @@ public class PlaceState {
 
     public String getName() {
         return mName;
+    }
+
+    public void setAddr(String address) {
+        mAddr = address;
+    }
+
+    public String getAddr() {
+        return mAddr;
     }
 
     public void setLatLng(LatLng latLng) {
@@ -61,6 +83,14 @@ public class PlaceState {
 
     public String getPhoneNum() {
         return mPhoneNum;
+    }
+
+    public void setSnippet(String snippet) {
+        mSnippet = snippet;
+    }
+
+    public String getSnippet() {
+        return mSnippet;
     }
 
     @Override

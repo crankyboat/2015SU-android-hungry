@@ -28,15 +28,15 @@ public class UserState {
     public UserState(Context context) {
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 //        mDeviceID = mTelephonyManager.getDeviceId();
-        mDeviceID = "123";
-        mCurrentLocation = "121.0,23.3";
+        mDeviceID = "ipPukGoxTOYn-Wd1WGBv-A";
+        mCurrentLocation = "24.9837193%2C121.5427091";
         mFeedback = new HashMap<String, Integer>();
     }
 
 
     public void setUserLocation(LatLng location) {
 //        mCurrentLocation = location.latitude+","+location.longitude;
-        mCurrentLocation = "121.0,23.3";
+        mCurrentLocation = "24.9837193%2C121.5427091";
     }
 
     public void setFeedback(String key, Integer value) {
