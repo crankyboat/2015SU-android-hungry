@@ -14,27 +14,28 @@
         <TextView
             android:id="@+id/transparent_padding"
             android:layout_width="match_parent"
-            android:layout_height="330dp"
+            android:layout_height="300dp"
             android:background="@android:color/white"
             android:alpha="0.0"   />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_large"
-            android:background="@android:color/white"
-            android:elevation="@dimen/elevation_small">
+            android:background="@android:color/transparent"
+            android:elevation="@dimen/elevation_large">
 
-            <ImageView
+            <FrameLayout
+                android:id="@+id/business_content_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_floating_material_light"
+                android:alpha="0.5"/>
+
+            <include
+                layout="@layout/content_business_topmost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:src="@drawable/business_image"/>
-
-            <!--<include-->
-                <!--layout="@layout/content_business_topmost"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"    />-->
+                android:layout_margin="@dimen/spacing_large"/>
 
         </FrameLayout>
     </LinearLayout>

@@ -1,6 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/spacing_large"
+    android:background="@android:color/white"   >
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/business_name"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:text="Business Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+    <ImageView
+        android:id="@+id/action_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:tint="@android:color/darker_gray"
+        android:src="@drawable/ic_favorite_black_24dp"/>
+
+    <TextView
+        android:id="@+id/business_category_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/business_name"
+        android:layout_marginTop="@dimen/spacing_extralarge"
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:text="Category Text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <LinearLayout
+        android:id="@+id/business_phone_group"
+        android:layout_below="@id/business_category_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/spacing_large"
+            android:tint="@android:color/darker_gray"
+            android:src="@drawable/ic_call_black_24dp"/>
+        <TextView
+            android:id="@+id/business_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Phone Number"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/business_address_group"
+        android:layout_below="@id/business_phone_group"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/spacing_large"
+            android:tint="@android:color/darker_gray"
+            android:src="@drawable/ic_directions_black_24dp"/>
+        <TextView
+            android:id="@+id/business_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Address"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/business_address_group"
+        android:scaleType="centerCrop"
+        android:src="@drawable/business_image"/>
+
+
+
+
+</RelativeLayout>

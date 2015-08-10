@@ -3,8 +3,10 @@ package htc.cloud.intern.hungrytest.business;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,14 +39,20 @@ public class BusinessActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business);
 
+        // Setup Toolbar
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.business_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         // Update all views
         Intent mIntent = getIntent();
-//        ((TextView) findViewById(R.id.business_name)).setText(getIntent().getStringExtra(bName));
+        ((TextView) findViewById(R.id.business_name)).setText(getIntent().getStringExtra(bName));
         ((TextView) findViewById(R.id.business_address)).setText(getIntent().getStringExtra(bAddr));
         ((TextView) findViewById(R.id.business_category_text)).setText(getIntent().getStringExtra(bCat));
-//        ((TextView) findViewById(R.id.business_category)).setText(getIntent().getStringExtra(bCat));
-//        ((TextView) findViewById(R.id.business_phone)).setText(getIntent().getStringExtra(bPhone));
-//        ((RatingBar) findViewById(R.id.business_rating)).setRating(getIntent().getFloatExtra(bRating, 0));
+        ((TextView) findViewById(R.id.business_phone)).setText(getIntent().getStringExtra(bPhone));
+        ((RatingBar) findViewById(R.id.business_rating)).setRating(getIntent().getFloatExtra(bRating, 0));
 //        ((RatingBar) findViewById(R.id.business_dist)).setRating(getIntent().getFloatExtra(bDist, 0));
 //        ((TextView) findViewById(R.id.business_snippet)).setText(getIntent().getStringExtra(bSnippet));
 
@@ -63,16 +71,18 @@ public class BusinessActivity extends ActionBarActivity {
 
         final View scrollView = (View) findViewById(R.id.transparent_padding).getParent().getParent();
         final View transparentView = (View) findViewById(R.id.transparent_padding);
-        final double scrollMax = 660;
+        final View contentView = (View) findViewById(R.id.business_content_bg);
+        final double scrollMax = 600;
         scrollView.getViewTreeObserver().addOnScrollChangedListener(
                 new ViewTreeObserver.OnScrollChangedListener() {
                     @Override
                     public void onScrollChanged() {
                         int scrollY = scrollView.getScrollY();
                         if (scrollY <= scrollMax) {
-                            transparentView.setAlpha((float)(scrollY/scrollMax));
+                            transparentView.setAlpha(Math.min((float) (scrollY / (scrollMax - 10)), (float) 1.0));
+                            contentView.setAlpha((float)0.5+(float)(0.5*scrollY/scrollMax));
                         }
-                        Log.i("BUSINESS-FRAGMENT", "ScrollY: " + scrollY);
+//                        Log.i("BUSINESS-FRAGMENT", "ScrollY: " + scrollY);
                     }
                 });
 
@@ -93,10 +103,15 @@ public class BusinessActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
     }
 }

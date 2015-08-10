@@ -37,7 +37,8 @@
         <activity
             android:name=".business.BusinessActivity"
             android:label="@string/title_activity_business"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
         </activity>
     </application>
 

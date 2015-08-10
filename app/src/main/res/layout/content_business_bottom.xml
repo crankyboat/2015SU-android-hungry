@@ -10,43 +10,55 @@
         android:id="@+id/business_header"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:background="@android:color/white"
         android:padding="@dimen/spacing_large"
         android:elevation="@dimen/elevation_small">
 
         <ImageView
             android:id="@+id/business_category_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_stars_black_24dp" />
+            android:src="@drawable/ic_stars_black_24dp"
+            android:tint="@android:color/darker_gray" />
 
-        <TextView
-            android:id="@+id/business_category_text"
+
+        <!--<TextView-->
+            <!--android:id="@+id/business_address"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@id/business_category_img"-->
+            <!--android:layout_below="@id/business_category_text"-->
+            <!--android:text="Category Text"-->
+            <!--android:textAppearance="@style/TextAppearance.AppCompat.Body2" />-->
+        <RatingBar
+            android:id="@+id/business_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/business_category_img"
-            android:text="Category Text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+            android:paddingLeft="@dimen/spacing_small"
+            style="@android:style/Widget.Holo.RatingBar.Small"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:rating="2.5"/>
 
         <TextView
-            android:id="@+id/business_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/business_category_img"
-            android:layout_below="@id/business_category_text"
-            android:text="Category Text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:layout_alignParentRight="true"
+            android:paddingRight="@dimen/spacing_large"
+            android:text="99 km"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
     </RelativeLayout>
 
     <!--<ViewFlipper-->
         <!--android:id="@+id/flipper"-->
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="200dp"-->
+        <!--android:layout_height="250dp"-->
         <!--android:layout_below="@id/business_header">-->
     <!--</ViewFlipper>-->
 
