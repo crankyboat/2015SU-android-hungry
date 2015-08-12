@@ -40,7 +40,8 @@
         android:layout_below="@id/business_category_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:onClick="onCall">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +62,8 @@
         android:layout_marginTop="@dimen/spacing_small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:onClick="onNavigate">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -3,11 +3,13 @@ package htc.cloud.intern.hungrytest.business;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +32,7 @@ import htc.cloud.intern.hungrytest.R;
 public class BusinessActivity extends ActionBarActivity {
 
     public static final String bName = "BUSINESS-NAME";
+    public static final String bLatLng = "BUSINESS-LATLNG";
     public static final String bAddr = "BUSINESS-ADDR";
     public static final String bCat = "BUSINESS-CAT";
     public static final String bPhone = "BUSINESS-PHONE";
@@ -64,19 +67,6 @@ public class BusinessActivity extends ActionBarActivity {
         ((TextView) findViewById(R.id.business_dist)).setText(Math.round(getIntent().getDoubleExtra(bDist, 0))+" km");
         ((RatingBar) findViewById(R.id.business_rating)).setRating(getIntent().getFloatExtra(bRating, 0));
 //        ((TextView) findViewById(R.id.business_snippet)).setText(getIntent().getStringExtra(bSnippet));
-
-//        Ion.with((ImageView)findViewById(R.id.business_image))
-//                .placeholder(R.drawable.ic_stars_black_24dp)
-//                .load(getIntent().getStringExtra(bImgSrc).replace("ls.jpg", "o.jpg"));
-
-//        ((FloatingActionButton) findViewById(R.id.fab)).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent callIntent = new Intent(Intent.ACTION_CALL);
-//                callIntent.setData(Uri.parse("tel:" + getIntent().getStringExtra(bPhone)));
-//                startActivity(callIntent);
-//            }
-//        });
 
         // Setup ViewFlipper
         mContext = this;
@@ -190,4 +180,23 @@ public class BusinessActivity extends ActionBarActivity {
         }
 
     }
+
+    public void onCall(View view) {
+
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + getIntent().getStringExtra(bPhone)));
+        startActivity(callIntent);
+
+    }
+
+    public void onNavigate(View view) {
+
+        Log.i("on-navigate", getIntent().getStringExtra(bLatLng));
+        Uri intentUri = Uri.parse("google.navigation:q="+getIntent().getStringExtra(bLatLng));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+
+    }
+
 }

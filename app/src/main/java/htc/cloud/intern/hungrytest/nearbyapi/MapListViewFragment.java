@@ -86,6 +86,7 @@ public class MapListViewFragment extends ListFragment {
 
         businessIntent.putExtra(BusinessActivity.bName, item.getName());
         businessIntent.putExtra(BusinessActivity.bAddr, item.getAddr());
+        businessIntent.putExtra(BusinessActivity.bLatLng, item.getLatLng().latitude+","+item.getLatLng().longitude);
         businessIntent.putExtra(BusinessActivity.bCat, item.getCategory());
         businessIntent.putExtra(BusinessActivity.bPhone, item.getPhoneNum());
         businessIntent.putExtra(BusinessActivity.bRating, (float)4.0);

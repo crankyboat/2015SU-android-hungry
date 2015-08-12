@@ -33,6 +33,7 @@ public class PlaceOnInfoWindowListener implements GoogleMap.OnInfoWindowClickLis
 
         businessIntent.putExtra(BusinessActivity.bName, mMarkerInfo.get(marker).getName());
         businessIntent.putExtra(BusinessActivity.bAddr, mMarkerInfo.get(marker).getAddr());
+        businessIntent.putExtra(BusinessActivity.bLatLng, mMarkerInfo.get(marker).getLatLng().latitude+","+mMarkerInfo.get(marker).getLatLng().longitude);
         businessIntent.putExtra(BusinessActivity.bCat, mMarkerInfo.get(marker).getCategory());
         businessIntent.putExtra(BusinessActivity.bPhone, mMarkerInfo.get(marker).getPhoneNum());
         businessIntent.putExtra(BusinessActivity.bRating, (float)4.0);
