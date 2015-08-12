@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<Fragment> mNavigationFragments;
     private htc.cloud.intern.hungrytest.nearby.MapFragment mNearbyFragment;
     private htc.cloud.intern.hungrytest.nearbyapi.MapFragment mNearbyApiFragment;
-    private ApiFragment mFavoriteFragment;  // temp
+    private PlaceholderFragment mFavoriteFragment;
     private DailyMatchFragment mDailyMatchFragment;
     private PlaceholderFragment mPlaceholderFragment;
 
@@ -162,7 +162,7 @@ public class MainActivity extends ActionBarActivity {
 
         mNearbyFragment = htc.cloud.intern.hungrytest.nearby.MapFragment.newInstance(0);
         mNearbyApiFragment = htc.cloud.intern.hungrytest.nearbyapi.MapFragment.newInstance(0);
-        mFavoriteFragment = ApiFragment.newInstance("Api");
+        mFavoriteFragment = PlaceholderFragment.newInstance("Favorite"); //ApiFragment.newInstance("Api");
         mDailyMatchFragment = DailyMatchFragment.newInstance("Daily Match");
         mPlaceholderFragment = PlaceholderFragment.newInstance("Placeholder");
 

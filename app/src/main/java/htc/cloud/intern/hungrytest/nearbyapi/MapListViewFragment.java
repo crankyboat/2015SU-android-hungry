@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.PlaceState;
@@ -58,14 +59,16 @@ public class MapListViewFragment extends ListFragment {
             Log.i("location-maplistview", String.format("Place '%s'", place.getName()));
             String placeName = place.getName().toString();
             String placeAddr = place.getAddr();
+            double placeDist = place.getDist();
             LatLng placeLatLng = place.getLatLng();
             String placeImgSrc = place.getImgSrc();
             String placePhoneNum = place.getPhoneNum();
             String placeCategory = place.getCategory();
             String placeSnippet = place.getSnippet();
+            ArrayList<String> placeImgList = place.getImgList();
 
-            mList.add(new PlaceState(place.getId(), placeName, placeAddr, placeLatLng,
-                    placeImgSrc, placeCategory, placePhoneNum, placeSnippet));
+            mList.add(new PlaceState(place.getId(), placeName, placeAddr, placeDist, placeLatLng,
+                    placeImgSrc, placeCategory, placePhoneNum, placeSnippet, placeImgList));
 
         }
         setListAdapter(new ListBaseAdapter(getActivity(), mList));
@@ -86,9 +89,10 @@ public class MapListViewFragment extends ListFragment {
         businessIntent.putExtra(BusinessActivity.bCat, item.getCategory());
         businessIntent.putExtra(BusinessActivity.bPhone, item.getPhoneNum());
         businessIntent.putExtra(BusinessActivity.bRating, (float)4.0);
-        businessIntent.putExtra(BusinessActivity.bDist, (float)2.5);
+        businessIntent.putExtra(BusinessActivity.bDist, item.getDist());
         businessIntent.putExtra(BusinessActivity.bSnippet, item.getSnippet());
         businessIntent.putExtra(BusinessActivity.bImgSrc, item.getImgSrc());
+        businessIntent.putExtra(BusinessActivity.bImgList, item.getImgList());
 
         startActivity(businessIntent);
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<!--<ScrollView-->
+<htc.cloud.intern.hungrytest.business.LockableScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/business_scrollview"
     android:layout_width="match_parent"
@@ -40,5 +41,5 @@
         </FrameLayout>
     </LinearLayout>
 
-
-</ScrollView>
+</htc.cloud.intern.hungrytest.business.LockableScrollView>
+<!--</ScrollView>-->

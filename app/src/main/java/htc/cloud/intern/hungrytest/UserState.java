@@ -29,14 +29,14 @@ public class UserState {
         mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 //        mDeviceID = mTelephonyManager.getDeviceId();
         mDeviceID = "ipPukGoxTOYn-Wd1WGBv-A";
-        mCurrentLocation = "24.9837193%2C121.5427091";
+        mCurrentLocation = "0,0";
         mFeedback = new HashMap<String, Integer>();
     }
 
 
     public void setUserLocation(LatLng location) {
-//        mCurrentLocation = location.latitude+","+location.longitude;
-        mCurrentLocation = "24.9837193%2C121.5427091";
+        mCurrentLocation = location.latitude+","+location.longitude;
+
     }
 
     public void setFeedback(String key, Integer value) {

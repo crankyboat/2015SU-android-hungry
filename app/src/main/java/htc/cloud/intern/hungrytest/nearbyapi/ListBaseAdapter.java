@@ -64,11 +64,16 @@ public class ListBaseAdapter extends BaseAdapter {
         mViewHolder.tv_title.setText(currentPlaceState.getName());
         mViewHolder.tv_desc.setText(currentPlaceState.getCategory());
         mViewHolder.tv_phone.setText(currentPlaceState.getPhoneNum());
-//        mViewHolder.iv_icon.setImageResource(currentPlaceState.getImgSrc());
 
-        Ion.with(mViewHolder.iv_icon)
-                .placeholder(R.drawable.ic_map_black_24dp)
-                .load(currentPlaceState.getImgSrc());
+        if ( !currentPlaceState.getImgSrc().equals("") ) {
+            Ion.with(mViewHolder.iv_icon)
+                    .placeholder(R.drawable.ic_stars_black_24dp)
+                    .load(currentPlaceState.getImgSrc());
+        }
+        else {
+            mViewHolder.iv_icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            mViewHolder.iv_icon.setImageResource(R.drawable.business_placeholder);
+        }
 
         Log.i("ListBaseAdapter", "imgURL: "+currentPlaceState.getImgSrc());
 

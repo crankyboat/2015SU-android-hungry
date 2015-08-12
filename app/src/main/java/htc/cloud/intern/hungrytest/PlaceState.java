@@ -2,6 +2,8 @@ package htc.cloud.intern.hungrytest;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+
 /**
  * Created by intern on 7/31/15.
  */
@@ -10,22 +12,26 @@ public class PlaceState {
     private String mId;
     private String mName;
     private String mAddr;
+    private double mDist;
     private LatLng mLatLng;
     private String mImgSrc;
     private String mCategory;
     private String mPhoneNum;
     private String mSnippet;
+    private ArrayList<String> mImgList;
 
-    public PlaceState(String id, String name, String address, LatLng latlng, String imgSrc,
-                      String category, String phoneNum, String snippet) {
+    public PlaceState(String id, String name, String address, double dist, LatLng latlng, String imgSrc,
+                      String category, String phoneNum, String snippet, ArrayList<String> imgList) {
         setId(id);
         setName(name);
         setAddr(address);
+        setDist(dist);
         setLatLng(latlng);
         setImgSrc(imgSrc);
         setCategory(category);
         setPhoneNum(phoneNum);
         setSnippet(snippet);
+        setImgList(imgList);
 
     }
 
@@ -51,6 +57,14 @@ public class PlaceState {
 
     public String getAddr() {
         return mAddr;
+    }
+
+    public void setDist(double dist) {
+        mDist = dist;
+    }
+
+    public double getDist() {
+        return mDist;
     }
 
     public void setLatLng(LatLng latLng) {
@@ -91,6 +105,14 @@ public class PlaceState {
 
     public String getSnippet() {
         return mSnippet;
+    }
+
+    public void setImgList(ArrayList<String> imgList) {
+        mImgList = new ArrayList<String>(imgList);
+    }
+
+    public ArrayList<String> getImgList() {
+        return mImgList;
     }
 
     @Override

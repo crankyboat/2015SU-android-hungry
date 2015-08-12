@@ -200,8 +200,6 @@ public class MapFragment extends Fragment implements
     @Override
     public void onPostExecute(JSONArray jsonArray) {
         try {
-//            Log.i("API-MapFragment", jsonArray.toString(4));
-
             ArrayList<PlaceState> likelyPlaces = new ArrayList<PlaceState>();
 
             double maxDistance = 0.0;
@@ -209,11 +207,13 @@ public class MapFragment extends Fragment implements
             String id;
             String name;
             String address;
+            double distance;
             LatLng latlng;
             String imgSrc;
             String category;
             String phoneNum;
             String snippet;
+            ArrayList<String> imgList;
 
             for (int i=0; i<jsonArray.length(); i++) {
                 business = jsonArray.getJSONObject(i);
@@ -222,17 +222,13 @@ public class MapFragment extends Fragment implements
 
                 name = business.getString("name");
 
-                maxDistance = (business.getDouble("distance") > maxDistance)
-                        ? business.getDouble("distance")
-                        : maxDistance ;
-
                 latlng = new LatLng(business.getJSONObject("location").getJSONObject("coordinate").getDouble("latitude"),
                         business.getJSONObject("location").getJSONObject("coordinate").getDouble("longitude"));
 
 
                 imgSrc = business.has("image_url")
                         ? business.getString("image_url").replace("ms.jpg", "ls.jpg")
-                        : "https://lh5.googleusercontent.com/YzDC5IKxZcmNM5zP7a5s-cNEm1Uwt___OcAKKWMxnGkc-GHehkO_bixdXP-tuCE7WdpaUNhhCnd8UCg=w2340-h1164-rw";
+                        : "";
 
                 phoneNum = business.has("display_phone")
                         ? business.getString("display_phone")
@@ -242,22 +238,38 @@ public class MapFragment extends Fragment implements
                         ? business.getString("snippet_text")
                         : "";
 
+                distance = business.has("distance")
+                        ? business.getDouble("distance")
+                        : -1.0;
+
+                maxDistance = (distance > maxDistance)
+                        ? distance
+                        : maxDistance;
+
                 int maxCatCount = 4;
                 category = new String();
-                for (int j = 0; j < Math.min(business.getJSONArray("categories").getJSONArray(0).length(), maxCatCount); j++) {
-                    category += business.getJSONArray("categories").getJSONArray(0).get(j)+" ";
+                if (business.has("categories")) {
+                    for (int j = 0; j < Math.min(business.getJSONArray("categories").getJSONArray(0).length(), maxCatCount); j++) {
+                        category += business.getJSONArray("categories").getJSONArray(0).get(j)+" ";
+                    }
                 }
-                Log.i("MapFragment", "category: "+category);
 
                 address = new String();
-                for (int j = 0; j < business.getJSONObject("location").getJSONArray("display_address").length(); j++) {
-                    address += business.getJSONObject("location").getJSONArray("display_address").get(j)+" ";
+                if (business.has("location") && business.getJSONObject("location").has("display_address")) {
+                    for (int j = 0; j < business.getJSONObject("location").getJSONArray("display_address").length(); j++) {
+                        address += business.getJSONObject("location").getJSONArray("display_address").get(j)+" ";
+                    }
                 }
-                Log.i("MapFragment", "address: "+address);
 
+                imgList = new ArrayList<String>();
+                for (int j = 0; j < business.getJSONArray("img_urls_and_descs").length(); j++) {
+                    imgList.add(business.getJSONArray("img_urls_and_descs").getJSONArray(j).getString(0));
+                }
 
-                likelyPlaces.add(new PlaceState(id, name, address, latlng, imgSrc, category, phoneNum, snippet));
+                likelyPlaces.add(new PlaceState(id, name, address, distance, latlng, imgSrc, category, phoneNum, snippet, imgList));
             }
+
+            Log.i("hungry-api", "Parsing Completed.");
 
             if (mMapViewFragment != null) {
                 mMapViewFragment.onLocationChanged(mCurrentLocation, likelyPlaces, maxDistance);
@@ -310,8 +322,8 @@ public class MapFragment extends Fragment implements
     protected void setUpLocationRequest() {
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(100000); //ms
-        mLocationRequest.setFastestInterval(1000);  //ms
+        mLocationRequest.setInterval(120*1000); //ms
+        mLocationRequest.setFastestInterval(120*1000);  //ms
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     }

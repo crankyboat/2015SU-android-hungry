@@ -28,9 +28,10 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/primary_dark_material_dark"
+                android:background="@color/my_primary"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark"
                 app:layout_scrollFlags="scroll|enterAlways" />
+            <!--android:background="@color/primary_dark_material_dark"-->
 
         </android.support.design.widget.AppBarLayout>
 
