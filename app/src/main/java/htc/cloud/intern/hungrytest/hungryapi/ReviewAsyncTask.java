@@ -8,33 +8,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import htc.cloud.intern.hungrytest.UserState;
 
 /**
- * Created by intern on 7/28/15.
+ * Created by intern on 8/16/15.
  */
-public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
+public class ReviewAsyncTask extends AsyncTask<String, Void, JSONArray> {
 
     public final static String apiURL = "https://recornot.herokuapp.com/";
-    public final static String serviceName = "get_recommendation";
-    public final static String useridField = "user_id";
-    public final static String locationField = "coordinate";
-    public final static String startRank = "start_rank";
-    public final static String numField = "num_rec";
-    public final static String jsonArrayName = "businesses";
-
-    public final static int curRank = 0;
-    public final static int numRec = 10;
+    public final static String serviceName = "reviews";
+    public final static String businessIdField = "business_id";
+    public final static String jsonArrayName = "reviews";
 
     private AsyncResponse responseDelegate;
     private URL url;
@@ -44,35 +36,26 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
     }
 
     @Override
-    protected JSONArray doInBackground(UserState... userStates) {
+    protected JSONArray doInBackground(String... businessId) {
 
+        URLConnection urlConnection;
         InputStream inputStream;
-        HttpsURLConnection urlConnection;
         StringWriter strWriter;
         String jsonString;
         JSONArray jsonArray = null;
 
-        // Get top recommendations from API
-        double startTime, endTime;
-        startTime = System.currentTimeMillis();
-        Log.i("hungry-api", "Starting....");
-
         try {
             url = new URL(apiURL+serviceName+
-                    "?"+useridField+"="+userStates[0].mDeviceID+
-                    "&"+locationField+"="+userStates[0].mCurrentLocation+
-                    "&"+startRank+"="+curRank+
-                    "&"+numField+"="+numRec);
+                    "?"+businessIdField+"="+businessId[0]);
 
             urlConnection = (HttpsURLConnection) url.openConnection();
             inputStream = urlConnection.getInputStream();
             strWriter = new StringWriter();
-            IOUtils.copy(inputStream, strWriter, (String)null);
+            IOUtils.copy(inputStream, strWriter, (String) null);
             jsonString = strWriter.toString();
             jsonArray = (new JSONObject(jsonString)).getJSONArray(jsonArrayName);
 
-            endTime = System.currentTimeMillis();
-            Log.i("hungry-api", "API: "+jsonArray.length()+", "+(endTime-startTime)/1000+" sec");
+            Log.i("hungry-api", "reviewAPI: " + jsonArray.length());
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -83,7 +66,6 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
         }
 
         return jsonArray;
-
     }
 
     protected void onPostExecute(JSONArray jsonArray) {
@@ -91,3 +73,4 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
     }
 
 }
+

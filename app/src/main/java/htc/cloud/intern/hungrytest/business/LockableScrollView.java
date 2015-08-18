@@ -17,10 +17,6 @@ public class LockableScrollView extends ScrollView {
 
     private boolean enableLock = true;
 
-    public boolean isEnableInterception() {
-        return enableLock;
-    }
-
     public void setEnableLock(boolean enableLock) {
         this.enableLock = enableLock;
     }

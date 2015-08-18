@@ -84,6 +84,7 @@ public class MapListViewFragment extends ListFragment {
         PlaceState item = (PlaceState) getListView().getItemAtPosition(position);
         Intent businessIntent = new Intent(getActivity(), BusinessActivity.class);
 
+        businessIntent.putExtra(BusinessActivity.bId, item.getId());
         businessIntent.putExtra(BusinessActivity.bName, item.getName());
         businessIntent.putExtra(BusinessActivity.bAddr, item.getAddr());
         businessIntent.putExtra(BusinessActivity.bLatLng, item.getLatLng().latitude+","+item.getLatLng().longitude);

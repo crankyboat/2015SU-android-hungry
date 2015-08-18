@@ -218,7 +218,7 @@ public class MapFragment extends Fragment implements
             for (int i=0; i<jsonArray.length(); i++) {
                 business = jsonArray.getJSONObject(i);
 
-                id = business.getString("business_id").replaceFirst("-(.*)", "");
+                id = business.getString("business_id");//.replaceFirst("-(.*)", "");
 
                 name = business.getString("name");
 

@@ -3,6 +3,7 @@ package htc.cloud.intern.hungrytest.business;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.res.ResourcesCompat;
@@ -15,22 +16,36 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.koushikdutta.ion.Ion;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
+import htc.cloud.intern.hungrytest.MainActivity;
 import htc.cloud.intern.hungrytest.R;
+import htc.cloud.intern.hungrytest.hungryapi.AsyncResponse;
+import htc.cloud.intern.hungrytest.hungryapi.ReviewAsyncTask;
+import htc.cloud.intern.hungrytest.nearbyapi.ListBaseAdapter;
 
-public class BusinessActivity extends ActionBarActivity {
+public class BusinessActivity extends ActionBarActivity
+    implements AsyncResponse {
 
+    public static final String bId = "BUSINESS-ID";
     public static final String bName = "BUSINESS-NAME";
     public static final String bLatLng = "BUSINESS-LATLNG";
     public static final String bAddr = "BUSINESS-ADDR";
@@ -47,11 +62,15 @@ public class BusinessActivity extends ActionBarActivity {
     private GestureDetector mDetector;
     private Context mContext;
     private ViewFlipper mViewFlipper;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business);
+
+        // Setup ReviewAsyncTask
+        setUpReviewAsyncTask();
 
         // Setup Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.business_toolbar);
@@ -59,7 +78,6 @@ public class BusinessActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Setup all views
-        Intent mIntent = getIntent();
         ((TextView) findViewById(R.id.business_name)).setText(getIntent().getStringExtra(bName));
         ((TextView) findViewById(R.id.business_address)).setText(getIntent().getStringExtra(bAddr));
         ((TextView) findViewById(R.id.business_category_text)).setText(getIntent().getStringExtra(bCat));
@@ -96,6 +114,7 @@ public class BusinessActivity extends ActionBarActivity {
         final View scrollView = (View) findViewById(R.id.transparent_padding).getParent().getParent();
         final View transparentView = (View) findViewById(R.id.transparent_padding);
         final View contentView = (View) findViewById(R.id.business_content_bg);
+
         final double scrollMax = 600;
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(
@@ -103,9 +122,21 @@ public class BusinessActivity extends ActionBarActivity {
                     @Override
                     public void onScrollChanged() {
                         int scrollY = scrollView.getScrollY();
+
                         if (scrollY <= scrollMax) {
-                            contentView.setAlpha((float)0.5+(float)(0.5*scrollY/scrollMax));
+
+//                            float alpha = (float) 0.5 + (float) (0.5 * scrollY / (scrollMax - 10));
+//                            AlphaAnimation alphaAnimation = new AlphaAnimation(alpha, alpha);
+//                            alphaAnimation.setDuration(0);
+//                            alphaAnimation.setFillAfter(true);
+//                            contentView.startAnimation(alphaAnimation);
+
+                            contentView.setAlpha((float) 0.5 + (float) (0.5 * scrollY / (scrollMax - 10)));
                             transparentView.setAlpha(Math.min((float) (scrollY / (scrollMax - 10)), (float) 1.0));
+                            Log.i("scroll-anim", "(scrollY, contentAlpha): ("+scrollY+", "+contentView.getAlpha()+")");
+                        }
+                        else {
+                            contentView.setAlpha(1);
                         }
 
                         if (scrollY <= 0 && imgList.size() > 1) {
@@ -199,4 +230,86 @@ public class BusinessActivity extends ActionBarActivity {
 
     }
 
+    private void setUpReviewAsyncTask() {
+
+        ReviewAsyncTask mReviewAsyncTask = new ReviewAsyncTask();
+        mReviewAsyncTask.setResponseDelegate(this);
+        mReviewAsyncTask.execute(getIntent().getStringExtra(BusinessActivity.bId));
+
+    }
+
+    @Override
+    public void onPostExecute(JSONArray jsonArray) {
+
+        //Parse jsonArray
+        ArrayList<ReviewItem> reviewList = new ArrayList<ReviewItem>();
+        JSONObject review;
+        float rating;
+        String date;
+        String content;
+        String userName;
+        String userImgUrl;
+
+        try {
+            for (int i=0; i<jsonArray.length(); i++) {
+
+                review = jsonArray.getJSONObject(i);
+
+                rating = review.has("rating")
+                        ? (float)review.getDouble("rating")
+                        : (float)0.0;
+
+                date = review.has("date")
+                        ? review.getString("date")
+                        : null;
+
+                content = review.has("review_content")
+                        ? review.getString("review_content")
+                        : null;
+
+                userName = review.has("user_name")
+                        ? review.getString("user_name")
+                        : "Anonymous";
+
+                userImgUrl = review.has("user_img_url")
+                        ? review.getString("user_img_url")
+                        : null;
+
+                reviewList.add(new ReviewItem(rating, date, content, userName, userImgUrl));
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mListView = (ListView) findViewById(R.id.review_list);
+        mListView.setEmptyView(findViewById(R.id.empty_list));
+        mListView.setAdapter(new ReviewListBaseAdapter(this, reviewList));
+
+        // Get total height of all items.
+        int totalItemsHeight = mListView.getPaddingTop() + mListView.getPaddingBottom();
+        for (int i=0; i<mListView.getAdapter().getCount(); i++) {
+            View item = mListView.getAdapter().getView(i, null, mListView);
+            int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(((View) (mListView.getParent())).getWidth(), View.MeasureSpec.AT_MOST);
+            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            item.measure(widthMeasureSpec, heightMeasureSpec);
+            totalItemsHeight += item.getMeasuredHeight();
+        }
+
+        // Get total height of all item dividers.
+        int totalDividersHeight = mListView.getDividerHeight() *
+                (mListView.getAdapter().getCount() - 1);
+
+        // Set list height.
+        ViewGroup.LayoutParams params = mListView.getLayoutParams();
+        params.height = totalItemsHeight + totalDividersHeight;
+        mListView.setEnabled(false);
+        mListView.setLayoutParams(params);
+        mListView.requestLayout();
+        mListView.setEnabled(true);
+
+    }
+
 }
+

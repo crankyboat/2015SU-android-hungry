@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/spacing_large"
+    android:paddingBottom="@dimen/spacing_large">
+
+    <ImageView
+        android:id="@+id/user_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:paddingTop="3dp"
+        android:paddingRight="3dp"
+        android:src="@drawable/ic_stars_black_24dp" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/user_icon"
+        android:paddingLeft="5dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:textStyle="bold"
+        android:textSize="8pt"
+        android:text="Username"/>
+
+    <TextView
+        android:id="@+id/review_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:text="Date" />
+
+    <RatingBar
+        android:id="@+id/review_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_name"
+        android:layout_toRightOf="@id/user_icon"
+        android:paddingLeft="5dp"
+        style="@android:style/Widget.Holo.RatingBar.Small"
+        android:numStars="5"
+        android:stepSize="0.5"
+        android:rating="2.5" />
+
+    <TextView
+        android:id="@+id/review_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/review_rating"
+        android:layout_toRightOf="@id/user_icon"
+        android:paddingLeft="5dp"
+        android:paddingTop="@dimen/spacing_large"
+        android:paddingBottom="3dp"
+        android:text="This is the review content. This is the review content. This is the review content. This is the review content." />
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_below="@id/review_content"-->
+        <!--android:background="@color/background_floating_material_light"/>-->
+
+</RelativeLayout>

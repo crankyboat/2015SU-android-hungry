@@ -2,6 +2,7 @@ package htc.cloud.intern.hungrytest;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -19,6 +20,7 @@ public class PlaceState {
     private String mPhoneNum;
     private String mSnippet;
     private ArrayList<String> mImgList;
+    private ArrayList<String> mReviewList;
 
     public PlaceState(String id, String name, String address, double dist, LatLng latlng, String imgSrc,
                       String category, String phoneNum, String snippet, ArrayList<String> imgList) {
@@ -32,6 +34,7 @@ public class PlaceState {
         setPhoneNum(phoneNum);
         setSnippet(snippet);
         setImgList(imgList);
+        setReviewList(new ArrayList<String>());
 
     }
 
@@ -113,6 +116,14 @@ public class PlaceState {
 
     public ArrayList<String> getImgList() {
         return mImgList;
+    }
+
+    public void setReviewList(ArrayList<String> reviewList) {
+        mReviewList = new ArrayList<String>(reviewList);
+    }
+
+    public ArrayList<String> getReviewList() {
+        return mReviewList;
     }
 
     @Override
