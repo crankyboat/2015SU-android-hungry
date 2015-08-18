@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -71,7 +72,14 @@ public class MapListViewFragment extends ListFragment {
                     placeImgSrc, placeCategory, placePhoneNum, placeSnippet, placeImgList));
 
         }
-        setListAdapter(new ListBaseAdapter(getActivity(), mList));
+
+        ((ListBaseAdapter)getListAdapter()).setListData(mList);
+        ((BaseAdapter)getListAdapter()).notifyDataSetChanged();
+        // TODO
+        // not sure if bottom needed or not
+        mListView.setEnabled(false);
+        mListView.requestLayout();
+        mListView.setEnabled(true);
 
     }
 

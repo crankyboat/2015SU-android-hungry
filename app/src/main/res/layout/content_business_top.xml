@@ -16,7 +16,7 @@
             android:id="@+id/transparent_padding"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@android:color/white"
+            android:background="@color/background_floating_material_light"
             android:alpha="0.0"   />
 
         <FrameLayout
@@ -29,8 +29,7 @@
                 android:id="@+id/business_content_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/background_floating_material_light"
-                android:alpha="0.5"/>
+                android:background="#88EEEEEE"/>
 
             <include
                 layout="@layout/content_business_topmost"

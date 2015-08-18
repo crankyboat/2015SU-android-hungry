@@ -1,66 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false">
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/business_header"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@android:color/white"
-        android:padding="@dimen/spacing_large"
-        android:elevation="@dimen/elevation_small">
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
 
-        <ImageView
-            android:id="@+id/business_category_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_stars_black_24dp"
-            android:tint="@android:color/darker_gray" />
+        <RelativeLayout
+            android:id="@+id/business_header"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/white"
+            android:padding="@dimen/spacing_large"
+            android:elevation="@dimen/elevation_small">
 
-        <RatingBar
-            android:id="@+id/business_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/business_category_img"
-            android:paddingLeft="@dimen/spacing_small"
-            style="@android:style/Widget.Holo.RatingBar.Small"
-            android:numStars="5"
-            android:stepSize="0.5"
-            android:rating="2.5"/>
+            <ImageView
+                android:id="@+id/business_category_img"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_stars_black_24dp"
+                android:tint="@android:color/darker_gray" />
 
-        <TextView
-            android:id="@+id/business_dist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingRight="@dimen/spacing_large"
-            android:text="99 km"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+            <RatingBar
+                android:id="@+id/business_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@id/business_category_img"
+                android:paddingLeft="@dimen/spacing_small"
+                style="@android:style/Widget.Holo.RatingBar.Small"
+                android:numStars="5"
+                android:stepSize="0.5"
+                android:rating="2.5"/>
+
+            <TextView
+                android:id="@+id/business_dist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingRight="@dimen/spacing_large"
+                android:text="99 km"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+
+        </RelativeLayout>
+
+        <!--<htc.cloud.intern.hungrytest.business.IndicatorViewFlipper-->
+        <ViewFlipper
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/business_viewflipper"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_below="@id/business_header" />
 
     </RelativeLayout>
 
-    <!--<ImageView-->
-        <!--android:id="@+id/business_image"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="250dp"-->
-        <!--android:layout_below="@id/business_header"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--android:src="@drawable/business_image"/>-->
-
-    <!--<htc.cloud.intern.hungrytest.business.IndicatorViewFlipper-->
-    <ViewFlipper
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/business_viewflipper"
+    <TextView
+        android:id="@+id/business_bottom_mask"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@id/business_header" />
+        android:layout_height="match_parent"
+        android:background="@color/background_floating_material_light"
+        android:alpha="0.0"/>
 
-</RelativeLayout>
+</FrameLayout>

@@ -21,6 +21,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -63,6 +64,10 @@ public class BusinessActivity extends ActionBarActivity
     private Context mContext;
     private ViewFlipper mViewFlipper;
     private ListView mListView;
+    private ArrayList<ReviewItem> mReviewList = new ArrayList<ReviewItem>();
+    private ArrayList<ReviewItem> mShortReviewList = new ArrayList<ReviewItem>();
+    private ReviewListBaseAdapter mReviewListAdapter;
+    private boolean mShort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +118,7 @@ public class BusinessActivity extends ActionBarActivity
         // Setup dynamic ScrollView and top-level touch event on TransparentView
         final View scrollView = (View) findViewById(R.id.transparent_padding).getParent().getParent();
         final View transparentView = (View) findViewById(R.id.transparent_padding);
-        final View contentView = (View) findViewById(R.id.business_content_bg);
+        final View maskView = (View) findViewById(R.id.business_bottom_mask);
 
         final double scrollMax = 600;
 
@@ -124,20 +129,12 @@ public class BusinessActivity extends ActionBarActivity
                         int scrollY = scrollView.getScrollY();
 
                         if (scrollY <= scrollMax) {
-
-//                            float alpha = (float) 0.5 + (float) (0.5 * scrollY / (scrollMax - 10));
-//                            AlphaAnimation alphaAnimation = new AlphaAnimation(alpha, alpha);
-//                            alphaAnimation.setDuration(0);
-//                            alphaAnimation.setFillAfter(true);
-//                            contentView.startAnimation(alphaAnimation);
-
-                            contentView.setAlpha((float) 0.5 + (float) (0.5 * scrollY / (scrollMax - 10)));
-                            transparentView.setAlpha(Math.min((float) (scrollY / (scrollMax - 10)), (float) 1.0));
-                            Log.i("scroll-anim", "(scrollY, contentAlpha): ("+scrollY+", "+contentView.getAlpha()+")");
+                            maskView.setAlpha(Math.min((float) (scrollY / (scrollMax - 10)), (float) 1.0));
                         }
                         else {
-                            contentView.setAlpha(1);
+                            maskView.setAlpha(1);
                         }
+                        Log.i("scroll-anim", "(scrollY, maskAlpha): ("+scrollY+", "+maskView.getAlpha()+")");
 
                         if (scrollY <= 0 && imgList.size() > 1) {
                             transparentView.setEnabled(true);
@@ -158,31 +155,6 @@ public class BusinessActivity extends ActionBarActivity
             }
         });
 
-    }
-
-    class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                if (mViewFlipper.getChildCount() > 1) {
-                    // right to left swipe
-                    if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                        mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_in));
-                        mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_out));
-                        mViewFlipper.showNext();
-                        return true;
-                    } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                        mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_in));
-                        mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_out));
-                        mViewFlipper.showPrevious();
-                        return true;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
     }
 
     @Override
@@ -212,37 +184,16 @@ public class BusinessActivity extends ActionBarActivity
 
     }
 
-    public void onCall(View view) {
-
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:" + getIntent().getStringExtra(bPhone)));
-        startActivity(callIntent);
-
-    }
-
-    public void onNavigate(View view) {
-
-        Log.i("on-navigate", getIntent().getStringExtra(bLatLng));
-        Uri intentUri = Uri.parse("google.navigation:q="+getIntent().getStringExtra(bLatLng));
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, intentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
-
-    }
-
-    private void setUpReviewAsyncTask() {
-
-        ReviewAsyncTask mReviewAsyncTask = new ReviewAsyncTask();
-        mReviewAsyncTask.setResponseDelegate(this);
-        mReviewAsyncTask.execute(getIntent().getStringExtra(BusinessActivity.bId));
-
-    }
-
     @Override
     public void onPostExecute(JSONArray jsonArray) {
 
+        if (jsonArray.length()==0) {
+            mListView = (ListView) findViewById(R.id.review_list);
+            ((ViewGroup)mListView.getParent().getParent()).removeView((View)mListView.getParent());
+            return;
+        }
+
         //Parse jsonArray
-        ArrayList<ReviewItem> reviewList = new ArrayList<ReviewItem>();
         JSONObject review;
         float rating;
         String date;
@@ -275,7 +226,7 @@ public class BusinessActivity extends ActionBarActivity
                         ? review.getString("user_img_url")
                         : null;
 
-                reviewList.add(new ReviewItem(rating, date, content, userName, userImgUrl));
+                mReviewList.add(new ReviewItem(rating, date, content, userName, userImgUrl));
 
             }
 
@@ -283,9 +234,15 @@ public class BusinessActivity extends ActionBarActivity
             e.printStackTrace();
         }
 
+        mReviewListAdapter = new ReviewListBaseAdapter(this, mReviewList);
         mListView = (ListView) findViewById(R.id.review_list);
         mListView.setEmptyView(findViewById(R.id.empty_list));
-        mListView.setAdapter(new ReviewListBaseAdapter(this, reviewList));
+        mListView.setAdapter(mReviewListAdapter);
+        setUpListViewHeight();
+
+    }
+
+    private void setUpListViewHeight() {
 
         // Get total height of all items.
         int totalItemsHeight = mListView.getPaddingTop() + mListView.getPaddingBottom();
@@ -309,6 +266,57 @@ public class BusinessActivity extends ActionBarActivity
         mListView.requestLayout();
         mListView.setEnabled(true);
 
+    }
+
+    private void setUpReviewAsyncTask() {
+
+        ReviewAsyncTask mReviewAsyncTask = new ReviewAsyncTask();
+        mReviewAsyncTask.setResponseDelegate(this);
+        mReviewAsyncTask.execute(getIntent().getStringExtra(BusinessActivity.bId));
+
+    }
+
+    public void onCall(View view) {
+
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + getIntent().getStringExtra(bPhone)));
+        startActivity(callIntent);
+
+    }
+
+    public void onNavigate(View view) {
+
+        Log.i("on-navigate", getIntent().getStringExtra(bLatLng));
+        Uri intentUri = Uri.parse("google.navigation:q="+getIntent().getStringExtra(bLatLng));
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+
+    }
+
+    class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (mViewFlipper.getChildCount() > 1) {
+                    // right to left swipe
+                    if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                        mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_in));
+                        mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_out));
+                        mViewFlipper.showNext();
+                        return true;
+                    } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                        mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_in));
+                        mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_out));
+                        mViewFlipper.showPrevious();
+                        return true;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
     }
 
 }

@@ -32,6 +32,10 @@ public class ListBaseAdapter extends BaseAdapter {
         this.inflater = LayoutInflater.from(this.context);
     }
 
+    public void setListData(ArrayList<PlaceState> newList) {
+        list = newList;
+    }
+
     @Override
     public int getCount() {
         return list.size();
