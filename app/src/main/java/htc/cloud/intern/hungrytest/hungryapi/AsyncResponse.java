@@ -1,5 +1,7 @@
 package htc.cloud.intern.hungrytest.hungryapi;
 
+import android.os.AsyncTask;
+
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -9,6 +11,6 @@ import java.util.ArrayList;
  */
 public interface AsyncResponse {
 
-    void onPostExecute(ArrayList<?> arrayList);
+    void onPostExecute(AsyncTask<?, ?, ?> asyncTask, ArrayList<?> arrayList);
 
 }

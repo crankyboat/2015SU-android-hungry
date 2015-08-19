@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -207,7 +208,7 @@ public class BusinessActivity extends ActionBarActivity
     }
 
     @Override
-    public void onPostExecute(ArrayList<?> reviewList) {
+    public void onPostExecute(AsyncTask<?, ?, ?> asyncTask, ArrayList<?> reviewList) {
 
         mListView = (ListView) findViewById(R.id.review_list);
 

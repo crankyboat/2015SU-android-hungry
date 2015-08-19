@@ -3,15 +3,17 @@ package htc.cloud.intern.hungrytest;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Created by intern on 7/31/15.
  */
-public class PlaceState {
+public class PlaceState implements Comparable<PlaceState>{
 
     private String mId;
     private String mName;
     private String mAddr;
+    private int mRank;
     private double mRating;
     private double mDist;
     private LatLng mLatLng;
@@ -22,11 +24,12 @@ public class PlaceState {
     private ArrayList<String> mImgList;
     private ArrayList<String> mReviewList;
 
-    public PlaceState(String id, String name, String address, double rating, double dist, LatLng latlng, String imgSrc,
+    public PlaceState(String id, String name, String address, int rank, double rating, double dist, LatLng latlng, String imgSrc,
                       String category, String phoneNum, String snippet, ArrayList<String> imgList) {
         setId(id);
         setName(name);
         setAddr(address);
+        setRank(rank);
         setRating(rating);
         setDist(dist);
         setLatLng(latlng);
@@ -61,6 +64,14 @@ public class PlaceState {
 
     public String getAddr() {
         return mAddr;
+    }
+
+    public void setRank(int rank) {
+        mRank = rank;
+    }
+
+    public int getRank() {
+        return mRank;
     }
 
     public void setRating(double rating) {
@@ -140,4 +151,8 @@ public class PlaceState {
         return String.format("(%s, %s)", mName, mPhoneNum);
     }
 
+    @Override
+    public int compareTo(PlaceState another) {
+        return ((Integer)getRank()).compareTo((Integer)another.getRank());
+    }
 }

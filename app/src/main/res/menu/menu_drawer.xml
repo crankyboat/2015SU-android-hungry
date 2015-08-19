@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:checkableBehavior="single">
 
     <group
-        android:id="@+id/group1"
-        android:checkableBehavior="single">
-
-        <item
-            android:id="@+id/drawer_nearby"
-            android:checked="true"
-            android:icon="@drawable/ic_explore_black_24dp"
-            android:title="@string/nearby"/>
+        android:id="@+id/group1">
 
         <item
             android:id="@+id/drawer_nearbyapi"
             android:icon="@drawable/ic_explore_black_24dp"
             android:title="@string/nearby_api"/>
 
-        <item
-            android:id="@+id/drawer_browse"
-            android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/browse"/>
+        <!--<item-->
+            <!--android:id="@+id/drawer_browse"-->
+            <!--android:icon="@drawable/ic_search_black_24dp"-->
+            <!--android:title="@string/browse"/>-->
 
         <item
             android:id="@+id/drawer_match"
@@ -34,8 +28,7 @@
     </group>
 
     <group
-        android:id="@+id/group2"
-        android:checkableBehavior="single">
+        android:id="@+id/group2">
 
         <item
             android:id="@+id/drawer_settings"

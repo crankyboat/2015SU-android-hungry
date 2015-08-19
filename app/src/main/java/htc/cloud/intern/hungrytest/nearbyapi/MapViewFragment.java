@@ -2,6 +2,7 @@ package htc.cloud.intern.hungrytest.nearbyapi;
 
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +35,8 @@ public class MapViewFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final LatLng TAIPEI_LAT_LNG = new LatLng(25.0, 121.6);
-    private GoogleMap mMap;
+    public GoogleMap mMap;
+    public MapFragment mMapFragment;
     protected LatLng mCurrentLocation;
     protected Marker mCurrentMarker;
     protected HashMap<Marker, PlaceState> mMarkerInfo = new HashMap<Marker, PlaceState>();
@@ -57,8 +59,28 @@ public class MapViewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_map_mapview, container, false);
         mMap = ((SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map)).getMap();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TAIPEI_LAT_LNG, 10));
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                Log.i("map-zoom", "zoom: "+cameraPosition.zoom);
+            }
+        });
+
+        // TODO
+        FloatingActionButton reloadButton = (FloatingActionButton) getActivity().findViewById(R.id.map_reload);
+        reloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMapFragment.onReload(mMap.getCameraPosition().zoom);
+            }
+        });
+
         return rootView;
 
+    }
+
+    public void setReloadDelegate(MapFragment mapFragment) {
+        mMapFragment = mapFragment;
     }
 
     public void onLocationChanged(LatLng location, ArrayList<PlaceState> likelyPlaces){

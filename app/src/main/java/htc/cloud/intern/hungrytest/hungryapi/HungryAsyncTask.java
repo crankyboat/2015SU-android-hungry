@@ -28,22 +28,29 @@ import htc.cloud.intern.hungrytest.UserState;
 public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
 
     public final static String apiURL = "https://recornot.herokuapp.com/";
-    public final static String serviceName = "get_recommendation";
+//    public final static String serviceName = "get_recommendation";
+    public final static String serviceName = "recommendation";
     public final static String useridField = "user_id";
     public final static String locationField = "coordinate";
     public final static String startRank = "start_rank";
     public final static String numField = "num_rec";
     public final static String jsonArrayName = "businesses";
+    public final static String zoomField = "zoom_level";
 
     public final static int numRec = 100;
 
-    private int currentRank;
+//    private int currentRank;
+    private int currentZoom;
     private AsyncResponse responseDelegate;
     private URL url;
 
-    public void setResponseDelegate(AsyncResponse rd){
-        currentRank = 0;
-        responseDelegate = rd;
+    public HungryAsyncTask(AsyncResponse delegate, int zoom) {
+        responseDelegate = delegate;
+        currentZoom = zoom;
+    }
+
+    public int getCurrentZoom() {
+        return currentZoom;
     }
 
     @Override
@@ -64,8 +71,9 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
             url = new URL(apiURL+serviceName+
                     "?"+useridField+"="+userStates[0].mDeviceID+
                     "&"+locationField+"="+userStates[0].mCurrentLocation+
-                    "&"+startRank+"="+currentRank+
-                    "&"+numField+"="+numRec);
+//                    "&"+startRank+"="+currentRank+
+//                    "&"+numField+"="+numRec+
+                    "&"+zoomField+"="+currentZoom);
 
             urlConnection = (HttpsURLConnection) url.openConnection();
             inputStream = urlConnection.getInputStream();
@@ -98,6 +106,7 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
         String id;
         String name;
         String address;
+        int rank;
         double rating;
         double distance;
         LatLng latlng;
@@ -130,6 +139,10 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
                 snippet = business.has("snippet_text")
                         ? business.getString("snippet_text")
                         : "";
+
+                rank = business.has("rec_order")
+                        ? business.getInt("rec_order")
+                        : Integer.MAX_VALUE;
 
                 rating = business.has("rating")
                         ? business.getDouble("rating")
@@ -166,7 +179,7 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
                     imgList.add(business.getJSONArray("img_urls_and_descs").getJSONArray(j).getString(0));
                 }
 
-                likelyPlaces.add(new PlaceState(id, name, address, rating, distance, latlng, imgSrc, category, phoneNum, snippet, imgList));
+                likelyPlaces.add(new PlaceState(id, name, address, rank, rating, distance, latlng, imgSrc, category, phoneNum, snippet, imgList));
             }
 
             Log.i("hungry-api", "Parsing Completed.");
@@ -175,7 +188,7 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
             e.printStackTrace();
         }
 
-        responseDelegate.onPostExecute(likelyPlaces);
+        responseDelegate.onPostExecute(this, likelyPlaces);
 
     }
 

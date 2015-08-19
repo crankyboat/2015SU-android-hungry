@@ -115,7 +115,7 @@ public class ReviewAsyncTask extends AsyncTask<String, Void, JSONArray> {
             e.printStackTrace();
         }
 
-        responseDelegate.onPostExecute(reviewList);
+        responseDelegate.onPostExecute(this, reviewList);
     }
 
 }

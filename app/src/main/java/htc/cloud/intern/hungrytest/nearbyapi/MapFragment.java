@@ -6,6 +6,7 @@ package htc.cloud.intern.hungrytest.nearbyapi;
 
 import android.app.Activity;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -20,8 +21,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -29,13 +28,14 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 import htc.cloud.intern.hungrytest.MainActivity;
 import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.R;
 import htc.cloud.intern.hungrytest.UserState;
 import htc.cloud.intern.hungrytest.hungryapi.AsyncResponse;
-import htc.cloud.intern.hungrytest.hungryapi.FeedbackAsyncTask;
 import htc.cloud.intern.hungrytest.hungryapi.HungryAsyncTask;
 
 public class MapFragment extends Fragment implements
@@ -44,6 +44,8 @@ public class MapFragment extends Fragment implements
     LocationListener, AsyncResponse {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final int MAX_ZOOM_LEVEL = 4;
+
     private ImageButton mSwitchviewButton;
     private boolean isMapView;
 
@@ -52,6 +54,7 @@ public class MapFragment extends Fragment implements
     protected LocationRequest mLocationRequest;
     protected LatLng mCurrentLocation;
     private Activity mActivity;
+    private HashMap<Integer, ArrayList<PlaceState>> mCachedPlacesByZoom;
 
     protected MapViewFragment mMapViewFragment;
     protected MapListViewFragment mMapListViewFragment;
@@ -181,22 +184,36 @@ public class MapFragment extends Fragment implements
     public void onLocationChanged(Location location) {
 
         mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
         UserState us = ((MainActivity) mActivity).mUserState;
         us.setUserLocation(mCurrentLocation);
-        setUpHungryApiAsyncTasks();
+
+        mCachedPlacesByZoom = new HashMap<Integer, ArrayList<PlaceState>>();
+        for (int i=0; i<=MAX_ZOOM_LEVEL; i++) {
+            setUpHungryApiAsyncTask(i);
+        }
 
     }
 
     @Override
-    public void onPostExecute(ArrayList<?> placeList) {
+    public void onPostExecute(AsyncTask<?, ?, ?> asyncTask, ArrayList<?> placeList) {
 
-        if (mMapViewFragment != null) {
-            mMapViewFragment.onLocationChanged(mCurrentLocation, (ArrayList<PlaceState>)placeList);
+        ArrayList<PlaceState> rankedPlaceList;
+        int currentZoom = ((HungryAsyncTask)asyncTask).getCurrentZoom();
+        if (currentZoom==0) {
+
+            rankedPlaceList = new ArrayList<PlaceState>((ArrayList<PlaceState>)placeList);
+            Collections.sort(rankedPlaceList);
+            rankedPlaceList = new ArrayList<PlaceState>(rankedPlaceList.subList(0, 20));
+
+            if (mMapViewFragment != null) {
+                mMapViewFragment.onLocationChanged(mCurrentLocation, rankedPlaceList);
+            }
+            if (mMapListViewFragment != null) {
+                mMapListViewFragment.onLocationChanged(rankedPlaceList);
+            }
         }
-        if (mMapListViewFragment != null) {
-            mMapListViewFragment.onLocationChanged((ArrayList<PlaceState>)placeList);
-        }
+        mCachedPlacesByZoom.put(currentZoom, new ArrayList<PlaceState>((ArrayList<PlaceState>) placeList));
+        Log.i("hungry-api", "(zoom, count): ("+currentZoom+", "+mCachedPlacesByZoom.get(currentZoom).size()+")");
 
     }
 
@@ -238,18 +255,17 @@ public class MapFragment extends Fragment implements
     protected void setUpLocationRequest() {
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(120*1000); //ms
+        mLocationRequest.setInterval(3*60*1000); //ms
         mLocationRequest.setFastestInterval(120*1000);  //ms
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     }
 
-    private void setUpHungryApiAsyncTasks() {
+    private void setUpHungryApiAsyncTask(int range) {
 
         // Dummy user state
         UserState us = ((MainActivity)mActivity).mUserState;
-        HungryAsyncTask mHungryAsyncTask = new HungryAsyncTask();
-        mHungryAsyncTask.setResponseDelegate(this);
+        HungryAsyncTask mHungryAsyncTask = new HungryAsyncTask(this, range);
         mHungryAsyncTask.execute(us);
 
 //        us.setFeedback("business1", 1);
@@ -263,6 +279,7 @@ public class MapFragment extends Fragment implements
 
         isMapView = true;
         mMapViewFragment = MapViewFragment.newInstance(0);
+        mMapViewFragment.setReloadDelegate(this);
         mMapListViewFragment = MapListViewFragment.newInstance(0);
         getFragmentManager().beginTransaction()
                 .add(R.id.map_container, mMapViewFragment)
@@ -274,6 +291,7 @@ public class MapFragment extends Fragment implements
 
     public void onSwitchViewClicked(View view){
 
+        getActivity().findViewById(R.id.map_reload).setVisibility(isMapView ? View.GONE : View.VISIBLE);
         mSwitchviewButton.setImageResource(isMapView ? R.drawable.ic_map_black_24dp : R.drawable.ic_list_black_24dp);
 
         Fragment switchFragment = (isMapView)
@@ -292,5 +310,49 @@ public class MapFragment extends Fragment implements
 
     }
 
+    public void onReload(float mapZoom) {
+
+        // TODO
+        // Check if mCahedPlacesByZoom.get(i) is non-null
+
+        // Use the appropriate ArrayLists depending on Zoom Level
+        ArrayList<PlaceState> rankedPlaceList;
+        Log.i("hungry-api", "mapZoom: "+mapZoom);
+        if (mapZoom < 13.5 && mCachedPlacesByZoom.get(4)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(4));
+        }
+        else if (mapZoom < 13.7 && mCachedPlacesByZoom.get(3)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(3));
+        }
+        else if (mapZoom < 13.9 && mCachedPlacesByZoom.get(2)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(2));
+        }
+        else if (mapZoom < 14.2 && mCachedPlacesByZoom.get(1)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(1));
+        }
+        else if (mCachedPlacesByZoom.get(0)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(0));
+        }
+        else {
+            rankedPlaceList = new ArrayList<PlaceState>();
+        }
+
+        // Get top 20 ranked
+        Collections.sort(rankedPlaceList);
+        for (int i=0; i<20; i++) {
+            Log.i("hungry-api", "(i, rank): ("+i+", "+rankedPlaceList.get(i).getRank()+")");
+        }
+        rankedPlaceList = new ArrayList<PlaceState>(rankedPlaceList.subList(0, 20));
+
+        if (mMapViewFragment != null) {
+            // TODO
+            mMapViewFragment.mMap.clear();
+            mMapViewFragment.mCurrentMarker = null;
+            mMapViewFragment.onLocationChanged(mCurrentLocation, (ArrayList<PlaceState>)rankedPlaceList);
+        }
+        if (mMapListViewFragment != null) {
+            mMapListViewFragment.onLocationChanged((ArrayList<PlaceState>)rankedPlaceList);
+        }
+    }
 
 }

@@ -54,26 +54,7 @@ public class MapListViewFragment extends ListFragment {
 
     public void onLocationChanged(ArrayList<PlaceState> likelyPlaces){
 
-        mList = new ArrayList<PlaceState>();
-        for (PlaceState place : likelyPlaces) {
-
-            Log.i("location-maplistview", String.format("Place '%s'", place.getName()));
-            String placeName = place.getName().toString();
-            String placeAddr = place.getAddr();
-            double placeRating = place.getRating();
-            double placeDist = place.getDist();
-            LatLng placeLatLng = place.getLatLng();
-            String placeImgSrc = place.getImgSrc();
-            String placePhoneNum = place.getPhoneNum();
-            String placeCategory = place.getCategory();
-            String placeSnippet = place.getSnippet();
-            ArrayList<String> placeImgList = place.getImgList();
-
-            mList.add(new PlaceState(place.getId(), placeName, placeAddr, placeRating, placeDist, placeLatLng,
-                    placeImgSrc, placeCategory, placePhoneNum, placeSnippet, placeImgList));
-
-        }
-
+        mList = new ArrayList<PlaceState>(likelyPlaces);
         ((ListBaseAdapter)getListAdapter()).setListData(mList);
         ((BaseAdapter)getListAdapter()).notifyDataSetChanged();
         // TODO

@@ -32,12 +32,10 @@ public class MainActivity extends ActionBarActivity {
 
     // TODO
     private ArrayList<Fragment> mNavigationFragments;
-    private htc.cloud.intern.hungrytest.nearby.MapFragment mNearbyFragment;
     private htc.cloud.intern.hungrytest.nearbyapi.MapFragment mNearbyApiFragment;
     private PlaceholderFragment mFavoriteFragment;
     private DailyMatchFragment mDailyMatchFragment;
     private PlaceholderFragment mPlaceholderFragment;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +67,6 @@ public class MainActivity extends ActionBarActivity {
 
                 Fragment selectedFragment;
                 switch (menuItem.getItemId()) {
-                    case R.id.drawer_nearby:
-                        selectedFragment = mNearbyFragment;
-                        break;
                     case R.id.drawer_nearbyapi:
                         selectedFragment = mNearbyApiFragment;
                         break;
@@ -99,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         mFragmentManager.beginTransaction()
-                .replace(R.id.container, MapFragment.newInstance(0))
+                .replace(R.id.container, mNearbyApiFragment)
                 .commit();
 //        mFragmentManager.beginTransaction()
 //                .show(mNearbyFragment)
@@ -132,7 +127,6 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     public void onSectionAttached(TextView textView, CharSequence name) {
 
         if (textView != null) {
@@ -145,14 +139,12 @@ public class MainActivity extends ActionBarActivity {
     private void setUpNavigationFragments() {
 
         // TODO
-        mNearbyFragment = htc.cloud.intern.hungrytest.nearby.MapFragment.newInstance(0);
         mNearbyApiFragment = htc.cloud.intern.hungrytest.nearbyapi.MapFragment.newInstance(0);
         mFavoriteFragment = PlaceholderFragment.newInstance("Favorite");
         mDailyMatchFragment = DailyMatchFragment.newInstance("Daily Match");
         mPlaceholderFragment = PlaceholderFragment.newInstance("Placeholder");
 
 //        mFragmentManager.beginTransaction()
-//                .add(R.id.container, mNearbyFragment)
 //                .add(R.id.container, mNearbyApiFragment)
 //                .add(R.id.container, mFavoriteFragment)
 //                .add(R.id.container, mDailyMatchFragment)
