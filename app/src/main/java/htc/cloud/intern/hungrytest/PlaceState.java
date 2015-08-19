@@ -2,7 +2,6 @@ package htc.cloud.intern.hungrytest;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -13,6 +12,7 @@ public class PlaceState {
     private String mId;
     private String mName;
     private String mAddr;
+    private double mRating;
     private double mDist;
     private LatLng mLatLng;
     private String mImgSrc;
@@ -22,11 +22,12 @@ public class PlaceState {
     private ArrayList<String> mImgList;
     private ArrayList<String> mReviewList;
 
-    public PlaceState(String id, String name, String address, double dist, LatLng latlng, String imgSrc,
+    public PlaceState(String id, String name, String address, double rating, double dist, LatLng latlng, String imgSrc,
                       String category, String phoneNum, String snippet, ArrayList<String> imgList) {
         setId(id);
         setName(name);
         setAddr(address);
+        setRating(rating);
         setDist(dist);
         setLatLng(latlng);
         setImgSrc(imgSrc);
@@ -60,6 +61,14 @@ public class PlaceState {
 
     public String getAddr() {
         return mAddr;
+    }
+
+    public void setRating(double rating) {
+        mRating = rating;
+    }
+
+    public double getRating() {
+        return mRating;
     }
 
     public void setDist(double dist) {
@@ -121,10 +130,10 @@ public class PlaceState {
     public void setReviewList(ArrayList<String> reviewList) {
         mReviewList = new ArrayList<String>(reviewList);
     }
-
-    public ArrayList<String> getReviewList() {
-        return mReviewList;
-    }
+//
+//    public ArrayList<String> getReviewList() {
+//        return mReviewList;
+//    }
 
     @Override
     public String toString(){

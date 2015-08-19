@@ -40,12 +40,13 @@ public class FeedbackAsyncTask extends AsyncTask<UserState, Void, Void> {
 //        String jsonString = new String();
 //        jsonString = userStates[0].getFeedbackAndClear();
 
-
         // PUT to db
         try {
             url = new URL(apiURL+serviceName
                     +"?"+useridField+"="+userStates[0].mDeviceID
                     +"&"+feedbackField+"=["+userStates[0].getFeedbackAndClear()+"]");
+
+            // TODO
             urlConnection = (HttpsURLConnection) url.openConnection();
 //            urlConnection.setDoInput(true);
 //            urlConnection.setDoOutput(true);

@@ -60,6 +60,7 @@ public class MapListViewFragment extends ListFragment {
             Log.i("location-maplistview", String.format("Place '%s'", place.getName()));
             String placeName = place.getName().toString();
             String placeAddr = place.getAddr();
+            double placeRating = place.getRating();
             double placeDist = place.getDist();
             LatLng placeLatLng = place.getLatLng();
             String placeImgSrc = place.getImgSrc();
@@ -68,7 +69,7 @@ public class MapListViewFragment extends ListFragment {
             String placeSnippet = place.getSnippet();
             ArrayList<String> placeImgList = place.getImgList();
 
-            mList.add(new PlaceState(place.getId(), placeName, placeAddr, placeDist, placeLatLng,
+            mList.add(new PlaceState(place.getId(), placeName, placeAddr, placeRating, placeDist, placeLatLng,
                     placeImgSrc, placeCategory, placePhoneNum, placeSnippet, placeImgList));
 
         }
@@ -86,24 +87,8 @@ public class MapListViewFragment extends ListFragment {
     @Override
     public void onListItemClick (ListView listView, View view, int position, long id) {
 
-//        Toast.makeText(getActivity(), "("+position+", "+id+")", Toast.LENGTH_SHORT).show();
-//        startActivity(new Intent(getActivity(), BusinessActivity.class));
-
-        PlaceState item = (PlaceState) getListView().getItemAtPosition(position);
-        Intent businessIntent = new Intent(getActivity(), BusinessActivity.class);
-
-        businessIntent.putExtra(BusinessActivity.bId, item.getId());
-        businessIntent.putExtra(BusinessActivity.bName, item.getName());
-        businessIntent.putExtra(BusinessActivity.bAddr, item.getAddr());
-        businessIntent.putExtra(BusinessActivity.bLatLng, item.getLatLng().latitude+","+item.getLatLng().longitude);
-        businessIntent.putExtra(BusinessActivity.bCat, item.getCategory());
-        businessIntent.putExtra(BusinessActivity.bPhone, item.getPhoneNum());
-        businessIntent.putExtra(BusinessActivity.bRating, (float)4.0);
-        businessIntent.putExtra(BusinessActivity.bDist, item.getDist());
-        businessIntent.putExtra(BusinessActivity.bSnippet, item.getSnippet());
-        businessIntent.putExtra(BusinessActivity.bImgSrc, item.getImgSrc());
-        businessIntent.putExtra(BusinessActivity.bImgList, item.getImgList());
-
+        PlaceState business = (PlaceState) getListView().getItemAtPosition(position);
+        Intent businessIntent = BusinessActivity.setUpBusinessIntent(getActivity(), business);
         startActivity(businessIntent);
 
     }

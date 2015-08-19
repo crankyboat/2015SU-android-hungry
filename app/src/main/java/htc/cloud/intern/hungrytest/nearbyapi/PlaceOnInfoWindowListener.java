@@ -27,23 +27,10 @@ public class PlaceOnInfoWindowListener implements GoogleMap.OnInfoWindowClickLis
     @Override
     public void onInfoWindowClick(Marker marker) {
 
-//        mActivity.startActivity(new Intent(mActivity, BusinessActivity.class));
-
-        Intent businessIntent = new Intent(mActivity, BusinessActivity.class);
-
-        businessIntent.putExtra(BusinessActivity.bId, mMarkerInfo.get(marker).getId());
-        businessIntent.putExtra(BusinessActivity.bName, mMarkerInfo.get(marker).getName());
-        businessIntent.putExtra(BusinessActivity.bAddr, mMarkerInfo.get(marker).getAddr());
-        businessIntent.putExtra(BusinessActivity.bLatLng, mMarkerInfo.get(marker).getLatLng().latitude+","+mMarkerInfo.get(marker).getLatLng().longitude);
-        businessIntent.putExtra(BusinessActivity.bCat, mMarkerInfo.get(marker).getCategory());
-        businessIntent.putExtra(BusinessActivity.bPhone, mMarkerInfo.get(marker).getPhoneNum());
-        businessIntent.putExtra(BusinessActivity.bRating, (float)4.0);
-        businessIntent.putExtra(BusinessActivity.bDist, mMarkerInfo.get(marker).getDist());
-        businessIntent.putExtra(BusinessActivity.bSnippet, mMarkerInfo.get(marker).getSnippet());
-        businessIntent.putExtra(BusinessActivity.bImgSrc, mMarkerInfo.get(marker).getImgSrc());
-        businessIntent.putExtra(BusinessActivity.bImgList, mMarkerInfo.get(marker).getImgList());
-
+        PlaceState business = mMarkerInfo.get(marker);
+        Intent businessIntent = BusinessActivity.setUpBusinessIntent(mActivity, business);
         mActivity.startActivity(businessIntent);
+
     }
 
 }

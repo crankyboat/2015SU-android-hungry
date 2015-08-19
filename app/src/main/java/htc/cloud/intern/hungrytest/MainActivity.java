@@ -15,12 +15,9 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.Api;
-
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.dailymatch.DailyMatchFragment;
-import htc.cloud.intern.hungrytest.hungryapi.ApiFragment;
 import htc.cloud.intern.hungrytest.nearby.MapFragment;
 
 
@@ -50,6 +47,8 @@ public class MainActivity extends ActionBarActivity {
         mContext = this;
         mUserState = new UserState(this.getBaseContext());
         mFragmentManager = getSupportFragmentManager();
+
+        // Setup Toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -58,18 +57,15 @@ public class MainActivity extends ActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Setup Navigation
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
-
-//        setUpNavigationMenuItems();
         setUpNavigationFragments();
-
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-                Toast.makeText(mContext, menuItem.getTitle() + " pressed", Toast.LENGTH_LONG).show();
+//                Toast.makeText(mContext, menuItem.getTitle() + " pressed", Toast.LENGTH_LONG).show();
 
                 Fragment selectedFragment;
                 switch (menuItem.getItemId()) {
@@ -108,15 +104,8 @@ public class MainActivity extends ActionBarActivity {
 //        mFragmentManager.beginTransaction()
 //                .show(mNearbyFragment)
 //                .commit();
-    }
 
-//    private void setUpNavigationMenuItems() {
-//
-//        Menu navigationMenu = mNavigationView.getMenu();
-//
-//        // id, (checked), icon, title
-//
-//    }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,19 +139,15 @@ public class MainActivity extends ActionBarActivity {
             Toast.makeText(this, textView.toString(), Toast.LENGTH_LONG).show();
             textView.setText(name);
         }
-        else {
-//            Toast.makeText(this, "No section_label found.", Toast.LENGTH_LONG).show();
 
-        }
     }
 
     private void setUpNavigationFragments() {
 
         // TODO
-
         mNearbyFragment = htc.cloud.intern.hungrytest.nearby.MapFragment.newInstance(0);
         mNearbyApiFragment = htc.cloud.intern.hungrytest.nearbyapi.MapFragment.newInstance(0);
-        mFavoriteFragment = PlaceholderFragment.newInstance("Favorite"); //ApiFragment.newInstance("Api");
+        mFavoriteFragment = PlaceholderFragment.newInstance("Favorite");
         mDailyMatchFragment = DailyMatchFragment.newInstance("Daily Match");
         mPlaceholderFragment = PlaceholderFragment.newInstance("Placeholder");
 

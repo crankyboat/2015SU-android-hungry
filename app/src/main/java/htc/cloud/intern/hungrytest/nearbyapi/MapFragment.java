@@ -25,8 +25,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -54,7 +52,6 @@ public class MapFragment extends Fragment implements
     private boolean isMapView;
 
     protected static final String TAG = "location-test";
-    protected static int PLACE_PICKER_REQUEST = 1;
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
     protected LatLng mCurrentLocation;
@@ -72,7 +69,6 @@ public class MapFragment extends Fragment implements
     }
 
     public MapFragment() {
-        isMapView = true;
     }
 
     @Override
@@ -91,7 +87,6 @@ public class MapFragment extends Fragment implements
         mActivity = activity;
         setUpGoogleApiClient();
         setUpLocationRequest();
-//        setUpHungryApiAsyncTasks();
 
         ActionBar actionBar = ((ActionBarActivity) activity).getSupportActionBar();
         View view = activity.getLayoutInflater().inflate(R.layout.fragment_map_mapview_toolbar, null);
@@ -207,6 +202,7 @@ public class MapFragment extends Fragment implements
             String id;
             String name;
             String address;
+            double rating;
             double distance;
             LatLng latlng;
             String imgSrc;
@@ -238,6 +234,10 @@ public class MapFragment extends Fragment implements
                         ? business.getString("snippet_text")
                         : "";
 
+                rating = business.has("rating")
+                        ? business.getDouble("rating")
+                        : 0.0;
+
                 distance = business.has("distance")
                         ? business.getDouble("distance")
                         : -1.0;
@@ -254,7 +254,7 @@ public class MapFragment extends Fragment implements
                     }
                 }
 
-                address = new String();
+                address = "Address N/A";
                 if (business.has("location") && business.getJSONObject("location").has("display_address")) {
                     for (int j = 0; j < business.getJSONObject("location").getJSONArray("display_address").length(); j++) {
                         address += business.getJSONObject("location").getJSONArray("display_address").get(j)+" ";
@@ -266,7 +266,7 @@ public class MapFragment extends Fragment implements
                     imgList.add(business.getJSONArray("img_urls_and_descs").getJSONArray(j).getString(0));
                 }
 
-                likelyPlaces.add(new PlaceState(id, name, address, distance, latlng, imgSrc, category, phoneNum, snippet, imgList));
+                likelyPlaces.add(new PlaceState(id, name, address, rating, distance, latlng, imgSrc, category, phoneNum, snippet, imgList));
             }
 
             Log.i("hungry-api", "Parsing Completed.");
@@ -277,7 +277,6 @@ public class MapFragment extends Fragment implements
             if (mMapListViewFragment != null) {
                 mMapListViewFragment.onLocationChanged(likelyPlaces);
             }
-
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -332,19 +331,20 @@ public class MapFragment extends Fragment implements
 
         // Dummy user state
         UserState us = ((MainActivity)mActivity).mUserState;
-        us.setFeedback("business1", 1);
-        us.setFeedback("business2", 100);
-
         HungryAsyncTask mHungryAsyncTask = new HungryAsyncTask();
         mHungryAsyncTask.setResponseDelegate(this);
         mHungryAsyncTask.execute(us);
 
+//        us.setFeedback("business1", 1);
+//        us.setFeedback("business2", 100);
 //        FeedbackAsyncTask mFeedbackAsyncTask = new FeedbackAsyncTask();
 //        mFeedbackAsyncTask.execute(us);
+
     }
 
     private void setUpViewFragments() {
 
+        isMapView = true;
         mMapViewFragment = MapViewFragment.newInstance(0);
         mMapListViewFragment = MapListViewFragment.newInstance(0);
         getFragmentManager().beginTransaction()
@@ -372,7 +372,6 @@ public class MapFragment extends Fragment implements
                 .commit();
 
         isMapView = !isMapView;
-//        Toast.makeText(mActivity, "switchFragment = "+switchFragment.toString(), Toast.LENGTH_LONG).show();
 
     }
 

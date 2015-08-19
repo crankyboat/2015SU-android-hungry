@@ -1,6 +1,7 @@
 <resources>
 
     <color name="my_primary">#FF563A1B</color>
+    <color name="my_accent">#FF835829</color>
     <color name="my_text">#FF92C9E9</color>
 
 </resources>

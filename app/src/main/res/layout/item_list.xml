@@ -11,9 +11,10 @@
         android:id="@+id/iv_icon"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_marginRight="5dp"
         android:src="@drawable/ic_stars_black_24dp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
@@ -22,28 +23,35 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
             android:textStyle="bold"
             android:textSize="8pt"
             android:text="Title" />
         <TextView
+            android:id="@+id/tv_dist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingTop="3dp"
+            android:text="99 km"/>
+        <TextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:layout_below="@id/tv_title"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
             android:text="Description" />
-        <TextView
-            android:id="@+id/tv_phone"
+        <RatingBar
+            android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:text="Phone Number" />
-    </LinearLayout>
+            android:layout_below="@id/tv_desc"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:rating="2.0"
+            style="@android:style/Widget.DeviceDefault.RatingBar.Small"/>
+    </RelativeLayout>
 
 </LinearLayout>

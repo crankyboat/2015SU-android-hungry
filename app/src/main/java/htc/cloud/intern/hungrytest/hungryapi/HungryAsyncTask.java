@@ -8,10 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,13 +31,14 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
     public final static String numField = "num_rec";
     public final static String jsonArrayName = "businesses";
 
-    public final static int curRank = 0;
-    public final static int numRec = 10;
+    public final static int numRec = 100;
 
+    private int currentRank;
     private AsyncResponse responseDelegate;
     private URL url;
 
     public void setResponseDelegate(AsyncResponse rd){
+        currentRank = 0;
         responseDelegate = rd;
     }
 
@@ -61,7 +60,7 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
             url = new URL(apiURL+serviceName+
                     "?"+useridField+"="+userStates[0].mDeviceID+
                     "&"+locationField+"="+userStates[0].mCurrentLocation+
-                    "&"+startRank+"="+curRank+
+                    "&"+startRank+"="+currentRank+
                     "&"+numField+"="+numRec);
 
             urlConnection = (HttpsURLConnection) url.openConnection();

@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.MainActivity;
+import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.R;
 import htc.cloud.intern.hungrytest.hungryapi.AsyncResponse;
 import htc.cloud.intern.hungrytest.hungryapi.ReviewAsyncTask;
@@ -60,14 +61,33 @@ public class BusinessActivity extends ActionBarActivity
 
     private static final int SWIPE_MIN_DISTANCE = 80;
     private static final int SWIPE_THRESHOLD_VELOCITY = 150;
+
     private GestureDetector mDetector;
     private Context mContext;
     private ViewFlipper mViewFlipper;
     private ListView mListView;
     private ArrayList<ReviewItem> mReviewList = new ArrayList<ReviewItem>();
-    private ArrayList<ReviewItem> mShortReviewList = new ArrayList<ReviewItem>();
     private ReviewListBaseAdapter mReviewListAdapter;
-    private boolean mShort;
+
+    public static Intent setUpBusinessIntent(Context context, PlaceState business) {
+
+        Intent businessIntent = new Intent(context, BusinessActivity.class);
+
+        businessIntent.putExtra(BusinessActivity.bId, business.getId());
+        businessIntent.putExtra(BusinessActivity.bName, business.getName());
+        businessIntent.putExtra(BusinessActivity.bAddr, business.getAddr());
+        businessIntent.putExtra(BusinessActivity.bLatLng, business.getLatLng().latitude+","+business.getLatLng().longitude);
+        businessIntent.putExtra(BusinessActivity.bCat, business.getCategory());
+        businessIntent.putExtra(BusinessActivity.bPhone, business.getPhoneNum());
+        businessIntent.putExtra(BusinessActivity.bRating, (float)business.getRating());
+        businessIntent.putExtra(BusinessActivity.bDist, business.getDist());
+        businessIntent.putExtra(BusinessActivity.bSnippet, business.getSnippet());
+        businessIntent.putExtra(BusinessActivity.bImgSrc, business.getImgSrc());
+        businessIntent.putExtra(BusinessActivity.bImgList, business.getImgList());
+
+        return businessIntent;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +110,12 @@ public class BusinessActivity extends ActionBarActivity
         ((TextView) findViewById(R.id.business_dist)).setText(Math.round(getIntent().getDoubleExtra(bDist, 0))+" km");
         ((RatingBar) findViewById(R.id.business_rating)).setRating(getIntent().getFloatExtra(bRating, 0));
 //        ((TextView) findViewById(R.id.business_snippet)).setText(getIntent().getStringExtra(bSnippet));
+
+        // Setup text colors
+        if (!getIntent().getStringExtra(bAddr).equals("Address N/A"))
+            ((TextView) findViewById(R.id.business_address)).setTextColor(getResources().getColor(R.color.my_accent));
+        if (!getIntent().getStringExtra(bPhone).equals("Phone Number N/A"))
+            ((TextView) findViewById(R.id.business_phone)).setTextColor(getResources().getColor(R.color.my_accent));
 
         // Setup ViewFlipper
         mContext = this;
@@ -187,6 +213,7 @@ public class BusinessActivity extends ActionBarActivity
     @Override
     public void onPostExecute(JSONArray jsonArray) {
 
+        // No reviews
         if (jsonArray.length()==0) {
             mListView = (ListView) findViewById(R.id.review_list);
             ((ViewGroup)mListView.getParent().getParent()).removeView((View)mListView.getParent());
@@ -286,7 +313,6 @@ public class BusinessActivity extends ActionBarActivity
 
     public void onNavigate(View view) {
 
-        Log.i("on-navigate", getIntent().getStringExtra(bLatLng));
         Uri intentUri = Uri.parse("google.navigation:q="+getIntent().getStringExtra(bLatLng));
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, intentUri);
         mapIntent.setPackage("com.google.android.apps.maps");

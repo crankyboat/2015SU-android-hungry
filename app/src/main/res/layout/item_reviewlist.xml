@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:paddingTop="3dp"
-        android:paddingRight="3dp"
+        android:paddingRight="@dimen/spacing_large"
         android:src="@drawable/ic_stars_black_24dp" />
 
     <TextView
@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/user_icon"
-        android:paddingLeft="5dp"
         android:paddingTop="3dp"
         android:paddingBottom="3dp"
         android:textStyle="bold"
@@ -45,7 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/user_name"
         android:layout_toRightOf="@id/user_icon"
-        android:paddingLeft="5dp"
         style="@android:style/Widget.Holo.RatingBar.Small"
         android:numStars="5"
         android:stepSize="0.5"
@@ -57,15 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/review_rating"
         android:layout_toRightOf="@id/user_icon"
-        android:paddingLeft="5dp"
         android:paddingTop="@dimen/spacing_large"
         android:paddingBottom="3dp"
         android:text="This is the review content. This is the review content. This is the review content. This is the review content." />
-
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:layout_below="@id/review_content"-->
-        <!--android:background="@color/background_floating_material_light"/>-->
 
 </RelativeLayout>

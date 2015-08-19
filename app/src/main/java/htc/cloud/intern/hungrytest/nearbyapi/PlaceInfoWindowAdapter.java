@@ -57,9 +57,7 @@ public class PlaceInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 //                .load(placeState.getImgSrc().replace("ls.jpg", "ms.jpg"));
 //        Log.i("InfoWindowAdapter", "imgURL: " + R.drawable.ic_stars_black_24dp);
 
-        ((RatingBar) mContent.findViewById(R.id.rating_bar)).setRating((float) 3.0);
-
-
+        ((RatingBar) mContent.findViewById(R.id.rating_bar)).setRating((float)placeState.getRating());
 
         return mContent;
     }

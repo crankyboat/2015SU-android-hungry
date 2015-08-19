@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +68,8 @@ public class ListBaseAdapter extends BaseAdapter {
 
         mViewHolder.tv_title.setText(currentPlaceState.getName());
         mViewHolder.tv_desc.setText(currentPlaceState.getCategory());
-        mViewHolder.tv_phone.setText(currentPlaceState.getPhoneNum());
+        mViewHolder.tv_dist.setText(Math.round(currentPlaceState.getDist())+" km");
+        mViewHolder.rb_rating.setRating((float)currentPlaceState.getRating());
 
         if ( !currentPlaceState.getImgSrc().equals("") ) {
             Ion.with(mViewHolder.iv_icon)
@@ -78,21 +80,22 @@ public class ListBaseAdapter extends BaseAdapter {
             mViewHolder.iv_icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mViewHolder.iv_icon.setImageResource(R.drawable.business_placeholder);
         }
-
         Log.i("ListBaseAdapter", "imgURL: "+currentPlaceState.getImgSrc());
 
         return convertView;
     }
 
     private class ListViewHolder {
-        TextView tv_title, tv_desc, tv_phone;
+        TextView tv_title, tv_desc, tv_dist;
+        RatingBar rb_rating;
         ImageView iv_icon;
 
         public ListViewHolder(View item) {
             tv_title = (TextView) item.findViewById(R.id.tv_title);
             tv_desc = (TextView) item.findViewById(R.id.tv_desc);
-            tv_phone= (TextView) item.findViewById(R.id.tv_phone);
+            tv_dist= (TextView) item.findViewById(R.id.tv_dist);
             iv_icon = (ImageView) item.findViewById(R.id.iv_icon);
+            rb_rating = (RatingBar) item.findViewById(R.id.rating_bar);
         }
     }
 

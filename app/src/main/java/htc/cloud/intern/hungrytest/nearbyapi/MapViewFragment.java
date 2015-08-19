@@ -1,5 +1,6 @@
 package htc.cloud.intern.hungrytest.nearbyapi;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
