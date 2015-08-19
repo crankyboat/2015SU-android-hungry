@@ -61,7 +61,7 @@ public class MapViewFragment extends Fragment {
 
     }
 
-    public void onLocationChanged(LatLng location, ArrayList<PlaceState> likelyPlaces, double maxDistance){
+    public void onLocationChanged(LatLng location, ArrayList<PlaceState> likelyPlaces){
 
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
 

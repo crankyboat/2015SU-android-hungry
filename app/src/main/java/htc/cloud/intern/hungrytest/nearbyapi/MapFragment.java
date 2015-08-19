@@ -28,10 +28,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.MainActivity;
@@ -193,94 +189,15 @@ public class MapFragment extends Fragment implements
     }
 
     @Override
-    public void onPostExecute(JSONArray jsonArray) {
-        try {
-            ArrayList<PlaceState> likelyPlaces = new ArrayList<PlaceState>();
+    public void onPostExecute(ArrayList<?> placeList) {
 
-            double maxDistance = 0.0;
-            JSONObject business;
-            String id;
-            String name;
-            String address;
-            double rating;
-            double distance;
-            LatLng latlng;
-            String imgSrc;
-            String category;
-            String phoneNum;
-            String snippet;
-            ArrayList<String> imgList;
-
-            for (int i=0; i<jsonArray.length(); i++) {
-                business = jsonArray.getJSONObject(i);
-
-                id = business.getString("business_id");//.replaceFirst("-(.*)", "");
-
-                name = business.getString("name");
-
-                latlng = new LatLng(business.getJSONObject("location").getJSONObject("coordinate").getDouble("latitude"),
-                        business.getJSONObject("location").getJSONObject("coordinate").getDouble("longitude"));
-
-
-                imgSrc = business.has("image_url")
-                        ? business.getString("image_url").replace("ms.jpg", "ls.jpg")
-                        : "";
-
-                phoneNum = business.has("display_phone")
-                        ? business.getString("display_phone")
-                        : "Phone Number N/A";
-
-                snippet = business.has("snippet_text")
-                        ? business.getString("snippet_text")
-                        : "";
-
-                rating = business.has("rating")
-                        ? business.getDouble("rating")
-                        : 0.0;
-
-                distance = business.has("distance")
-                        ? business.getDouble("distance")
-                        : -1.0;
-
-                maxDistance = (distance > maxDistance)
-                        ? distance
-                        : maxDistance;
-
-                int maxCatCount = 4;
-                category = new String();
-                if (business.has("categories")) {
-                    for (int j = 0; j < Math.min(business.getJSONArray("categories").getJSONArray(0).length(), maxCatCount); j++) {
-                        category += business.getJSONArray("categories").getJSONArray(0).get(j)+" ";
-                    }
-                }
-
-                address = "Address N/A";
-                if (business.has("location") && business.getJSONObject("location").has("display_address")) {
-                    for (int j = 0; j < business.getJSONObject("location").getJSONArray("display_address").length(); j++) {
-                        address += business.getJSONObject("location").getJSONArray("display_address").get(j)+" ";
-                    }
-                }
-
-                imgList = new ArrayList<String>();
-                for (int j = 0; j < business.getJSONArray("img_urls_and_descs").length(); j++) {
-                    imgList.add(business.getJSONArray("img_urls_and_descs").getJSONArray(j).getString(0));
-                }
-
-                likelyPlaces.add(new PlaceState(id, name, address, rating, distance, latlng, imgSrc, category, phoneNum, snippet, imgList));
-            }
-
-            Log.i("hungry-api", "Parsing Completed.");
-
-            if (mMapViewFragment != null) {
-                mMapViewFragment.onLocationChanged(mCurrentLocation, likelyPlaces, maxDistance);
-            }
-            if (mMapListViewFragment != null) {
-                mMapListViewFragment.onLocationChanged(likelyPlaces);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (mMapViewFragment != null) {
+            mMapViewFragment.onLocationChanged(mCurrentLocation, (ArrayList<PlaceState>)placeList);
         }
+        if (mMapListViewFragment != null) {
+            mMapListViewFragment.onLocationChanged((ArrayList<PlaceState>)placeList);
+        }
+
     }
 
 //    @Override

@@ -31,10 +31,6 @@ import android.widget.ViewFlipper;
 
 import com.koushikdutta.ion.Ion;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.MainActivity;
@@ -211,61 +207,20 @@ public class BusinessActivity extends ActionBarActivity
     }
 
     @Override
-    public void onPostExecute(JSONArray jsonArray) {
+    public void onPostExecute(ArrayList<?> reviewList) {
 
-        // No reviews
-        if (jsonArray.length()==0) {
-            mListView = (ListView) findViewById(R.id.review_list);
-            ((ViewGroup)mListView.getParent().getParent()).removeView((View)mListView.getParent());
-            return;
-        }
-
-        //Parse jsonArray
-        JSONObject review;
-        float rating;
-        String date;
-        String content;
-        String userName;
-        String userImgUrl;
-
-        try {
-            for (int i=0; i<jsonArray.length(); i++) {
-
-                review = jsonArray.getJSONObject(i);
-
-                rating = review.has("rating")
-                        ? (float)review.getDouble("rating")
-                        : (float)0.0;
-
-                date = review.has("date")
-                        ? review.getString("date")
-                        : null;
-
-                content = review.has("review_content")
-                        ? review.getString("review_content")
-                        : null;
-
-                userName = review.has("user_name")
-                        ? review.getString("user_name")
-                        : "Anonymous";
-
-                userImgUrl = review.has("user_img_url")
-                        ? review.getString("user_img_url")
-                        : null;
-
-                mReviewList.add(new ReviewItem(rating, date, content, userName, userImgUrl));
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        mReviewListAdapter = new ReviewListBaseAdapter(this, mReviewList);
         mListView = (ListView) findViewById(R.id.review_list);
-        mListView.setEmptyView(findViewById(R.id.empty_list));
-        mListView.setAdapter(mReviewListAdapter);
-        setUpListViewHeight();
+
+        if (reviewList.size()==0) { // No reviews
+            ((ViewGroup)mListView.getParent().getParent()).removeView((View) mListView.getParent());
+        }
+        else {
+            mReviewList = new ArrayList<ReviewItem>(((ArrayList<ReviewItem>) reviewList));
+            mReviewListAdapter = new ReviewListBaseAdapter(this, mReviewList);
+            mListView.setEmptyView(findViewById(R.id.empty_list));
+            mListView.setAdapter(mReviewListAdapter);
+            setUpListViewHeight();
+        }
 
     }
 

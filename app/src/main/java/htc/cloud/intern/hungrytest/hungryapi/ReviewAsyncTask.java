@@ -14,8 +14,11 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import htc.cloud.intern.hungrytest.business.ReviewItem;
 
 
 /**
@@ -69,7 +72,50 @@ public class ReviewAsyncTask extends AsyncTask<String, Void, JSONArray> {
     }
 
     protected void onPostExecute(JSONArray jsonArray) {
-        responseDelegate.onPostExecute(jsonArray);
+
+        ArrayList<ReviewItem> reviewList = new ArrayList<ReviewItem>();
+
+        JSONObject review;
+        float rating;
+        String date;
+        String content;
+        String userName;
+        String userImgUrl;
+
+        try {
+            for (int i=0; i<jsonArray.length(); i++) {
+
+                review = jsonArray.getJSONObject(i);
+
+                rating = review.has("rating")
+                        ? (float)review.getDouble("rating")
+                        : (float)0.0;
+
+                date = review.has("date")
+                        ? review.getString("date")
+                        : null;
+
+                content = review.has("review_content")
+                        ? review.getString("review_content")
+                        : null;
+
+                userName = review.has("user_name")
+                        ? review.getString("user_name")
+                        : "Anonymous";
+
+                userImgUrl = review.has("user_img_url")
+                        ? review.getString("user_img_url")
+                        : null;
+
+                reviewList.add(new ReviewItem(rating, date, content, userName, userImgUrl));
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        responseDelegate.onPostExecute(reviewList);
     }
 
 }
