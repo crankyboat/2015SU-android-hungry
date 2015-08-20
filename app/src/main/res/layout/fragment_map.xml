@@ -12,8 +12,11 @@
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/spacing_extralarge"
         app:fabSize="normal"
-        android:src="@drawable/ic_explore_black_24dp"
-        android:backgroundTint="@color/my_primary"
-        app:borderWidth="0dp"/>
+        android:src="@drawable/ic_search_black_24dp"
+        android:backgroundTint="@color/background_floating_material_light"
+        android:tint="@color/my_primary"
+        app:borderWidth="0dp"
+        android:clickable="true"
+        android:scaleType="center" />
 
 </FrameLayout>

@@ -74,7 +74,6 @@ public class ReviewAsyncTask extends AsyncTask<String, Void, JSONArray> {
     protected void onPostExecute(JSONArray jsonArray) {
 
         ArrayList<ReviewItem> reviewList = new ArrayList<ReviewItem>();
-
         JSONObject review;
         float rating;
         String date;

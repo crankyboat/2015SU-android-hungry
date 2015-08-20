@@ -32,6 +32,7 @@ public class MainActivity extends ActionBarActivity {
 
     // TODO
     private ArrayList<Fragment> mNavigationFragments;
+    private Fragment mCurrentFragment;
     private htc.cloud.intern.hungrytest.nearbyapi.MapFragment mNearbyApiFragment;
     private PlaceholderFragment mFavoriteFragment;
     private DailyMatchFragment mDailyMatchFragment;
@@ -63,8 +64,6 @@ public class MainActivity extends ActionBarActivity {
 
             @Override public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-//                Toast.makeText(mContext, menuItem.getTitle() + " pressed", Toast.LENGTH_LONG).show();
-
                 Fragment selectedFragment;
                 switch (menuItem.getItemId()) {
                     case R.id.drawer_nearbyapi:
@@ -79,14 +78,14 @@ public class MainActivity extends ActionBarActivity {
                     default:
                         selectedFragment = mPlaceholderFragment;
                 }
-                mFragmentManager.beginTransaction()
-                        .replace(R.id.container, selectedFragment)
-                        .commit();
-//                mFragmentManager.beginTransaction()
-//                        .show(selectedFragment)
-//                        .commit();
+                if (mCurrentFragment!=selectedFragment) {
+                    mFragmentManager.beginTransaction()
+                            .replace(R.id.container, selectedFragment)
+                            .commit();
+                }
 
                 menuItem.setChecked(true);
+                mCurrentFragment = selectedFragment;
                 mDrawerLayout.closeDrawers();
 
                 return true;
@@ -96,9 +95,7 @@ public class MainActivity extends ActionBarActivity {
         mFragmentManager.beginTransaction()
                 .replace(R.id.container, mNearbyApiFragment)
                 .commit();
-//        mFragmentManager.beginTransaction()
-//                .show(mNearbyFragment)
-//                .commit();
+        mCurrentFragment = mNearbyApiFragment;
 
     }
 

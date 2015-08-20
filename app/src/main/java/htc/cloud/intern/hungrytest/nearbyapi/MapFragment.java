@@ -5,9 +5,11 @@ package htc.cloud.intern.hungrytest.nearbyapi;
  */
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -25,6 +28,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -45,11 +49,16 @@ public class MapFragment extends Fragment implements
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final int MAX_ZOOM_LEVEL = 4;
+    private static final int MAX_NUM_PLACES = 20;
 
+    private FloatingActionButton mReloadButton;
     private ImageButton mSwitchviewButton;
+
+    private ProgressDialog mProgressDialog;
+
     private boolean isMapView;
 
-    protected static final String TAG = "location-test";
+    protected static final String TAG = "location-map";
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
     protected LatLng mCurrentLocation;
@@ -81,6 +90,7 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void onAttach(Activity activity) {
+        Log.i(TAG, "onAttach()");
         super.onAttach(activity);
 
         mActivity = activity;
@@ -102,7 +112,6 @@ public class MapFragment extends Fragment implements
                     Gravity.RIGHT | Gravity.CENTER_VERTICAL));
         }
 
-
         mSwitchviewButton = (ImageButton) getActivity().findViewById(R.id.action_switchview);
         mSwitchviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,10 +120,15 @@ public class MapFragment extends Fragment implements
             }
         });
 
+        if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+        }
+
     }
 
     @Override
     public void onDetach (){
+        Log.i(TAG, "onDetach()");
         ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayOptions(
@@ -122,45 +136,44 @@ public class MapFragment extends Fragment implements
                             ActionBar.DISPLAY_SHOW_TITLE |
                             ActionBar.DISPLAY_HOME_AS_UP);
         }
+        if (mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
         super.onDetach();
     }
 
     @Override
     public void onStart() {
+        Log.i(TAG, "onStart()");
         super.onStart();
-        mGoogleApiClient.connect();
-
-    }
-
-    @Override
-    public void onStop() {
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-
-        super.onStop();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(
-                    mGoogleApiClient, this);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         if (!mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
     }
 
     @Override
+    public void onStop() {
+        Log.i(TAG, "onStop()");
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        Log.i(TAG, "onPause()");
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        Log.i(TAG, "onResume()");
+        super.onResume();
+    }
+
+    @Override
     public void onConnected(Bundle bundle) {
+        Log.i(TAG, "onConnected()");
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
 
@@ -168,7 +181,7 @@ public class MapFragment extends Fragment implements
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i(TAG, "Connection suspended");
+        Log.i(TAG, "onConnectionSuspended()");
         mGoogleApiClient.connect();
     }
 
@@ -192,6 +205,12 @@ public class MapFragment extends Fragment implements
             setUpHungryApiAsyncTask(i);
         }
 
+        // Display Dialog
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mProgressDialog.setMessage("Updating your location....");
+        mProgressDialog.show();
+
     }
 
     @Override
@@ -201,11 +220,17 @@ public class MapFragment extends Fragment implements
         int currentZoom = ((HungryAsyncTask)asyncTask).getCurrentZoom();
         if (currentZoom==0) {
 
+            // Remove dialog
+            mProgressDialog.dismiss();
+
             rankedPlaceList = new ArrayList<PlaceState>((ArrayList<PlaceState>)placeList);
             Collections.sort(rankedPlaceList);
-            rankedPlaceList = new ArrayList<PlaceState>(rankedPlaceList.subList(0, 20));
+            int maxIndex = Math.min(MAX_NUM_PLACES, placeList.size());
+            rankedPlaceList = new ArrayList<PlaceState>(rankedPlaceList.subList(0, maxIndex));
 
             if (mMapViewFragment != null) {
+                mMapViewFragment.mCurrentMarker = null;
+                mMapViewFragment.mMap.clear();
                 mMapViewFragment.onLocationChanged(mCurrentLocation, rankedPlaceList);
             }
             if (mMapListViewFragment != null) {
@@ -256,7 +281,7 @@ public class MapFragment extends Fragment implements
 
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(3*60*1000); //ms
-        mLocationRequest.setFastestInterval(120*1000);  //ms
+        mLocationRequest.setFastestInterval(60*1000);  //ms
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     }
@@ -291,7 +316,8 @@ public class MapFragment extends Fragment implements
 
     public void onSwitchViewClicked(View view){
 
-        getActivity().findViewById(R.id.map_reload).setVisibility(isMapView ? View.GONE : View.VISIBLE);
+        mReloadButton = (FloatingActionButton) getActivity().findViewById(R.id.map_reload);
+        mReloadButton.setVisibility(isMapView ? View.GONE : View.VISIBLE);
         mSwitchviewButton.setImageResource(isMapView ? R.drawable.ic_map_black_24dp : R.drawable.ic_list_black_24dp);
 
         Fragment switchFragment = (isMapView)
@@ -312,22 +338,20 @@ public class MapFragment extends Fragment implements
 
     public void onReload(float mapZoom) {
 
-        // TODO
         // Check if mCahedPlacesByZoom.get(i) is non-null
-
         // Use the appropriate ArrayLists depending on Zoom Level
         ArrayList<PlaceState> rankedPlaceList;
         Log.i("hungry-api", "mapZoom: "+mapZoom);
-        if (mapZoom < 13.5 && mCachedPlacesByZoom.get(4)!=null) {
+        if (mapZoom < 12.9 && mCachedPlacesByZoom.get(4)!=null) {
             rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(4));
         }
-        else if (mapZoom < 13.7 && mCachedPlacesByZoom.get(3)!=null) {
+        else if (mapZoom < 13.2 && mCachedPlacesByZoom.get(3)!=null) {
             rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(3));
         }
-        else if (mapZoom < 13.9 && mCachedPlacesByZoom.get(2)!=null) {
+        else if (mapZoom < 13.5 && mCachedPlacesByZoom.get(2)!=null) {
             rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(2));
         }
-        else if (mapZoom < 14.2 && mCachedPlacesByZoom.get(1)!=null) {
+        else if (mapZoom < 14.7 && mCachedPlacesByZoom.get(1)!=null) {
             rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(1));
         }
         else if (mCachedPlacesByZoom.get(0)!=null) {
@@ -339,13 +363,13 @@ public class MapFragment extends Fragment implements
 
         // Get top 20 ranked
         Collections.sort(rankedPlaceList);
-        for (int i=0; i<20; i++) {
-            Log.i("hungry-api", "(i, rank): ("+i+", "+rankedPlaceList.get(i).getRank()+")");
+        int maxIndex = Math.min(MAX_NUM_PLACES, rankedPlaceList.size());
+        rankedPlaceList = new ArrayList<PlaceState>(rankedPlaceList.subList(0, maxIndex));
+        for (int i=0; i<maxIndex; i++) {
+            Log.i("hungry-api-rank", "(i, rank): ("+i+", "+rankedPlaceList.get(i).getRank()+")");
         }
-        rankedPlaceList = new ArrayList<PlaceState>(rankedPlaceList.subList(0, 20));
 
         if (mMapViewFragment != null) {
-            // TODO
             mMapViewFragment.mMap.clear();
             mMapViewFragment.mCurrentMarker = null;
             mMapViewFragment.onLocationChanged(mCurrentLocation, (ArrayList<PlaceState>)rankedPlaceList);

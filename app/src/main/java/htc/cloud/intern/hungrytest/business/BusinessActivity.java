@@ -98,6 +98,7 @@ public class BusinessActivity extends ActionBarActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.business_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getIntent().getStringExtra(bName));
 
         // Setup all views
         ((TextView) findViewById(R.id.business_name)).setText(getIntent().getStringExtra(bName));
@@ -125,10 +126,13 @@ public class BusinessActivity extends ActionBarActivity
             for  (int i = 0; i < imgList.size(); i++) {
                 ImageView imageView = new ImageView(this);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                Ion.with(imageView)
-                        .placeholder(R.drawable.ic_stars_black_24dp)
-                        .load(imgList.get(i).replace("ls.jpg", "o.jpg"));
+                String imageURL = imgList.get(i);
+                imageURL = imageURL.replace("ls.jpg", "o.jpg")
+                        .replace("l.jpg", "o.jpg")
+                        .replace("//", imageURL.contains("http") ? "//" : "http://");
+                Ion.with(imageView).load(imageURL);
                 mViewFlipper.addView(imageView);
+                Log.i("business-activity", imageURL);
             }
         }
         else {
@@ -143,7 +147,7 @@ public class BusinessActivity extends ActionBarActivity
         final View transparentView = (View) findViewById(R.id.transparent_padding);
         final View maskView = (View) findViewById(R.id.business_bottom_mask);
 
-        final double scrollMax = 600;
+        final double scrollMax = 500;
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(
                 new ViewTreeObserver.OnScrollChangedListener() {

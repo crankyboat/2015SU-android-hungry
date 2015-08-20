@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,10 +34,14 @@ import htc.cloud.intern.hungrytest.R;
  */
 public class MapViewFragment extends Fragment {
 
+    private static final String TAG = "map-view";
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final LatLng TAIPEI_LAT_LNG = new LatLng(25.0, 121.6);
+    private static HashMap<Integer, Integer> mMarkerRes = new HashMap<Integer, Integer>();
+
     public GoogleMap mMap;
     public MapFragment mMapFragment;
+    public FloatingActionButton mReloadButton;
     protected LatLng mCurrentLocation;
     protected Marker mCurrentMarker;
     protected HashMap<Marker, PlaceState> mMarkerInfo = new HashMap<Marker, PlaceState>();
@@ -50,6 +55,26 @@ public class MapViewFragment extends Fragment {
     }
 
     public MapViewFragment() {
+        mMarkerRes.put(1, R.drawable.number_1);
+        mMarkerRes.put(2, R.drawable.number_2);
+        mMarkerRes.put(3, R.drawable.number_3);
+        mMarkerRes.put(4, R.drawable.number_4);
+        mMarkerRes.put(5, R.drawable.number_5);
+        mMarkerRes.put(6, R.drawable.number_6);
+        mMarkerRes.put(7, R.drawable.number_7);
+        mMarkerRes.put(8, R.drawable.number_8);
+        mMarkerRes.put(9, R.drawable.number_9);
+        mMarkerRes.put(10, R.drawable.number_10);
+        mMarkerRes.put(11, R.drawable.number_11);
+        mMarkerRes.put(12, R.drawable.number_12);
+        mMarkerRes.put(13, R.drawable.number_13);
+        mMarkerRes.put(14, R.drawable.number_14);
+        mMarkerRes.put(15, R.drawable.number_15);
+        mMarkerRes.put(16, R.drawable.number_16);
+        mMarkerRes.put(17, R.drawable.number_17);
+        mMarkerRes.put(18, R.drawable.number_18);
+        mMarkerRes.put(19, R.drawable.number_19);
+        mMarkerRes.put(20, R.drawable.number_20);
     }
 
     @Override
@@ -66,9 +91,8 @@ public class MapViewFragment extends Fragment {
             }
         });
 
-        // TODO
-        FloatingActionButton reloadButton = (FloatingActionButton) getActivity().findViewById(R.id.map_reload);
-        reloadButton.setOnClickListener(new View.OnClickListener() {
+        mReloadButton = (FloatingActionButton) getActivity().findViewById(R.id.map_reload);
+        mReloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMapFragment.onReload(mMap.getCameraPosition().zoom);
@@ -86,10 +110,11 @@ public class MapViewFragment extends Fragment {
     public void onLocationChanged(LatLng location, ArrayList<PlaceState> likelyPlaces){
 
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-
         mCurrentLocation = location;
         if (mCurrentMarker == null) {
-            mCurrentMarker = mMap.addMarker(new MarkerOptions().position(mCurrentLocation));
+            mCurrentMarker = mMap.addMarker(new MarkerOptions()
+                    .position(mCurrentLocation)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.here)));
             mMarkerInfo.put(mCurrentMarker, null);
         }
         else {
@@ -102,15 +127,19 @@ public class MapViewFragment extends Fragment {
 //        double max_lat = -1;
 //        double max_lon = -1;
 
-        for (PlaceState place : likelyPlaces) {
-            Log.i("location-mapview", String.format("Place '%s'", place.getName()));
+//        for (PlaceState place : likelyPlaces) {
+        for (int i=0; i<likelyPlaces.size(); i++) {
+            PlaceState place = likelyPlaces.get(i);
+            Log.i(TAG, String.format("Place '%s'", place.getName()));
             String placeName = place.getName().toString();
 
             LatLng placeLatLng = place.getLatLng();
             Marker placeMarker = mMap.addMarker(new MarkerOptions()
                     .position(placeLatLng)
                     .title(placeName)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    .icon(BitmapDescriptorFactory.fromResource(mMarkerRes.get(i+1))));
+
             mMarkerInfo.put(placeMarker, place);
             boundsBuilder.include(placeLatLng);
 
@@ -132,9 +161,9 @@ public class MapViewFragment extends Fragment {
 //        double zoom = mMarkerInfo.size() > 1
 //                ? Math.floor(8 - Math.log(1.6446 * dist / Math.sqrt(2 * (displaySize * displaySize))) / Math.log(2)) - 1
 //                : 15;
-//        Log.i("location-mapview", String.format("(%f, %f, %f, %f), Zoom %f", min_lat, max_lat, min_lon, max_lon, zoom));
+//        Log.i(TAG, String.format("(%f, %f, %f, %f), Zoom %f", min_lat, max_lat, min_lon, max_lon, zoom));
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 50));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
 //        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, (float) zoom));
 //        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
 //            @Override
@@ -156,7 +185,7 @@ public class MapViewFragment extends Fragment {
 //                        ? Math.floor(8 - Math.log(1.6446 * dist / Math.sqrt(2 * (displaySize * displaySize))) / Math.log (2))
 //                        : 15;
 //
-//                Log.i("location-mapview", "NewZoom "+zoom);
+//                Log.i(TAG, "NewZoom "+zoom);
 //            }
 //        });
 
