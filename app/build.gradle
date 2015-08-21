@@ -28,4 +28,5 @@ dependencies {
     compile 'com.koushikdutta.ion:ion:2.+'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
     compile 'com.android.support:support-v4:22.2.0'
+    compile files('libs/nineoldandroids-2.4.0.jar')
 }
