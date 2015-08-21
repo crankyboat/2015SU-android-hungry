@@ -13,4 +13,6 @@ public interface AsyncResponse {
 
     void onPostExecute(AsyncTask<?, ?, ?> asyncTask, ArrayList<?> arrayList);
 
+    void onNoExecute(AsyncTask<?, ?, ?> asyncTask, String message);
+
 }

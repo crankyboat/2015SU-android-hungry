@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.koushikdutta.ion.Ion;
@@ -226,6 +227,14 @@ public class BusinessActivity extends ActionBarActivity
             mListView.setAdapter(mReviewListAdapter);
             setUpListViewHeight();
         }
+
+    }
+
+    @Override
+    public void onNoExecute(AsyncTask<?, ?, ?> asyncTask, String message) {
+
+        ((ViewGroup)mListView.getParent().getParent()).removeView((View) mListView.getParent());
+        Toast.makeText(this, "Network error.", Toast.LENGTH_SHORT).show();
 
     }
 

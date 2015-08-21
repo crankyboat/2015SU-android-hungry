@@ -2,6 +2,7 @@ package htc.cloud.intern.hungrytest.hungryapi;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -91,6 +92,8 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return jsonArray;
@@ -98,6 +101,11 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
     }
 
     protected void onPostExecute(JSONArray jsonArray) {
+
+        if (jsonArray==null) {
+            responseDelegate.onNoExecute(this, "");
+            return;
+        }
 
         ArrayList<PlaceState> likelyPlaces = new ArrayList<PlaceState>();
 

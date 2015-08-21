@@ -45,7 +45,7 @@ public class PlaceInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         PlaceState placeState = mMarkerInfo.get(marker);
 
-        if (placeState.getLatLng() == null) {   //mCurrentMarker
+        if (placeState == null) {   //mCurrentMarker
             return null;
         }
 

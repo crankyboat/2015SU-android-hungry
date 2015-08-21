@@ -6,9 +6,13 @@ package htc.cloud.intern.hungrytest.nearbyapi;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -20,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -205,10 +210,7 @@ public class MapFragment extends Fragment implements
             setUpHungryApiAsyncTask(i);
         }
 
-        // Display Dialog
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mProgressDialog.setMessage("Updating your location....");
+        mProgressDialog = new CustomProgressDialog(mActivity);
         mProgressDialog.show();
 
     }
@@ -220,7 +222,6 @@ public class MapFragment extends Fragment implements
         int currentZoom = ((HungryAsyncTask)asyncTask).getCurrentZoom();
         if (currentZoom==0) {
 
-            // Remove dialog
             mProgressDialog.dismiss();
 
             rankedPlaceList = new ArrayList<PlaceState>((ArrayList<PlaceState>)placeList);
@@ -238,7 +239,34 @@ public class MapFragment extends Fragment implements
             }
         }
         mCachedPlacesByZoom.put(currentZoom, new ArrayList<PlaceState>((ArrayList<PlaceState>) placeList));
-        Log.i("hungry-api", "(zoom, count): ("+currentZoom+", "+mCachedPlacesByZoom.get(currentZoom).size()+")");
+        Log.i("hungry-api", "(zoom, count): (" + currentZoom + ", " + mCachedPlacesByZoom.get(currentZoom).size() + ")");
+
+    }
+
+    @Override
+    public void onNoExecute(AsyncTask<?, ?, ?> asyncTask, String message) {
+
+        int currentZoom = ((HungryAsyncTask)asyncTask).getCurrentZoom();
+        if (currentZoom==0) {
+            mProgressDialog.dismiss();
+            Toast.makeText(mActivity, "Network error. ", Toast.LENGTH_LONG).show();
+        }
+
+        // Pause for awhile then reconnect
+
+
+//        LocationServices.FusedLocationApi.removeLocationUpdates(
+//                mGoogleApiClient, this);
+//
+//        if (mGoogleApiClient.isConnected()) {
+//            LocationServices.FusedLocationApi.requestLocationUpdates(
+//                    mGoogleApiClient, mLocationRequest, this);
+//        }
+//        else {
+//            mGoogleApiClient.connect();
+//        }
+
+
 
     }
 

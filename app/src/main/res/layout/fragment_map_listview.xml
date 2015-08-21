@@ -11,11 +11,9 @@
         android:layout_height="match_parent" />
 
     <ProgressBar android:id="@android:id/empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:gravity="center_vertical|center_horizontal"
-        android:progressTint="@color/my_text"
-        android:progressBackgroundTint="@color/my_primary"
         android:indeterminate="true"/>
 
 </LinearLayout>

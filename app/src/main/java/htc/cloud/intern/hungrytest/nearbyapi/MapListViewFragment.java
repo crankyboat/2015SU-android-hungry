@@ -1,6 +1,9 @@
 package htc.cloud.intern.hungrytest.nearbyapi;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.LightingColorFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -47,6 +51,8 @@ public class MapListViewFragment extends ListFragment {
 
         mListView = (ListView) rootView.findViewById(android.R.id.list);
         mListView.setEmptyView(rootView.findViewById(android.R.id.empty));
+        ((ProgressBar)mListView.getEmptyView()).getIndeterminateDrawable().setColorFilter(
+                getResources().getColor(R.color.my_primary), PorterDuff.Mode.MULTIPLY);
         setListAdapter(new ListBaseAdapter(getActivity(), mList));
 
         return rootView;
@@ -57,8 +63,6 @@ public class MapListViewFragment extends ListFragment {
         mList = new ArrayList<PlaceState>(likelyPlaces);
         ((ListBaseAdapter)getListAdapter()).setListData(mList);
         ((BaseAdapter)getListAdapter()).notifyDataSetChanged();
-        // TODO
-        // not sure if bottom needed or not
         mListView.setEnabled(false);
         mListView.requestLayout();
         mListView.setEnabled(true);
