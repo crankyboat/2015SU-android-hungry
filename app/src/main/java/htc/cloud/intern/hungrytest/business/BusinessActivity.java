@@ -3,11 +3,20 @@ package htc.cloud.intern.hungrytest.business;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -31,8 +40,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.google.android.gms.gcm.Task;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.MainActivity;
@@ -45,6 +60,7 @@ import htc.cloud.intern.hungrytest.nearbyapi.ListBaseAdapter;
 public class BusinessActivity extends ActionBarActivity
     implements AsyncResponse {
 
+    public static final String TAG = "business-activity";
     public static final String bId = "BUSINESS-ID";
     public static final String bName = "BUSINESS-NAME";
     public static final String bLatLng = "BUSINESS-LATLNG";
@@ -66,6 +82,8 @@ public class BusinessActivity extends ActionBarActivity
     private ListView mListView;
     private ArrayList<ReviewItem> mReviewList = new ArrayList<ReviewItem>();
     private ReviewListBaseAdapter mReviewListAdapter;
+    private ImageView mBlurredView;
+    private ImageView mCurrentImageView;
 
     public static Intent setUpBusinessIntent(Context context, PlaceState business) {
 
@@ -120,6 +138,7 @@ public class BusinessActivity extends ActionBarActivity
         mContext = this;
         mDetector = new GestureDetector(new SwipeGestureDetector());
         mViewFlipper = (ViewFlipper) findViewById(R.id.business_viewflipper);
+        mBlurredView = (ImageView) findViewById(R.id.business_bottom_blurred);
 
         // Add all ImageViews to ViewFlipper
         final ArrayList<String> imgList = getIntent().getStringArrayListExtra(BusinessActivity.bImgList);
@@ -133,14 +152,49 @@ public class BusinessActivity extends ActionBarActivity
                         .replace("//", imageURL.contains("http") ? "//" : "http://");
                 Ion.with(imageView).load(imageURL);
                 mViewFlipper.addView(imageView);
-                Log.i("business-activity", imageURL);
+                Log.i(TAG, imageURL);
             }
+            mCurrentImageView = (ImageView)mViewFlipper.getCurrentView();
+
+            String imageURL = imgList.get(0);
+            imageURL = imageURL.replace("ls.jpg", "o.jpg")
+                    .replace("l.jpg", "o.jpg")
+                    .replace("//", imageURL.contains("http") ? "//" : "http://");
+            Ion.with(this).load(imageURL).withBitmap().asBitmap()
+                    .setCallback(new FutureCallback<Bitmap>() {
+                        @Override
+                        public void onCompleted(Exception e, Bitmap result) {
+
+                            Drawable drawable = mCurrentImageView.getDrawable();
+                            Bitmap originalBitmap = ((BitmapDrawable)drawable).getBitmap();
+                            Bitmap blurredImage = createBlurredImage(originalBitmap);
+                            mBlurredView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            mBlurredView.setImageBitmap(blurredImage);
+                            mBlurredView.setEnabled(false);
+                            mBlurredView.requestLayout();
+                            mBlurredView.setEnabled(true);
+
+                        }
+                    });
+
+
+
         }
         else {
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(R.drawable.business_placeholder);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             mViewFlipper.addView(imageView);
+            mCurrentImageView = imageView;
+
+            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.business_placeholder);
+            Bitmap blurredImage = createBlurredImage(originalBitmap);
+            mBlurredView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            mBlurredView.setImageBitmap(blurredImage);
+            mBlurredView.setEnabled(false);
+            mBlurredView.requestLayout();
+            mBlurredView.setEnabled(true);
+
         }
 
         // Setup dynamic ScrollView and top-level touch event on TransparentView
@@ -158,9 +212,14 @@ public class BusinessActivity extends ActionBarActivity
 
                         if (scrollY <= scrollMax) {
                             maskView.setAlpha(Math.min((float) (scrollY / (scrollMax - 10)), (float) 1.0));
+//                            mBlurredView.setAlpha(Math.min((float) (scrollY*2.0 / (scrollMax - 10)), (float) 1.0));
+                            mBlurredView.setAlpha((float)1.0);
+                            mCurrentImageView.setAlpha(Math.max(1-(float) (scrollY*2.0 / (scrollMax - 10)), (float) 0.0));
                         }
                         else {
                             maskView.setAlpha(1);
+                            mBlurredView.setAlpha((float)1.0);
+                            mCurrentImageView.setAlpha((float)0.0);
                         }
                         Log.i("scroll-anim", "(scrollY, maskAlpha): ("+scrollY+", "+maskView.getAlpha()+")");
 
@@ -172,6 +231,7 @@ public class BusinessActivity extends ActionBarActivity
                             transparentView.setEnabled(false);
                             ((LockableScrollView)scrollView).setEnableLock(false);
                         }
+
                     }
                 });
 
@@ -289,7 +349,7 @@ public class BusinessActivity extends ActionBarActivity
 
     }
 
-    class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
+    private class SwipeGestureDetector extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             try {
@@ -306,6 +366,11 @@ public class BusinessActivity extends ActionBarActivity
                         mViewFlipper.showPrevious();
                         return true;
                     }
+                    mCurrentImageView = (ImageView)mViewFlipper.getCurrentView();
+
+                    // GET BLURRED BITMAP
+
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -313,6 +378,39 @@ public class BusinessActivity extends ActionBarActivity
             return false;
         }
     }
+
+    private Bitmap createBlurredImage (Bitmap originalBitmap)
+    {
+        int radius = 25;
+
+        // Load a clean bitmap and work from that.
+        // Create another bitmap that will hold the results of the filter.
+        Bitmap blurredBitmap;
+        blurredBitmap = Bitmap.createBitmap(originalBitmap);
+
+        // Create the Renderscript instance that will do the work.
+        RenderScript rs = RenderScript.create(this);
+
+        // Allocate memory for Renderscript to work with
+        Allocation input = Allocation.createFromBitmap (rs, originalBitmap, Allocation.MipmapControl.MIPMAP_FULL, Allocation.USAGE_SCRIPT);
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+        // Load up an instance of the specific script that we want to use.
+        ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        script.setInput(input);
+
+        // Set the blur radius
+        script.setRadius(radius);
+
+        // Start the ScriptIntrinisicBlur
+        script.forEach(output);
+
+        // Copy the output to the blurred bitmap
+        output.copyTo(blurredBitmap);
+
+        return blurredBitmap;
+    }
+
 
 }
 

@@ -366,6 +366,11 @@ public class MapFragment extends Fragment implements
 
     public void onReload(float mapZoom) {
 
+        if (mCachedPlacesByZoom==null || mCachedPlacesByZoom.size()==0) {
+            Toast.makeText(mActivity, "Network error.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // Check if mCahedPlacesByZoom.get(i) is non-null
         // Use the appropriate ArrayLists depending on Zoom Level
         ArrayList<PlaceState> rankedPlaceList;

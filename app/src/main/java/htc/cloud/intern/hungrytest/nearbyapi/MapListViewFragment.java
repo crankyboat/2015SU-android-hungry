@@ -50,6 +50,7 @@ public class MapListViewFragment extends ListFragment {
         View rootView = inflater.inflate(R.layout.fragment_map_listview, container, false);
 
         mListView = (ListView) rootView.findViewById(android.R.id.list);
+        mListView.setDivider(null);
         mListView.setEmptyView(rootView.findViewById(android.R.id.empty));
         ((ProgressBar)mListView.getEmptyView()).getIndeterminateDrawable().setColorFilter(
                 getResources().getColor(R.color.my_primary), PorterDuff.Mode.MULTIPLY);
