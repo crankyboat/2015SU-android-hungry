@@ -212,8 +212,7 @@ public class BusinessActivity extends ActionBarActivity
 
                         if (scrollY <= scrollMax) {
                             maskView.setAlpha(Math.min((float) (scrollY / (scrollMax - 10)), (float) 1.0));
-//                            mBlurredView.setAlpha(Math.min((float) (scrollY*2.0 / (scrollMax - 10)), (float) 1.0));
-                            mBlurredView.setAlpha((float)1.0);
+                            mBlurredView.setAlpha(Math.min((float) (scrollY*2.0 / (scrollMax - 10)), (float) 1.0));
                             mCurrentImageView.setAlpha(Math.max(1-(float) (scrollY*2.0 / (scrollMax - 10)), (float) 0.0));
                         }
                         else {
