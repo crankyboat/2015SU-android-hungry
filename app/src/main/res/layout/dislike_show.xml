@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="1"
+    android:id="@+id/dislike_show_content"
+    android:paddingTop="150px"
+    android:paddingLeft="20px"
+    android:paddingRight="20px">
+
+    <LinearLayout android:id="@+id/restaurant"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:gravity="center_horizontal"
+        >
+        <ImageView
+            android:id="@+id/dislike_show"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/icon_cross"
+            android:tint="#b8b8b8"
+            android:layout_marginTop="100dp"
+            />
+    </LinearLayout>
+</LinearLayout>

@@ -20,10 +20,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.dailymatch.DailyMatchFragment;
+import htc.cloud.intern.hungrytest.dailymatch.editorFrag;
 import htc.cloud.intern.hungrytest.nearby.MapFragment;
 
 
 public class MainActivity extends ActionBarActivity {
+
 
     public static FragmentManager mFragmentManager;
     public UserState mUserState;
@@ -101,6 +103,7 @@ public class MainActivity extends ActionBarActivity {
         mFragmentManager.beginTransaction()
                 .replace(R.id.container, mNearbyApiFragment)
                 .commit();
+
         mCurrentFragment = mNearbyApiFragment;
 
     }
