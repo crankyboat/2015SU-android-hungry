@@ -34,9 +34,7 @@ public class FeedbackAsyncTask extends AsyncTask<UserState, Void, Void> {
     protected Void doInBackground(UserState... userStates) {
 
         HttpsURLConnection urlConnection;
-        OutputStreamWriter outputStreamWriter;
 
-        // PUT to db
         try {
             url = new URL(apiURL+serviceName
                     +"?"+useridField+"="+userStates[0].mDeviceID

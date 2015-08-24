@@ -86,6 +86,8 @@ public class BusinessActivity extends ActionBarActivity
     private ReviewListBaseAdapter mReviewListAdapter;
     private ImageView mBlurredView;
     private ImageView mCurrentImageView;
+    private ArrayList<String> mImgList;
+
 
     public static Intent setUpBusinessIntent(Context context, PlaceState business) {
 
@@ -149,12 +151,12 @@ public class BusinessActivity extends ActionBarActivity
         mBlurredView = (ImageView) findViewById(R.id.business_bottom_blurred);
 
         // Add all ImageViews to ViewFlipper
-        final ArrayList<String> imgList = getIntent().getStringArrayListExtra(BusinessActivity.bImgList);
-        if ( imgList.size() > 0 ) {
-            for  (int i = 0; i < imgList.size(); i++) {
+        mImgList = getIntent().getStringArrayListExtra(BusinessActivity.bImgList);
+        if ( mImgList.size() > 0 ) {
+            for  (int i = 0; i < mImgList.size(); i++) {
                 ImageView imageView = new ImageView(this);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                String imageURL = imgList.get(i);
+                String imageURL = mImgList.get(i);
                 imageURL = imageURL.replace("ls.jpg", "o.jpg")
                         .replace("l.jpg", "o.jpg")
                         .replace("//", imageURL.contains("http") ? "//" : "http://");
@@ -163,27 +165,7 @@ public class BusinessActivity extends ActionBarActivity
                 Log.i(TAG, imageURL);
             }
             mCurrentImageView = (ImageView)mViewFlipper.getCurrentView();
-
-            String imageURL = imgList.get(0);
-            imageURL = imageURL.replace("ls.jpg", "o.jpg")
-                    .replace("l.jpg", "o.jpg")
-                    .replace("//", imageURL.contains("http") ? "//" : "http://");
-            Ion.with(this).load(imageURL).withBitmap().asBitmap()
-                    .setCallback(new FutureCallback<Bitmap>() {
-                        @Override
-                        public void onCompleted(Exception e, Bitmap result) {
-
-                            Drawable drawable = mCurrentImageView.getDrawable();
-                            Bitmap originalBitmap = ((BitmapDrawable)drawable).getBitmap();
-                            Bitmap blurredImage = createBlurredImage(originalBitmap);
-                            mBlurredView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            mBlurredView.setImageBitmap(blurredImage);
-                            mBlurredView.setEnabled(false);
-                            mBlurredView.requestLayout();
-                            mBlurredView.setEnabled(true);
-
-                        }
-                    });
+            setUpBlurredView(0);
 
         }
         else {
@@ -217,7 +199,7 @@ public class BusinessActivity extends ActionBarActivity
                         int scrollY = scrollView.getScrollY();
 
                         if (scrollY <= scrollMax) {
-                            maskView.setAlpha(Math.min((float) (scrollY / (scrollMax - 10)), (float) 1.0));
+                            maskView.setAlpha(Math.min((float) (scrollY / (scrollMax)), (float) 1.0));
                             mBlurredView.setAlpha(Math.min((float) (scrollY*2.0 / (scrollMax - 10)), (float) 1.0));
                             mCurrentImageView.setAlpha(Math.max(1-(float) (scrollY*2.0 / (scrollMax - 10)), (float) 0.0));
                         }
@@ -228,7 +210,7 @@ public class BusinessActivity extends ActionBarActivity
                         }
                         Log.i("scroll-anim", "(scrollY, maskAlpha): ("+scrollY+", "+maskView.getAlpha()+")");
 
-                        if (scrollY <= 0 && imgList.size() > 1) {
+                        if (scrollY <= 0 && mImgList.size() > 1) {
                             transparentView.setEnabled(true);
                             ((LockableScrollView)scrollView).setEnableLock(true);
                         }
@@ -358,23 +340,18 @@ public class BusinessActivity extends ActionBarActivity
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             try {
                 if (mViewFlipper.getChildCount() > 1) {
-                    // right to left swipe
                     if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                         mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_in));
                         mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.left_out));
                         mViewFlipper.showNext();
-                        return true;
                     } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                         mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_in));
                         mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(mContext, R.anim.right_out));
                         mViewFlipper.showPrevious();
-                        return true;
                     }
                     mCurrentImageView = (ImageView)mViewFlipper.getCurrentView();
-
-                    // GET BLURRED BITMAP
-
-
+                    setUpBlurredView(mViewFlipper.getDisplayedChild());
+                    return true;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -383,8 +360,7 @@ public class BusinessActivity extends ActionBarActivity
         }
     }
 
-    private Bitmap createBlurredImage (Bitmap originalBitmap)
-    {
+    private Bitmap createBlurredImage (Bitmap originalBitmap) {
         int radius = 25;
 
         // Load a clean bitmap and work from that.
@@ -413,6 +389,27 @@ public class BusinessActivity extends ActionBarActivity
         output.copyTo(blurredBitmap);
 
         return blurredBitmap;
+    }
+
+    private void setUpBlurredView(int imageIndex) {
+
+        String imageURL = mImgList.get(imageIndex);
+        imageURL = imageURL.replace("ls.jpg", "o.jpg")
+                .replace("l.jpg", "o.jpg")
+                .replace("//", imageURL.contains("http") ? "//" : "http://");
+        Ion.with(mContext).load(imageURL).withBitmap().asBitmap()
+                .setCallback(new FutureCallback<Bitmap>() {
+                    @Override
+                    public void onCompleted(Exception e, Bitmap originalBitmap) {
+                        Bitmap blurredImage = createBlurredImage(originalBitmap);
+                        mBlurredView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        mBlurredView.setImageBitmap(blurredImage);
+                        mBlurredView.setEnabled(false);
+                        mBlurredView.requestLayout();
+                        mBlurredView.setEnabled(true);
+                    }
+                });
+
     }
 
 
