@@ -173,31 +173,39 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dailymatch, container, false);
-        if(rootView.findViewById(R.id.fragment_daily) != null) {
+
+        if(rootView.findViewById(R.id.fragment_daily) != null
+                && restaurant_content!=null && restaurant_content.size()>0) {
 
             // Create an instance of editorFrag
-                editorFrag frag = new editorFrag();
+            editorFrag frag = new editorFrag();
 
             //Set argument of restaurant && 0 is the first restaurant
-                args = set_layout_content(R.layout.fragment_restaurant,
-                                          0,
-                                          restaurant_content.get(0).getName(),
-                                          restaurant_content.get(0).getRating(),
-                                          restaurant_content.get(0).getDist(),
-                                          restaurant_content.get(0).getImgSrc());
-                frag.setArguments(args);
+            args = set_layout_content(R.layout.fragment_restaurant,
+                                      0,
+                                      restaurant_content.get(0).getName(),
+                                      restaurant_content.get(0).getRating(),
+                                      restaurant_content.get(0).getDist(),
+                                      restaurant_content.get(0).getImgSrc());
+
+            frag.setArguments(args);
 
 
             //add fragment to the fragment container layout
-                getChildFragmentManager()
+            getChildFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_daily, frag)
-                    .addToBackStack(null)
-                    .commit();
+                .addToBackStack(null)
+                .commit();
 
-            }
-            Log.d("TAG", "onCreateView!!");
-            return rootView;
+        }
+        else {
+            // TODO
+            // If restaurant_content is empty?
+        }
+
+        Log.d("TAG", "onCreateView!!");
+        return rootView;
     }
 
     @Override

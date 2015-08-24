@@ -27,7 +27,7 @@ public class FeedbackAsyncTask extends AsyncTask<UserState, Void, Void> {
     public final static String apiURL = "https://recornot.herokuapp.com/";
     public final static String serviceName = "feedback";
     public final static String useridField = "user_id";
-    public final static String feedbackField = ""; //fedbacks=[...]
+    public final static String feedbackField = "";
     private URL url;
 
     @Override
@@ -41,24 +41,13 @@ public class FeedbackAsyncTask extends AsyncTask<UserState, Void, Void> {
             url = new URL(apiURL+serviceName
                     +"?"+useridField+"="+userStates[0].mDeviceID
                     +"&"+feedbackField+userStates[0].getFeedbackAndClear());
-
             Log.i(TAG, "url: "+url);
 
-            // TODO
             urlConnection = (HttpsURLConnection) url.openConnection();
-//            urlConnection.setDoInput(true);
-//            urlConnection.setDoOutput(true);
-//            urlConnection.setRequestMethod("PUT");
-//            urlConnection.setRequestProperty("Content-Type", "application/json");
-
-//            outputStreamWriter= new OutputStreamWriter(urlConnection.getOutputStream());
-//            outputStreamWriter.write(jsonString);
-//            outputStreamWriter.flush();
             Log.i(TAG, "(PUT) Response Code " + urlConnection.getResponseCode());
 
             InputStream inputStream = urlConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
             String tempString;
             String responseString  = new String();
             while ((tempString = bufferedReader.readLine()) != null) {

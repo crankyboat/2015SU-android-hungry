@@ -53,7 +53,7 @@ public class MapFragment extends Fragment implements
     LocationListener, AsyncResponse {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final int MAX_ZOOM_LEVEL = 4;
+    private static final int MAX_ZOOM_LEVEL = 9;
     private static final int MAX_NUM_PLACES = 20;
 
     private FloatingActionButton mReloadButton;
@@ -206,7 +206,7 @@ public class MapFragment extends Fragment implements
         us.setUserLocation(mCurrentLocation);
 
         mCachedPlacesByZoom = new HashMap<Integer, ArrayList<PlaceState>>();
-        for (int i=0; i<=MAX_ZOOM_LEVEL; i++) {
+        for (int i=0; i<=MAX_ZOOM_LEVEL; i+=2) {    // increment by two levels
             setUpHungryApiAsyncTask(i);
         }
 
@@ -254,7 +254,6 @@ public class MapFragment extends Fragment implements
 
         // Pause for awhile then reconnect
 
-
 //        LocationServices.FusedLocationApi.removeLocationUpdates(
 //                mGoogleApiClient, this);
 //
@@ -269,29 +268,6 @@ public class MapFragment extends Fragment implements
 
 
     }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == PLACE_PICKER_REQUEST) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                Place place = PlacePicker.getPlace(data, mActivity);
-//                String toastMsg = String.format("Place: %s", place.getName());
-//                Toast.makeText(mActivity, toastMsg, Toast.LENGTH_LONG).show();
-//            }
-//        }
-//    }
-//
-//    private void setUpPlacePicker() {
-//        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-//        Context context = mActivity.getApplicationContext();
-//        try {
-//            startActivityForResult(builder.build(context), PLACE_PICKER_REQUEST);
-//        } catch (GooglePlayServicesRepairableException e) {
-//            e.printStackTrace();
-//        } catch (GooglePlayServicesNotAvailableException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     protected synchronized void setUpGoogleApiClient() {
 
@@ -316,15 +292,9 @@ public class MapFragment extends Fragment implements
 
     private void setUpHungryApiAsyncTask(int range) {
 
-        // Dummy user state
         UserState us = ((MainActivity)mActivity).mUserState;
         HungryAsyncTask mHungryAsyncTask = new HungryAsyncTask(this, range);
         mHungryAsyncTask.execute(us);
-
-//        us.setFeedback("business1", 1);
-//        us.setFeedback("business2", 100);
-//        FeedbackAsyncTask mFeedbackAsyncTask = new FeedbackAsyncTask();
-//        mFeedbackAsyncTask.execute(us);
 
     }
 
@@ -375,7 +345,22 @@ public class MapFragment extends Fragment implements
         // Use the appropriate ArrayLists depending on Zoom Level
         ArrayList<PlaceState> rankedPlaceList;
         Log.i("hungry-api", "mapZoom: "+mapZoom);
-        if (mapZoom < 12.9 && mCachedPlacesByZoom.get(4)!=null) {
+        if (mapZoom < 11.4 && mCachedPlacesByZoom.get(9)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(9));
+        }
+        else if (mapZoom < 11.4 && mCachedPlacesByZoom.get(8)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(8));
+        }
+        else if (mapZoom < 11.6 && mCachedPlacesByZoom.get(7)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(7));
+        }
+        else if (mapZoom < 11.9 && mCachedPlacesByZoom.get(6)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(6));
+        }
+        else if (mapZoom < 12.4 && mCachedPlacesByZoom.get(5)!=null) {
+            rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(5));
+        }
+        else if (mapZoom < 12.9 && mCachedPlacesByZoom.get(4)!=null) {
             rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(4));
         }
         else if (mapZoom < 13.2 && mCachedPlacesByZoom.get(3)!=null) {
@@ -398,9 +383,9 @@ public class MapFragment extends Fragment implements
         Collections.sort(rankedPlaceList);
         int maxIndex = Math.min(MAX_NUM_PLACES, rankedPlaceList.size());
         rankedPlaceList = new ArrayList<PlaceState>(rankedPlaceList.subList(0, maxIndex));
-        for (int i=0; i<maxIndex; i++) {
-            Log.i("hungry-api-rank", "(i, rank): ("+i+", "+rankedPlaceList.get(i).getRank()+")");
-        }
+//        for (int i=0; i<maxIndex; i++) {
+//            Log.i("hungry-api-rank", "(i, rank): ("+i+", "+rankedPlaceList.get(i).getRank()+")");
+//        }
 
         if (mMapViewFragment != null) {
             mMapViewFragment.mMap.clear();

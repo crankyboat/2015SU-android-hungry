@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -134,6 +136,12 @@ public class BusinessActivity extends ActionBarActivity
         if (!getIntent().getStringExtra(bPhone).equals("Phone Number N/A"))
             ((TextView) findViewById(R.id.business_phone)).setTextColor(getResources().getColor(R.color.my_accent));
 
+        // Setup Empty ListView
+        mListView = (ListView) findViewById(R.id.review_list);
+        mListView.setEmptyView(findViewById(R.id.empty_list));
+        ((ProgressBar)mListView.getEmptyView()).getIndeterminateDrawable().setColorFilter(
+                getResources().getColor(R.color.my_primary), PorterDuff.Mode.MULTIPLY);
+
         // Setup ViewFlipper
         mContext = this;
         mDetector = new GestureDetector(new SwipeGestureDetector());
@@ -176,8 +184,6 @@ public class BusinessActivity extends ActionBarActivity
 
                         }
                     });
-
-
 
         }
         else {
@@ -282,7 +288,6 @@ public class BusinessActivity extends ActionBarActivity
         else {
             mReviewList = new ArrayList<ReviewItem>(((ArrayList<ReviewItem>) reviewList));
             mReviewListAdapter = new ReviewListBaseAdapter(this, mReviewList);
-            mListView.setEmptyView(findViewById(R.id.empty_list));
             mListView.setAdapter(mReviewListAdapter);
             setUpListViewHeight();
         }
