@@ -23,10 +23,11 @@ import htc.cloud.intern.hungrytest.UserState;
  */
 public class FeedbackAsyncTask extends AsyncTask<UserState, Void, Void> {
 
+    private final static String TAG = "FeedbackAsyncTask";
     public final static String apiURL = "https://recornot.herokuapp.com/";
     public final static String serviceName = "feedback";
     public final static String useridField = "user_id";
-    public final static String feedbackField = "feedbacks"; //fedbacks=[...]
+    public final static String feedbackField = ""; //fedbacks=[...]
     private URL url;
 
     @Override
@@ -35,16 +36,13 @@ public class FeedbackAsyncTask extends AsyncTask<UserState, Void, Void> {
         HttpsURLConnection urlConnection;
         OutputStreamWriter outputStreamWriter;
 
-        // Construct JSONstring
-        // Input = { userid, JSONArray of business_id:clicks pairs }
-//        String jsonString = new String();
-//        jsonString = userStates[0].getFeedbackAndClear();
-
         // PUT to db
         try {
             url = new URL(apiURL+serviceName
                     +"?"+useridField+"="+userStates[0].mDeviceID
-                    +"&"+feedbackField+"=["+userStates[0].getFeedbackAndClear()+"]");
+                    +"&"+feedbackField+userStates[0].getFeedbackAndClear());
+
+            Log.i(TAG, "url: "+url);
 
             // TODO
             urlConnection = (HttpsURLConnection) url.openConnection();
@@ -56,7 +54,7 @@ public class FeedbackAsyncTask extends AsyncTask<UserState, Void, Void> {
 //            outputStreamWriter= new OutputStreamWriter(urlConnection.getOutputStream());
 //            outputStreamWriter.write(jsonString);
 //            outputStreamWriter.flush();
-            Log.i("FeedbackAsyncTask", "(PUT) Response Code " + urlConnection.getResponseCode());
+            Log.i(TAG, "(PUT) Response Code " + urlConnection.getResponseCode());
 
             InputStream inputStream = urlConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -67,7 +65,8 @@ public class FeedbackAsyncTask extends AsyncTask<UserState, Void, Void> {
                 responseString += tempString;
             }
             bufferedReader.close();
-            Log.i("FeedbackAsyncTask", responseString);
+            Log.i(TAG, responseString);
+
 
         } catch (IOException e) {
             e.printStackTrace();

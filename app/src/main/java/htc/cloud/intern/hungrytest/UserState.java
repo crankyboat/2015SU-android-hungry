@@ -16,6 +16,8 @@ import java.util.Map;
  */
 public class UserState {
 
+    public static final String TAG = "user-state";
+
 //    private final TelephonyManager mTelephonyManager;
     public final String mDeviceID;
     public String mCurrentLocation;
@@ -52,7 +54,7 @@ public class UserState {
         Iterator iter = mFeedback.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry pair = (Map.Entry)iter.next();
-            feedbackString = feedbackString + pair.getKey() + ":" + pair.getValue() +",";
+            feedbackString = feedbackString + "feedbacks=" + pair.getKey() + "," + pair.getValue() +"&";
             iter.remove(); // avoids a ConcurrentModificationException
         }
         feedbackString = feedbackString.length()>0
@@ -61,6 +63,7 @@ public class UserState {
 
         mFeedback = new HashMap<String, Integer>();
 
+        Log.i(TAG, "feedback string: "+feedbackString);
         return feedbackString;
 
     }

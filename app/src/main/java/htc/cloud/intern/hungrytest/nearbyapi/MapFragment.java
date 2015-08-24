@@ -412,4 +412,21 @@ public class MapFragment extends Fragment implements
         }
     }
 
+    public ArrayList<PlaceState> getCachedPlaces() {
+
+        if (mCachedPlacesByZoom==null) {
+            return null;
+        }
+        else {
+            for (int i = MAX_ZOOM_LEVEL; i >= 0; i--) {
+                if (mCachedPlacesByZoom.get(i) != null) {
+                    return mCachedPlacesByZoom.get(i);
+                }
+            }
+            return null;
+        }
+
+    }
+
+
 }

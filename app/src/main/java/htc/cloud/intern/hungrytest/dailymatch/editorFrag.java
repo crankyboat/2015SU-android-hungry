@@ -25,6 +25,8 @@ import android.widget.Toast;
  * Recommendation Fragment layout
  */
 
+import com.koushikdutta.ion.Ion;
+
 import htc.cloud.intern.hungrytest.R;
 
 public class editorFrag extends Fragment{
@@ -53,8 +55,8 @@ public class editorFrag extends Fragment{
             res_index = obj.getInt("res_index");
             res_index += 1;
             res_name = obj.getString("res_name");
-            rating = obj.getString("rating");
-            distance = obj.getString("distance");
+            rating = obj.getDouble("rating")+"";
+            distance = Math.round(obj.getDouble("distance"))+"";
             img = obj.getString("img");
 
             //Log.d("TAG", "editor oncreateview!!");
@@ -99,15 +101,25 @@ public class editorFrag extends Fragment{
 
     public void set_content(){
         TextView Name = (TextView) getView().findViewById(R.id.res_name);
-        Name.setText(res_name);
         TextView Rating = (TextView)getView().findViewById(R.id.rating);
-        Rating.setText(rating);
         TextView Distance = (TextView)getView().findViewById(R.id.distance);
-        Distance.setText(distance);
         ImageView imageView = (ImageView) getView().findViewById(R.id.img);
-        int imageResource = getResources().getIdentifier(img, null, getView().getContext().getPackageName());
-        Drawable image = getResources().getDrawable(imageResource);
-        imageView.setImageDrawable(image);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        Name.setText(res_name);
+        Rating.setText(rating);
+        Distance.setText(distance);
+
+        if (img.equals("")) {
+            imageView.setImageResource(R.drawable.business_placeholder);
+        }
+        else {
+            String imageURL = img.replace("ls.jpg", "o.jpg")
+                    .replace("l.jpg", "o.jpg")
+                    .replace("//", img.contains("http") ? "//" : "http://");
+            Ion.with(imageView).load(imageURL);
+        }
+
     }
 
     public void setListener() {
@@ -174,11 +186,13 @@ public class editorFrag extends Fragment{
 
                     //slide left && slide right
                     if (mCurPosX - mPosX < 0 && (Math.abs(mCurPosX - mPosX) > 600)) {
+                        ((DailyMatchFragment)mCallback).setNegativeFeedback(res_index-1); // dislike
                         mCallback.onObjectSelected(res_index);
+
                     }else if (mCurPosX - mPosX > 0 && (Math.abs(mCurPosX - mPosX) > 600)) {
+                        ((DailyMatchFragment)mCallback).setPositiveFeedback(res_index-1); // like
                         mCallback.onObjectSelected(res_index);
                     }
-
                         View view = (View) event.getLocalState();
                         View view1 = getView().findViewById(R.id.button);
                         ViewGroup owner = (ViewGroup) view.getParent();
@@ -204,7 +218,9 @@ public class editorFrag extends Fragment{
     private View.OnClickListener click_like = new View.OnClickListener() {
 
         public void onClick(View view){
+            ((DailyMatchFragment)mCallback).setPositiveFeedback(res_index-1); // like
             mCallback.onObjectSelected(res_index);
+
             //Log.d("TAG", "up !!u like it!!!" + mCurPosY + "," + mPosY);
 
             LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -227,7 +243,9 @@ public class editorFrag extends Fragment{
     private View.OnClickListener click_dislike = new View.OnClickListener() {
 
         public void onClick(View view){
+            ((DailyMatchFragment)mCallback).setNegativeFeedback(res_index-1); // dislike
             mCallback.onObjectSelected(res_index);
+
             //Log.d("TAG", "up !!u dont like it!!!" + mCurPosY + "," + mPosY);
 
             LayoutInflater inflater = LayoutInflater.from(getActivity());

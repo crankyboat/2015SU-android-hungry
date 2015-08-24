@@ -37,10 +37,10 @@ public class MainActivity extends ActionBarActivity {
     // TODO
     private ArrayList<Fragment> mNavigationFragments;
     private Fragment mCurrentFragment;
-    private htc.cloud.intern.hungrytest.nearbyapi.MapFragment mNearbyApiFragment;
-    private PlaceholderFragment mFavoriteFragment;
-    private DailyMatchFragment mDailyMatchFragment;
-    private PlaceholderFragment mPlaceholderFragment;
+    public htc.cloud.intern.hungrytest.nearbyapi.MapFragment mNearbyApiFragment;
+    public PlaceholderFragment mFavoriteFragment;
+    public DailyMatchFragment mDailyMatchFragment;
+    public PlaceholderFragment mPlaceholderFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -24,7 +24,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/icon_favorite"
-            android:tint="#FF0000"
+            android:tint="@color/my_like"
             android:layout_marginTop="100dp"
             />
     </LinearLayout>

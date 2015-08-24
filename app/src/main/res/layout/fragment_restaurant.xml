@@ -91,7 +91,7 @@
                             android:layout_height="20dp"
                             android:src="@drawable/icon_star"
                             android:layout_gravity="center_vertical"
-                            android:tint="#F9F900"
+                            android:tint="@color/my_accent"
                             />
                         <TextView
                             android:id="@+id/rating"
@@ -100,7 +100,8 @@
                             android:text=""
                             android:textSize="16dp"
                             android:textColor="#4f4f4f"
-                            android:layout_gravity="center_vertical"/>
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="2dp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -116,7 +117,7 @@
                             android:layout_height="20dp"
                             android:src="@drawable/icon_map_1"
                             android:layout_gravity="center_vertical"
-                            android:tint="#02DF82"
+                            android:tint="@color/my_accent"
                             />
 
                         <TextView
@@ -189,7 +190,7 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:src="@drawable/icon_info"
-                    android:tint="#00E3E3"
+                    android:tint="@color/my_text"
                     android:layout_gravity="center"
                     />
             </LinearLayout>
@@ -205,7 +206,7 @@
                     android:layout_width="65dp"
                     android:layout_height="65dp"
                     android:src="@drawable/icon_favorite"
-                    android:tint="#FF0000"
+                    android:tint="@color/my_like"
                     android:layout_gravity="center"
                     />
             </LinearLayout>

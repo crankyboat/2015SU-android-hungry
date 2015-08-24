@@ -14,12 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Random;
+import java.util.Set;
 
 import htc.cloud.intern.hungrytest.MainActivity;
+import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.PlaceholderFragment;
 import htc.cloud.intern.hungrytest.R;
+import htc.cloud.intern.hungrytest.UserState;
+import htc.cloud.intern.hungrytest.hungryapi.FeedbackAsyncTask;
 
 /**
  * Created by intern on 7/27/15.
@@ -30,20 +37,43 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
     private static final String ARG_SECTION_NAME = "section_name";
     private CharSequence mSectionName;
     private TextView mSectionNameView;
+    private MainActivity mActivity;
 
-    private ArrayList<object_content> restaurant_content = new ArrayList<object_content>();
+    private ArrayList<PlaceState> restaurant_content;
     private Bundle args = null;
+    private UserState mUserState;
 
     //constructor
     public DailyMatchFragment() {}
 
-    private Bundle set_layout_content(Integer layout,Integer res_index,String res_name,String rating,String distance, String img){
+    public static Set<Integer> randIntSetWithImg(ArrayList<PlaceState> cachedPlaces, int maxPlaces, Random rand) {
+        Set<Integer> generated = new LinkedHashSet<Integer>();
+        while (generated.size() < maxPlaces)
+        {
+            Integer next = rand.nextInt(cachedPlaces.size());
+            if (!cachedPlaces.get(next).getImgSrc().equals("")) {
+                generated.add(next);
+            }
+        }
+        return generated;
+    }
+
+    public void setPositiveFeedback(int businessIndex) {
+        mUserState.setFeedback(restaurant_content.get(businessIndex).getId(), 1);
+    }
+
+    public void setNegativeFeedback(int businessIndex) {
+        mUserState.setFeedback(restaurant_content.get(businessIndex).getId(), -1);
+    }
+
+    private Bundle set_layout_content(Integer layout, Integer res_index,
+                                      String res_name, double rating, double distance, String img){
         Bundle args = new Bundle();
         args.putInt("layout", layout);
         args.putInt("res_index", res_index);
         args.putString("res_name", res_name);
-        args.putString("rating", rating);
-        args.putString("distance", distance);
+        args.putDouble("rating", rating);
+        args.putDouble("distance", distance);
         args.putString("img", img);
         return args;
     }
@@ -51,14 +81,31 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
     //onObjectSelected
     public void onObjectSelected(int res_index) {
 
-        Log.d("TAG","!!!"+res_index);
+        Log.d("TAG", "!!!" + res_index);
+
+        // END OF LIST
+        if (res_index >= restaurant_content.size()) {
+
+            Toast.makeText(getActivity(), "End of list.", Toast.LENGTH_LONG).show();
+            FeedbackAsyncTask mFeedbackAsyncTask = new FeedbackAsyncTask();
+            mFeedbackAsyncTask.execute(mUserState);
+
+            // Replace fragment
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
+                    .replace(R.id.fragment_daily, PlaceholderFragment.newInstance("", R.layout.fragment_dailymatch_end))
+                    .commit();
+
+            return;
+        }
 
         args = set_layout_content(R.layout.fragment_restaurant,
                 res_index,
-                restaurant_content.get(res_index).res_name,
-                restaurant_content.get(res_index).rating,
-                restaurant_content.get(res_index).distance,
-                restaurant_content.get(res_index).img);
+                restaurant_content.get(res_index).getName(),
+                restaurant_content.get(res_index).getRating(),
+                restaurant_content.get(res_index).getDist(),
+                restaurant_content.get(res_index).getImgSrc());
 
         editorFrag new_frag = new editorFrag();
         new_frag.setArguments(args);
@@ -69,8 +116,6 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
                 .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
                 .replace(R.id.fragment_daily, new_frag)
                 .commit();
-
-
 
     }
 
@@ -89,25 +134,41 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
     }
 
     //Set a restaurant object content
-    private object_content set_content(String res_name,String rating,String distance, String img){
-        return new object_content(res_name,rating,distance,img);
-    }
+//    private PlaceState set_content(String res_name,String rating,String distance, String img){
+//        return new PlaceState(res_name,rating,distance,img);
+//    }
+
     //Add a restaurant object to arraylist
     private void add_content(){
 
-        //two fake data
-        restaurant_content.add(set_content("橋北屋","3.8","17.3","@drawable/image_5"));
-        restaurant_content.add(set_content("鼎泰豐","4.5","14.3","@drawable/image_4"));
-        restaurant_content.add(set_content("鼎王","4.0","10.0","@drawable/image_6"));
+        ArrayList<PlaceState> cachedPlaces = mActivity.mNearbyApiFragment.getCachedPlaces();
+        if (cachedPlaces==null) {
+            Toast.makeText(mActivity, "Network error.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else {
+            int MAX_FEEDBACK = 10;
+            Set<Integer> randSetWithImg = randIntSetWithImg(cachedPlaces, MAX_FEEDBACK, new Random());
+            for (Integer r : randSetWithImg) {
+                restaurant_content.add(cachedPlaces.get(r));
+            }
+            return;
+        }
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mActivity = (MainActivity) getActivity();
+        mUserState = mActivity.mUserState;
+
         add_content();
         Log.d("TAG", "F : onCreate!!");
+
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,10 +181,10 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
             //Set argument of restaurant && 0 is the first restaurant
                 args = set_layout_content(R.layout.fragment_restaurant,
                                           0,
-                                          restaurant_content.get(0).res_name,
-                                          restaurant_content.get(0).rating,
-                                          restaurant_content.get(0).distance,
-                                          restaurant_content.get(0).img);
+                                          restaurant_content.get(0).getName(),
+                                          restaurant_content.get(0).getRating(),
+                                          restaurant_content.get(0).getDist(),
+                                          restaurant_content.get(0).getImgSrc());
                 frag.setArguments(args);
 
 
@@ -150,6 +211,9 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
         ((MainActivity) activity).onSectionAttached(
                 mSectionNameView,
                 getArguments().getCharSequence(ARG_SECTION_NAME));
+
+        restaurant_content = new ArrayList<PlaceState>();
+
         Log.d("TAG", "F : onAttach!!");
     }
 
