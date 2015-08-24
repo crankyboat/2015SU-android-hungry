@@ -41,6 +41,8 @@ public class editorFrag extends Fragment{
     private String res_name,rating,distance,img;
     public float mPosX,mCurPosX,mPosY,mCurPosY;
 
+    private View res_view = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -118,25 +120,64 @@ public class editorFrag extends Fragment{
         getView().findViewById(R.id.fragment).setOnDragListener(_MyDragListener);
     }
 
+    private int value1 = 0,value2 = 0;
+
     private View.OnTouchListener _MyTouchListener = new View.OnTouchListener() {
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                Log.d("TAG", "onTouch!!");
+
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    mPosX = motionEvent.getX();
+                    mPosY = motionEvent.getY();
+                    ClipData data = ClipData.newPlainText("", "");
+                    View.DragShadowBuilder shadowBuilder = new MyDragShadowBuilder(view,mPosX,mPosY);
+                    view.startDrag(data, shadowBuilder, view, 0);
+                    view.setVisibility(View.INVISIBLE);
+                    value1++;
+                    Log.d("TAG", "down!!");
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    Log.d("TAG", "move!!");
+                    break;
+                case MotionEvent.ACTION_UP:
+                    view.setVisibility(View.VISIBLE);
+                    Log.d("TAG", "up!!");
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    Log.d("TAG", "cancel!!");
+                    break;
+                default:
+                    break;
+            }
+            /*if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
                 view.startDrag(data, shadowBuilder, view, 0);
-                view.setVisibility(View.INVISIBLE);
+                //view.setVisibility(View.INVISIBLE);
                 mPosX = motionEvent.getX();
                 mPosY = motionEvent.getY();
-                Log.d("TAG", "onTouch!!" + mPosX + "," + mPosY);
+                Log.d("TAG", "down!!" + value1);
+                value1++;
                 return true;
-            } else {
-                Log.d("TAG", "NTouch!!");
+            }else if(motionEvent.getAction() == MotionEvent.ACTION_MOVE){
+                Log.d("TAG", "move!!" + value1);
+                return true;
+            }else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+                Log.d("TAG", "up!!" + value1);
+                return true;
+            }else if(motionEvent.getAction() == MotionEvent.ACTION_CANCEL){
+                Log.d("TAG", "cancel!!" + value1);
+                return true;
+            }else {
+                //view.setVisibility(View.VISIBLE);
+                Log.d("TAG", "else condition!!"+ value2);
+                value2++;
                 return false;
-            }
-
+            }*/
+            return true;
         }
     };
+
 
     private View.OnDragListener _MyDragListener = new View.OnDragListener() {
         @Override
@@ -146,10 +187,10 @@ public class editorFrag extends Fragment{
 
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
-                    //Log.d("TAG", "ACTION_DRAG_STARTED!!");
+                    Log.d("TAG", "ACTION_DRAG_STARTED!!");
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
-                    //Log.d("TAG", "ACTION_DRAG_ENTERED!!");
+                    Log.d("TAG", "ACTION_DRAG_ENTERED!!");
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                         View _view = (View) event.getLocalState();
@@ -164,7 +205,7 @@ public class editorFrag extends Fragment{
                         Log.d("TAG", "ACTION_DRAG_EXITED!!");
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
-                    //Log.d("TAG", "ACTION_DRAG_LOCATION!!");
+                        Log.d("TAG", "ACTION_DRAG_LOCATION!!");
                     break;
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
@@ -173,9 +214,11 @@ public class editorFrag extends Fragment{
                     mCurPosY = event.getY();
 
                     //slide left && slide right
-                    if (mCurPosX - mPosX < 0 && (Math.abs(mCurPosX - mPosX) > 600)) {
+                    if (mCurPosX - mPosX < 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt((getView().getWidth()/2))) {
+                        Log.d("TAG", "!!" + (Math.abs(mCurPosX - mPosX))+","+Math.sqrt(Math.abs(mCurPosX - mPosX)));
                         mCallback.onObjectSelected(res_index);
-                    }else if (mCurPosX - mPosX > 0 && (Math.abs(mCurPosX - mPosX) > 600)) {
+                    }else if (mCurPosX - mPosX > 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt((getView().getWidth()/2))) {
+                        Log.d("TAG", "!!" + (Math.abs(mCurPosX - mPosX))+","+Math.sqrt(Math.abs(mCurPosX - mPosX)));
                         mCallback.onObjectSelected(res_index);
                     }
 
@@ -189,12 +232,21 @@ public class editorFrag extends Fragment{
                         container.addView(view1);
                         view.setVisibility(View.VISIBLE);
 
-                        //Log.d("TAG","ACTION_DROP!!"+mCurPosX+","+mCurPosY);
+                        Log.d("TAG", "ACTION_DROP!!");
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    //Log.d("TAG", "ACTION_DRAG_ENDED!!");
+                        Log.d("TAG", "ACTION_DRAG_ENDED!!");
                 default:
-                    //Log.d("TAG", "no work!!");
+                    /*View __view = (View) event.getLocalState();
+                    View __view1 = getView().findViewById(R.id.button);
+                    ViewGroup __owner = (ViewGroup) __view.getParent();
+                    __owner.removeView(__view);
+                    __owner.removeView(__view1);
+                    LinearLayout __container = (LinearLayout) v;
+                    __container.addView(__view);
+                    __container.addView(__view1);
+                    __view.setVisibility(View.VISIBLE);*/
+                    Log.d("TAG", "drag default!!");
                     break;
             }
             return true;

@@ -51,27 +51,30 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
     //onObjectSelected
     public void onObjectSelected(int res_index) {
 
-        Log.d("TAG","!!!"+res_index);
 
-        args = set_layout_content(R.layout.fragment_restaurant,
-                res_index,
-                restaurant_content.get(res_index).res_name,
-                restaurant_content.get(res_index).rating,
-                restaurant_content.get(res_index).distance,
-                restaurant_content.get(res_index).img);
+      if(res_index < 2) {
+          Log.d("TAG", "res_index:" + res_index+"!!!");
 
-        editorFrag new_frag = new editorFrag();
-        new_frag.setArguments(args);
+          args = set_layout_content(R.layout.fragment_restaurant,
+                  res_index,
+                  restaurant_content.get(res_index).res_name,
+                  restaurant_content.get(res_index).rating,
+                  restaurant_content.get(res_index).distance,
+                  restaurant_content.get(res_index).img);
 
-        //method1 : replace fragment with animation
-        getChildFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
-                .replace(R.id.fragment_daily, new_frag)
-                .commit();
+          editorFrag new_frag = new editorFrag();
+          new_frag.setArguments(args);
+
+          //method1 : replace fragment with animation
+          getChildFragmentManager()
+                  .beginTransaction()
+                  .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
+                  .replace(R.id.fragment_daily, new_frag)
+                  .addToBackStack(null)
+                  .commit();
 
 
-
+      }
     }
 
 
