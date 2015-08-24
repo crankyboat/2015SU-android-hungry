@@ -180,6 +180,9 @@ public class editorFrag extends Fragment{
 
 
     private View.OnDragListener _MyDragListener = new View.OnDragListener() {
+
+
+
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();

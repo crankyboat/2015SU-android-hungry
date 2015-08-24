@@ -71,5 +71,12 @@ public class MyDragShadowBuilder extends View.DragShadowBuilder {
         touchPoint.set((int) x, (int) y);
     }
 
+    @Override
+    public void onDrawShadow(Canvas canvas) {
+        super.onDrawShadow(canvas);
+
+    
+    }
+
 
 }
