@@ -86,11 +86,9 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
         // END OF LIST
         if (res_index >= restaurant_content.size()) {
 
-            Toast.makeText(getActivity(), "End of list.", Toast.LENGTH_LONG).show();
             FeedbackAsyncTask mFeedbackAsyncTask = new FeedbackAsyncTask();
             mFeedbackAsyncTask.execute(mUserState);
 
-            // Replace fragment
             getChildFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)

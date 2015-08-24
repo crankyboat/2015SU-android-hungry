@@ -25,21 +25,12 @@
         android:tint="@color/my_primary"
         android:src="@drawable/ic_favorite_black_24dp"/>
 
-    <TextView
-        android:id="@+id/business_category_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/business_name"
-        android:paddingTop="@dimen/spacing_large"
-        android:text="Category Text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
     <RelativeLayout
         android:id="@+id/business_header"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/business_category_text"
+        android:layout_below="@id/business_name"
         android:paddingTop="@dimen/spacing_large">
 
         <RatingBar
@@ -64,9 +55,18 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/business_category_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/business_header"
+        android:paddingBottom="@dimen/spacing_large"
+        android:text="Category Text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
     <LinearLayout
         android:id="@+id/business_phone_group"
-        android:layout_below="@id/business_header"
+        android:layout_below="@id/business_category_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
