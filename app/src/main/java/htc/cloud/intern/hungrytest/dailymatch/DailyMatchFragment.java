@@ -51,8 +51,6 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
     //onObjectSelected
     public void onObjectSelected(int res_index) {
 
-
-      if(res_index < 2) {
           Log.d("TAG", "res_index:" + res_index+"!!!");
 
           args = set_layout_content(R.layout.fragment_restaurant,
@@ -74,7 +72,6 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
                   .commit();
 
 
-      }
     }
 
 
@@ -99,9 +96,9 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
     private void add_content(){
 
         //two fake data
-        restaurant_content.add(set_content("橋北屋","3.8","17.3","@drawable/image_5"));
-        restaurant_content.add(set_content("鼎泰豐","4.5","14.3","@drawable/image_4"));
-        restaurant_content.add(set_content("鼎王","4.0","10.0","@drawable/image_6"));
+        restaurant_content.add(set_content("橋北屋","3.8","17.3","@drawable/img_pizza"));
+        restaurant_content.add(set_content("鼎泰豐","4.5","14.3","@drawable/img_pizza"));
+        //restaurant_content.add(set_content("鼎王","4.0","10.0","@drawable/image_6"));
     }
 
     @Override
