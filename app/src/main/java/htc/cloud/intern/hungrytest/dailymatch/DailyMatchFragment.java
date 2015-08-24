@@ -105,15 +105,16 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
                 restaurant_content.get(res_index).getDist(),
                 restaurant_content.get(res_index).getImgSrc());
 
-        editorFrag new_frag = new editorFrag();
-        new_frag.setArguments(args);
+          editorFrag new_frag = new editorFrag();
+          new_frag.setArguments(args);
 
-        //method1 : replace fragment with animation
-        getChildFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
-                .replace(R.id.fragment_daily, new_frag)
-                .commit();
+          //method1 : replace fragment with animation
+          getChildFragmentManager()
+                  .beginTransaction()
+                  .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
+                  .replace(R.id.fragment_daily, new_frag)
+                  .addToBackStack(null)
+                  .commit();
 
     }
 
