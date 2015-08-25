@@ -1,7 +1,6 @@
 package htc.cloud.intern.hungrytest;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,19 +12,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.dailymatch.DailyMatchFragment;
-import htc.cloud.intern.hungrytest.dailymatch.editorFrag;
-import htc.cloud.intern.hungrytest.nearby.MapFragment;
-
+import htc.cloud.intern.hungrytest.nearbyapi.MapFragment;
 
 public class MainActivity extends ActionBarActivity {
-
 
     public static FragmentManager mFragmentManager;
     public UserState mUserState;
@@ -37,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
     // TODO
     private ArrayList<Fragment> mNavigationFragments;
     private Fragment mCurrentFragment;
-    public htc.cloud.intern.hungrytest.nearbyapi.MapFragment mNearbyApiFragment;
+    public MapFragment mNearbyApiFragment;
     public PlaceholderFragment mFavoriteFragment;
     public DailyMatchFragment mDailyMatchFragment;
     public PlaceholderFragment mPlaceholderFragment;
@@ -46,10 +41,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            getWindow().setStatusBarColor(getResources().getColor(R.color.my_primary_dark));
-//        }
 
         mContext = this;
         mUserState = new UserState(this.getBaseContext());
@@ -144,12 +135,12 @@ public class MainActivity extends ActionBarActivity {
 
     private void setUpNavigationFragments() {
 
-        // TODO
-        mNearbyApiFragment = htc.cloud.intern.hungrytest.nearbyapi.MapFragment.newInstance(0);
+        mNearbyApiFragment = MapFragment.newInstance(0);
         mFavoriteFragment = PlaceholderFragment.newInstance("Favorite");
         mDailyMatchFragment = DailyMatchFragment.newInstance("Daily Match");
         mPlaceholderFragment = PlaceholderFragment.newInstance("Placeholder");
 
+        // TODO
 //        mFragmentManager.beginTransaction()
 //                .add(R.id.container, mNearbyApiFragment)
 //                .add(R.id.container, mFavoriteFragment)
