@@ -194,6 +194,7 @@ public class editorFrag extends Fragment{
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     Log.d("TAG", "ACTION_DRAG_ENTERED!!");
+
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                         View _view = (View) event.getLocalState();
@@ -208,7 +209,41 @@ public class editorFrag extends Fragment{
                         Log.d("TAG", "ACTION_DRAG_EXITED!!");
                     break;
                 case DragEvent.ACTION_DRAG_LOCATION:
-                        Log.d("TAG", "ACTION_DRAG_LOCATION!!");
+                    /*
+                    if(event.getX() < getView().getWidth()/2){
+                        LayoutInflater inflater = LayoutInflater.from(getActivity());
+                        View dislike = inflater.inflate(R.layout.dislike_show,
+                                (ViewGroup) getView().findViewById(R.id.dislike_show_content));
+                        final Toast toast = new Toast(v.getContext());
+                        toast.setView(dislike);
+                        toast.show();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 50);
+
+                    }else{
+                        LayoutInflater inflater = LayoutInflater.from(getActivity());
+                        View like = inflater.inflate(R.layout.like_show,
+                                (ViewGroup) getView().findViewById(R.id.like_show_content));
+                        final Toast toast = new Toast(v.getContext());
+                        toast.setView(like);
+                        toast.show();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 50);
+
+                    }*/
+                        Log.d("TAG", "ACTION_DRAG_LOCATION!!("+event.getX()+","+event.getY()+")"+getView().getWidth());
                     break;
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
@@ -217,11 +252,39 @@ public class editorFrag extends Fragment{
                     mCurPosY = event.getY();
 
                     //slide left && slide right
-                    if (mCurPosX - mPosX < 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt((getView().getWidth()/2))) {
+                    if (mCurPosX - mPosX < 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt(((getView().getWidth()*0.4)))) {
                         Log.d("TAG", "!!" + (Math.abs(mCurPosX - mPosX))+","+Math.sqrt(Math.abs(mCurPosX - mPosX)));
+                        LayoutInflater inflater = LayoutInflater.from(getActivity());
+                        View dislike = inflater.inflate(R.layout.dislike_show,
+                                (ViewGroup) getView().findViewById(R.id.dislike_show_content));
+                        final Toast toast = new Toast(v.getContext());
+                        toast.setView(dislike);
+                        toast.show();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 200);
                         mCallback.onObjectSelected(res_index);
-                    }else if (mCurPosX - mPosX > 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt((getView().getWidth()/2))) {
+                    }else if (mCurPosX - mPosX > 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt(((getView().getWidth()*0.4)))) {
                         Log.d("TAG", "!!" + (Math.abs(mCurPosX - mPosX))+","+Math.sqrt(Math.abs(mCurPosX - mPosX)));
+                        LayoutInflater inflater = LayoutInflater.from(getActivity());
+                        View like = inflater.inflate(R.layout.like_show,
+                                (ViewGroup) getView().findViewById(R.id.like_show_content));
+                        final Toast toast = new Toast(v.getContext());
+                        toast.setView(like);
+                        toast.show();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 200);
                         mCallback.onObjectSelected(res_index);
                     }
 
