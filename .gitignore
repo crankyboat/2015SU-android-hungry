@@ -1,0 +1,26 @@
+# Build application files
+*.apk
+*.ap_
+
+# Dalvik VM files
+*.dex
+
+# Java class files
+*.java
+
+# Gradle files
+build/
+gradle/
+.gradle/
+.idea/
+*.iml
+
+# Local config files
+local.properties
+
+# Log files
+*.log
+
+# Local cached files
+*.DS_Store
+
