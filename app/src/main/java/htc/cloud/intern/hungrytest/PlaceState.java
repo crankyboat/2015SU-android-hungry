@@ -141,10 +141,10 @@ public class PlaceState implements Comparable<PlaceState>{
     public void setReviewList(ArrayList<String> reviewList) {
         mReviewList = new ArrayList<String>(reviewList);
     }
-//
-//    public ArrayList<String> getReviewList() {
-//        return mReviewList;
-//    }
+
+    public ArrayList<String> getReviewList() {
+        return mReviewList;
+    }
 
     @Override
     public String toString(){

@@ -38,7 +38,7 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
     public final static String zoomField = "zoom_level";
     public final static int numRec = 100;
 
-//    private int currentRank;
+    private int currentRank;
     private int currentZoom;
     private AsyncResponse responseDelegate;
     private URL url;
@@ -126,7 +126,7 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
             for (int i=0; i<jsonArray.length(); i++) {
                 business = jsonArray.getJSONObject(i);
 
-                id = business.getString("business_id");//.replaceFirst("-(.*)", "");
+                id = business.getString("business_id");
 
                 name = business.getString("name");
 

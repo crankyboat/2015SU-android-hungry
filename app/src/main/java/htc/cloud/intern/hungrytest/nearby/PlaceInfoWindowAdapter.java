@@ -47,12 +47,6 @@ public class PlaceInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         ((TextView) mContent.findViewById(R.id.tv_title)).setText(marker.getTitle());
         ((TextView) mContent.findViewById(R.id.tv_desc)).setText(placeState.getCategory());
-//        ((ImageView) mContent.findViewById(R.id.iv_icon)).setImageResource(R.drawable.ic_stars_black_24dp);
-//        Ion.with((ImageView) mContent.findViewById(R.id.iv_icon))
-//                .placeholder(R.drawable.ic_map_black_24dp)
-//                .load(placeState.getImgSrc().replace("ls.jpg", "ms.jpg"));
-//        Log.i("InfoWindowAdapter", "imgURL: " + R.drawable.ic_stars_black_24dp);
-
         ((RatingBar) mContent.findViewById(R.id.rating_bar)).setRating((float)placeState.getRating());
 
         return mContent;
