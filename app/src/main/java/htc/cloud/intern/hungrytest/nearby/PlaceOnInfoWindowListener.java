@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest.nearbyapi;
+package htc.cloud.intern.hungrytest.nearby;
 
 import android.app.Activity;
 import android.content.Intent;

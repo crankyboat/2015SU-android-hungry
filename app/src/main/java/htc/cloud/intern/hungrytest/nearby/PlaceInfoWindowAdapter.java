@@ -1,16 +1,12 @@
-package htc.cloud.intern.hungrytest.nearbyapi;
+package htc.cloud.intern.hungrytest.nearby;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.koushikdutta.ion.Ion;
 
 import java.util.HashMap;
 

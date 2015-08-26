@@ -31,7 +31,6 @@
                 android:background="@color/my_primary"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark"
                 app:layout_scrollFlags="scroll|enterAlways" />
-            <!--android:background="@color/primary_dark_material_dark"-->
 
         </android.support.design.widget.AppBarLayout>
 

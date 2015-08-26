@@ -3,22 +3,22 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/background_floating_material_light">
 
-    <TextView
-        android:id="@+id/end_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_extralarge"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:layout_centerInParent="true"
-        android:text="Thank you for your feedback!"/>
-
-    <!--<ImageView-->
-        <!--android:id="@+id/end_image"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="100dp"-->
-        <!--android:layout_above="@id/end_text"-->
+    <!--<TextView-->
+        <!--android:id="@+id/end_text"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/spacing_extralarge"-->
+        <!--android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
         <!--android:layout_centerInParent="true"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--android:src="@drawable/drawer_avatar"/>-->
+        <!--android:text="Thank you for your feedback!"/>-->
+
+    <ImageView
+        android:id="@+id/end_image"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="@dimen/spacing_extralarge"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/cher_wang"/>
 
 </RelativeLayout>

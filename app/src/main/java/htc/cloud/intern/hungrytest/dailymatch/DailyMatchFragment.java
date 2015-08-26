@@ -1,18 +1,12 @@
 package htc.cloud.intern.hungrytest.dailymatch;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +25,7 @@ import htc.cloud.intern.hungrytest.hungryapi.FeedbackAsyncTask;
 /**
  * Created by intern on 7/27/15.
  */
-public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectListener{
+public class DailyMatchFragment extends Fragment implements EditorFragment.OnSelectListener{
 
 
     private static final String ARG_SECTION_NAME = "section_name";
@@ -80,7 +74,6 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
 
     //onObjectSelected
     public void onObjectSelected(int res_index) {
-
         Log.d("TAG", "!!!" + res_index);
 
         // END OF LIST
@@ -93,6 +86,7 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
                     .beginTransaction()
                     .setCustomAnimations(R.anim.fade_out, R.anim.fade_in)
                     .replace(R.id.fragment_daily, PlaceholderFragment.newInstance("", R.layout.fragment_dailymatch_end))
+                    .addToBackStack(null)
                     .commit();
 
             return;
@@ -105,7 +99,7 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
                 restaurant_content.get(res_index).getDist(),
                 restaurant_content.get(res_index).getImgSrc());
 
-          editorFrag new_frag = new editorFrag();
+          EditorFragment new_frag = new EditorFragment();
           new_frag.setArguments(args);
 
           //method1 : replace fragment with animation
@@ -176,8 +170,8 @@ public class DailyMatchFragment extends Fragment implements editorFrag.OnSelectL
         if(rootView.findViewById(R.id.fragment_daily) != null
                 && restaurant_content!=null && restaurant_content.size()>0) {
 
-            // Create an instance of editorFrag
-            editorFrag frag = new editorFrag();
+            // Create an instance of EditorFragment
+            EditorFragment frag = new EditorFragment();
 
             //Set argument of restaurant && 0 is the first restaurant
             args = set_layout_content(R.layout.fragment_restaurant,

@@ -72,7 +72,7 @@ public class ReviewListBaseAdapter extends BaseAdapter {
         }
         else {
             mViewHolder.iv_usericon.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            mViewHolder.iv_usericon.setImageResource(R.drawable.business_image);
+            mViewHolder.iv_usericon.setImageResource(R.drawable.user_placeholder);
         }
 
         return convertView;

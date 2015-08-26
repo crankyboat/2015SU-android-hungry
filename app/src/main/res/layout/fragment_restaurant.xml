@@ -41,7 +41,7 @@
                     android:layout_height="fill_parent"
                     android:scaleType="centerCrop"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/img_pizza"
+                    android:src="@drawable/business_placeholder"
                     />
 
             </LinearLayout>

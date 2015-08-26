@@ -3,11 +3,11 @@ package htc.cloud.intern.hungrytest.dailymatch;
 /**
  * Created by cwhuang on 2015/8/21.
  */
-public class object_content {
+public class ObjectContent {
 
     String res_name,rating,distance,img;
 
-    public object_content(String res_name,String rating,String distance, String img){
+    public ObjectContent(String res_name, String rating, String distance, String img){
         this.res_name = res_name;
         this.rating = rating;
         this.distance = distance;

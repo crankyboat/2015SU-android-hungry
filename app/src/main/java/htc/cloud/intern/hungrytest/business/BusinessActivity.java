@@ -2,13 +2,9 @@ package htc.cloud.intern.hungrytest.business;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.renderscript.Allocation;
@@ -16,8 +12,6 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -29,35 +23,24 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.google.android.gms.gcm.Task;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
-import htc.cloud.intern.hungrytest.MainActivity;
 import htc.cloud.intern.hungrytest.PlaceState;
 import htc.cloud.intern.hungrytest.R;
 import htc.cloud.intern.hungrytest.hungryapi.AsyncResponse;
 import htc.cloud.intern.hungrytest.hungryapi.ReviewAsyncTask;
-import htc.cloud.intern.hungrytest.nearbyapi.ListBaseAdapter;
 
 public class BusinessActivity extends ActionBarActivity
     implements AsyncResponse {
@@ -235,7 +218,7 @@ public class BusinessActivity extends ActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_business, menu);
+//        getMenuInflater().inflate(R.menu.menu_business, menu);
         return true;
     }
 
@@ -248,8 +231,8 @@ public class BusinessActivity extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_settings:
-                return true;
+//            case R.id.action_settings:
+//                return true;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -314,7 +297,7 @@ public class BusinessActivity extends ActionBarActivity
 
         ReviewAsyncTask mReviewAsyncTask = new ReviewAsyncTask();
         mReviewAsyncTask.setResponseDelegate(this);
-        mReviewAsyncTask.execute(getIntent().getStringExtra(BusinessActivity.bId));
+        mReviewAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getIntent().getStringExtra(BusinessActivity.bId));
 
     }
 

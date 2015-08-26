@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest.nearbyapi;
+package htc.cloud.intern.hungrytest.nearby;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.koushikdutta.ion.Ion;
 

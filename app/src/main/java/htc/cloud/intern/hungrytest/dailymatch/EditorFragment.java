@@ -29,7 +29,7 @@ import com.koushikdutta.ion.Ion;
 
 import htc.cloud.intern.hungrytest.R;
 
-public class editorFrag extends Fragment{
+public class EditorFragment extends Fragment{
 
     // Container Fragment must implement this interface
     public interface OnSelectListener {
@@ -79,7 +79,7 @@ public class editorFrag extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         set_content();
         setListener();
-        Log.d("TAG", "editorFrag onViewCreate!!");
+        Log.d("TAG", "EditorFragment onViewCreate!!");
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -161,31 +161,6 @@ public class editorFrag extends Fragment{
                 default:
                     break;
             }
-            /*if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                view.startDrag(data, shadowBuilder, view, 0);
-                //view.setVisibility(View.INVISIBLE);
-                mPosX = motionEvent.getX();
-                mPosY = motionEvent.getY();
-                Log.d("TAG", "down!!" + value1);
-                value1++;
-                return true;
-            }else if(motionEvent.getAction() == MotionEvent.ACTION_MOVE){
-                Log.d("TAG", "move!!" + value1);
-                return true;
-            }else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
-                Log.d("TAG", "up!!" + value1);
-                return true;
-            }else if(motionEvent.getAction() == MotionEvent.ACTION_CANCEL){
-                Log.d("TAG", "cancel!!" + value1);
-                return true;
-            }else {
-                //view.setVisibility(View.VISIBLE);
-                Log.d("TAG", "else condition!!"+ value2);
-                value2++;
-                return false;
-            }*/
             return true;
         }
     };
@@ -229,12 +204,40 @@ public class editorFrag extends Fragment{
                     mCurPosY = event.getY();
 
                     //slide left && slide right
-                    if (mCurPosX - mPosX < 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt((getView().getWidth()/2))) {
+                    if (mCurPosX - mPosX < 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt((getView().getWidth()*0.4))) {
                         Log.d("TAG", "!!" + (Math.abs(mCurPosX - mPosX))+","+Math.sqrt(Math.abs(mCurPosX - mPosX)));
-                        ((DailyMatchFragment)mCallback).setNegativeFeedback(res_index-1); // dislike
+                        LayoutInflater inflater = LayoutInflater.from(getActivity());
+                        View dislike = inflater.inflate(R.layout.dislike_show,
+                                (ViewGroup) getView().findViewById(R.id.dislike_show_content));
+                        final Toast toast = new Toast(v.getContext());
+                        toast.setView(dislike);
+                        toast.show();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 200);
+                        ((DailyMatchFragment)mCallback).setNegativeFeedback(res_index - 1); // dislike
                         mCallback.onObjectSelected(res_index);
-                    }else if (mCurPosX - mPosX > 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt((getView().getWidth()/2))) {
+                    }else if (mCurPosX - mPosX > 0 && Math.sqrt(Math.abs(mCurPosX - mPosX)) > Math.sqrt((getView().getWidth()*0.4))) {
                         Log.d("TAG", "!!" + (Math.abs(mCurPosX - mPosX))+","+Math.sqrt(Math.abs(mCurPosX - mPosX)));
+                        LayoutInflater inflater = LayoutInflater.from(getActivity());
+                        View like = inflater.inflate(R.layout.like_show,
+                                (ViewGroup) getView().findViewById(R.id.like_show_content));
+                        final Toast toast = new Toast(v.getContext());
+                        toast.setView(like);
+                        toast.show();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                toast.cancel();
+                            }
+                        }, 200);
                         ((DailyMatchFragment)mCallback).setPositiveFeedback(res_index-1); // like
                         mCallback.onObjectSelected(res_index);
                     }

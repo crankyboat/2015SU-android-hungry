@@ -1,4 +1,4 @@
-package htc.cloud.intern.hungrytest.nearbyapi;
+package htc.cloud.intern.hungrytest.nearby;
 
 /**
  * Created by intern on 7/24/15.
@@ -6,13 +6,9 @@ package htc.cloud.intern.hungrytest.nearbyapi;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -22,9 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -33,7 +27,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -52,26 +45,23 @@ public class MapFragment extends Fragment implements
     GoogleApiClient.OnConnectionFailedListener,
     LocationListener, AsyncResponse {
 
+    protected static final String TAG = "map-fragment";
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final int MAX_ZOOM_LEVEL = 9;
     private static final int MAX_NUM_PLACES = 20;
 
-    private FloatingActionButton mReloadButton;
-    private ImageButton mSwitchviewButton;
-
-    private ProgressDialog mProgressDialog;
-
-    private boolean isMapView;
-
-    protected static final String TAG = "location-map";
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
     protected LatLng mCurrentLocation;
     private Activity mActivity;
     private HashMap<Integer, ArrayList<PlaceState>> mCachedPlacesByZoom;
 
+    private boolean isMapView;
     protected MapViewFragment mMapViewFragment;
     protected MapListViewFragment mMapListViewFragment;
+    private FloatingActionButton mReloadButton;
+    private ImageButton mSwitchviewButton;
+    private ProgressDialog mProgressDialog;
 
     public static MapFragment newInstance(int sectionNumber) {
         MapFragment fragment = new MapFragment();
@@ -91,6 +81,7 @@ public class MapFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         setUpViewFragments();
         return rootView;
+
     }
 
     @Override
@@ -128,12 +119,12 @@ public class MapFragment extends Fragment implements
         if (!mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
-
     }
 
     @Override
     public void onDetach (){
         Log.i(TAG, "onDetach()");
+
         ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayOptions(
@@ -141,11 +132,13 @@ public class MapFragment extends Fragment implements
                             ActionBar.DISPLAY_SHOW_TITLE |
                             ActionBar.DISPLAY_HOME_AS_UP);
         }
+
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
+
         super.onDetach();
     }
 
@@ -153,6 +146,7 @@ public class MapFragment extends Fragment implements
     public void onStart() {
         Log.i(TAG, "onStart()");
         super.onStart();
+
         if (!mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
@@ -179,23 +173,26 @@ public class MapFragment extends Fragment implements
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "onConnected()");
+
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
         Log.i(TAG, "onConnectionSuspended()");
+
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+
         int errorCode = connectionResult.getErrorCode();
         if (errorCode == ConnectionResult.SERVICE_MISSING) {
             Toast.makeText(getActivity(), "Google Play Service Missing.", Toast.LENGTH_LONG).show();
         }
+
     }
 
     @Override
@@ -234,10 +231,12 @@ public class MapFragment extends Fragment implements
                 mMapViewFragment.mMap.clear();
                 mMapViewFragment.onLocationChanged(mCurrentLocation, rankedPlaceList);
             }
+
             if (mMapListViewFragment != null) {
                 mMapListViewFragment.onLocationChanged(rankedPlaceList);
             }
         }
+
         mCachedPlacesByZoom.put(currentZoom, new ArrayList<PlaceState>((ArrayList<PlaceState>) placeList));
         Log.i("hungry-api", "(zoom, count): (" + currentZoom + ", " + mCachedPlacesByZoom.get(currentZoom).size() + ")");
 
@@ -252,20 +251,8 @@ public class MapFragment extends Fragment implements
             Toast.makeText(mActivity, "Network error. ", Toast.LENGTH_LONG).show();
         }
 
+        // TODO
         // Pause for awhile then reconnect
-
-//        LocationServices.FusedLocationApi.removeLocationUpdates(
-//                mGoogleApiClient, this);
-//
-//        if (mGoogleApiClient.isConnected()) {
-//            LocationServices.FusedLocationApi.requestLocationUpdates(
-//                    mGoogleApiClient, mLocationRequest, this);
-//        }
-//        else {
-//            mGoogleApiClient.connect();
-//        }
-
-
 
     }
 
@@ -294,7 +281,7 @@ public class MapFragment extends Fragment implements
 
         UserState us = ((MainActivity)mActivity).mUserState;
         HungryAsyncTask mHungryAsyncTask = new HungryAsyncTask(this, range);
-        mHungryAsyncTask.execute(us);
+        mHungryAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, us);
 
     }
 
@@ -341,7 +328,6 @@ public class MapFragment extends Fragment implements
             return;
         }
 
-        // Check if mCahedPlacesByZoom.get(i) is non-null
         // Use the appropriate ArrayLists depending on Zoom Level
         ArrayList<PlaceState> rankedPlaceList;
         Log.i("hungry-api", "mapZoom: "+mapZoom);
@@ -366,7 +352,7 @@ public class MapFragment extends Fragment implements
         else if (mapZoom < 13.2 && mCachedPlacesByZoom.get(3)!=null) {
             rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(3));
         }
-        else if (mapZoom < 13.5 && mCachedPlacesByZoom.get(2)!=null) {
+        else if (mapZoom < 14.0 && mCachedPlacesByZoom.get(2)!=null) {
             rankedPlaceList = new ArrayList<PlaceState>(mCachedPlacesByZoom.get(2));
         }
         else if (mapZoom < 14.7 && mCachedPlacesByZoom.get(1)!=null) {
@@ -383,9 +369,6 @@ public class MapFragment extends Fragment implements
         Collections.sort(rankedPlaceList);
         int maxIndex = Math.min(MAX_NUM_PLACES, rankedPlaceList.size());
         rankedPlaceList = new ArrayList<PlaceState>(rankedPlaceList.subList(0, maxIndex));
-//        for (int i=0; i<maxIndex; i++) {
-//            Log.i("hungry-api-rank", "(i, rank): ("+i+", "+rankedPlaceList.get(i).getRank()+")");
-//        }
 
         if (mMapViewFragment != null) {
             mMapViewFragment.mMap.clear();
@@ -395,6 +378,7 @@ public class MapFragment extends Fragment implements
         if (mMapListViewFragment != null) {
             mMapListViewFragment.onLocationChanged((ArrayList<PlaceState>)rankedPlaceList);
         }
+
     }
 
     public ArrayList<PlaceState> getCachedPlaces() {
@@ -412,6 +396,5 @@ public class MapFragment extends Fragment implements
         }
 
     }
-
 
 }

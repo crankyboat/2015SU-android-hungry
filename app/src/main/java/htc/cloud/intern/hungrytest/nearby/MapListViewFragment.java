@@ -1,12 +1,9 @@
-package htc.cloud.intern.hungrytest.nearbyapi;
+package htc.cloud.intern.hungrytest.nearby;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.PlaceState;

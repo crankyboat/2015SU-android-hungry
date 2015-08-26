@@ -1,6 +1,5 @@
-package htc.cloud.intern.hungrytest.nearbyapi;
+package htc.cloud.intern.hungrytest.nearby;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -9,9 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -21,7 +17,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.VisibleRegion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,7 +82,7 @@ public class MapViewFragment extends Fragment {
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                Log.i("map-zoom", "zoom: "+cameraPosition.zoom);
+                Log.i(TAG, "zoom: "+cameraPosition.zoom);
             }
         });
 
@@ -122,92 +117,25 @@ public class MapViewFragment extends Fragment {
         }
         boundsBuilder.include(mCurrentLocation);
 
-//        double min_lat = 1000;
-//        double min_lon = 1000;
-//        double max_lat = -1;
-//        double max_lon = -1;
-
-//        for (PlaceState place : likelyPlaces) {
         for (int i=0; i<likelyPlaces.size(); i++) {
             PlaceState place = likelyPlaces.get(i);
-            Log.i(TAG, String.format("Place '%s'", place.getName()));
+//            Log.i(TAG, String.format("Place '%s'", place.getName()));
             String placeName = place.getName().toString();
 
             LatLng placeLatLng = place.getLatLng();
             Marker placeMarker = mMap.addMarker(new MarkerOptions()
                     .position(placeLatLng)
                     .title(placeName)
-//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                     .icon(BitmapDescriptorFactory.fromResource(mMarkerRes.get(i+1))));
 
             mMarkerInfo.put(placeMarker, place);
             boundsBuilder.include(placeLatLng);
 
-//            min_lat = placeLatLng.latitude < min_lat ? placeLatLng.latitude : min_lat;
-//            min_lon = placeLatLng.longitude < min_lon ? placeLatLng.longitude : min_lon;
-//            max_lat = placeLatLng.latitude > max_lat ? placeLatLng.latitude : max_lat;
-//            max_lon = placeLatLng.longitude > max_lon ? placeLatLng.longitude : max_lon;
-
         }
         mMap.setInfoWindowAdapter(new PlaceInfoWindowAdapter(getActivity(), mMarkerInfo));
         mMap.setOnInfoWindowClickListener(new PlaceOnInfoWindowListener(getActivity(), mMarkerInfo));
-
-        // Adjust Zoom
-//        double degToRad = 57.2958;
-//        double meanRadiusEarth = 6371;
-//        int displaySize = getChildFragmentManager().findFragmentById(R.id.map).getView().getWidth();
-//        double dist = (meanRadiusEarth * Math.acos(Math.sin(min_lat / degToRad) * Math.sin(max_lat / degToRad) +
-//                (Math.cos(min_lat / degToRad) * Math.cos(max_lat / degToRad) * Math.cos((max_lon / degToRad) - (min_lon / degToRad)))));
-//        double zoom = mMarkerInfo.size() > 1
-//                ? Math.floor(8 - Math.log(1.6446 * dist / Math.sqrt(2 * (displaySize * displaySize))) / Math.log(2)) - 1
-//                : 15;
-//        Log.i(TAG, String.format("(%f, %f, %f, %f), Zoom %f", min_lat, max_lat, min_lon, max_lon, zoom));
-
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLocation, (float) zoom));
-//        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-//            @Override
-//            public void onCameraChange(CameraPosition cameraPosition) {
-//                VisibleRegion vr = mMap.getProjection().getVisibleRegion();
-//                double min_lon = vr.latLngBounds.southwest.longitude;
-//                double max_lat = vr.latLngBounds.northeast.latitude;
-//                double max_lon = vr.latLngBounds.northeast.longitude;
-//                double min_lat = vr.latLngBounds.southwest.latitude;
-//
-//                // Adjust Zoom
-//                double degToRad = 57.2958;
-//                double meanRadiusEarth = 6371;
-//                int displaySize = getChildFragmentManager().findFragmentById(R.id.map).getView().getWidth();
-//
-//                double dist = (meanRadiusEarth * Math.acos(Math.sin(min_lat / degToRad) * Math.sin(max_lat / degToRad) +
-//                        (Math.cos(min_lat / degToRad) * Math.cos(max_lat / degToRad) * Math.cos((max_lon / degToRad) - (min_lon / degToRad)))));
-//                double zoom = mMarkerInfo.size() > 1
-//                        ? Math.floor(8 - Math.log(1.6446 * dist / Math.sqrt(2 * (displaySize * displaySize))) / Math.log (2))
-//                        : 15;
-//
-//                Log.i(TAG, "NewZoom "+zoom);
-//            }
-//        });
 
     }
-
-//    @Override
-//    public void onStop(){
-//        Toast.makeText(getActivity(), "MapViewFragment onStop().", Toast.LENGTH_LONG).show();
-//        super.onStop();
-//    }
-//
-//    @Override
-//    public void onDestroyView(){
-//        Toast.makeText(getActivity(), "MapViewFragment onDestroyView().", Toast.LENGTH_LONG).show();
-//        super.onDestroyView();
-//    }
-//
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//        Toast.makeText(getActivity(), "MapViewFragment onResume().", Toast.LENGTH_LONG).show();
-//
-//    }
 
 }

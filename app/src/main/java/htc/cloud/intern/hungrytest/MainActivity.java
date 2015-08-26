@@ -18,14 +18,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import htc.cloud.intern.hungrytest.dailymatch.DailyMatchFragment;
-import htc.cloud.intern.hungrytest.nearbyapi.MapFragment;
+import htc.cloud.intern.hungrytest.nearby.MapFragment;
 
 public class MainActivity extends ActionBarActivity {
 
     public static FragmentManager mFragmentManager;
+    private Context mContext;
     public UserState mUserState;
     private Toolbar mToolbar;
-    private Context mContext;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
@@ -102,7 +102,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -115,8 +115,8 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_settings:
-                return true;
+//            case R.id.action_settings:
+//                return true;
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
@@ -136,9 +136,9 @@ public class MainActivity extends ActionBarActivity {
     private void setUpNavigationFragments() {
 
         mNearbyApiFragment = MapFragment.newInstance(0);
-        mFavoriteFragment = PlaceholderFragment.newInstance("Favorite");
+        mFavoriteFragment = PlaceholderFragment.newInstance("Favorites");
         mDailyMatchFragment = DailyMatchFragment.newInstance("Daily Match");
-        mPlaceholderFragment = PlaceholderFragment.newInstance("Placeholder");
+        mPlaceholderFragment = PlaceholderFragment.newInstance("Settings");
 
         // TODO
 //        mFragmentManager.beginTransaction()

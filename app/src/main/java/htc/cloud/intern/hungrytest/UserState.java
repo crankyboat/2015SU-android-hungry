@@ -26,7 +26,8 @@ public class UserState {
     public UserState(Context context) {
 //        mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 //        mDeviceID = mTelephonyManager.getDeviceId();
-        mDeviceID = "ipPukGoxTOYn-Wd1WGBv-A";
+//        mDeviceID = "ipPukGoxTOYn-Wd1WGBv-A";
+        mDeviceID = "DUqL8F4_ctxz2DU4mNFR0Q";
         mCurrentLocation = "0,0";
         mFeedback = new HashMap<String, Integer>();
     }

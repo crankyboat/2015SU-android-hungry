@@ -29,7 +29,6 @@ import htc.cloud.intern.hungrytest.UserState;
 public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
 
     public final static String apiURL = "https://recornot.herokuapp.com/";
-//    public final static String serviceName = "get_recommendation";
     public final static String serviceName = "recommendation";
     public final static String useridField = "user_id";
     public final static String locationField = "coordinate";
@@ -37,7 +36,6 @@ public class HungryAsyncTask extends AsyncTask<UserState, Void, JSONArray> {
     public final static String numField = "num_rec";
     public final static String jsonArrayName = "businesses";
     public final static String zoomField = "zoom_level";
-
     public final static int numRec = 100;
 
 //    private int currentRank;
